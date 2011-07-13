@@ -13,17 +13,16 @@
 </head>
 
 <body>
-	<form:form action="/events/${name}" commandName="form" method="delete">
-		<input type="submit" value="supprimer" />
+	<form:form action="/events" commandName="form" method="post">
+		<form:errors path="name" />
+		<form:input path="name"/>
+		<input type="submit" />
 	</form:form>
 	
-	<c:forEach var="event" items="${events}">
-		${event}<br/>
+	<ul>
+	<c:forEach var="collection" items="${collections}">
+		<li><a href="events/${collection}">${collection}</a></li>
 	</c:forEach>
-	
-	<form action="/events/${name}" method="post">
-		<input type="text" size="150" name="values" />
-		<input type="submit" value="poster" />
-	</form>
+	</ul>
 </body>
 </html>
