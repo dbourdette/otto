@@ -17,12 +17,10 @@
 		<input type="submit" value="supprimer" />
 	</form:form>
 
-    logs - <a href="/events/${name}/graph">graph</a> <br/><br/>
-	
-	<c:forEach var="event" items="${events}">
-		${event}<br/>
-	</c:forEach>
-	
+    <a href="/events/${name}">logs</a> - graph  <br/><br/>
+
+    ${graph}
+
 	<form action="/events/${name}" method="post">
 		<input type="text" size="150" name="values" />
 		<input type="submit" value="poster" />
