@@ -3,14 +3,14 @@ package org.otto.graph;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 
-public class StatSheetRow implements Comparable<StatSheetRow> {
+public class GraphRow implements Comparable<GraphRow> {
 
     private Interval interval;
 
-    public StatSheetRow() {
+    public GraphRow() {
     }
 
-    public StatSheetRow(Interval interval) {
+    public GraphRow(Interval interval) {
         super();
         this.interval = interval;
     }
@@ -28,7 +28,7 @@ public class StatSheetRow implements Comparable<StatSheetRow> {
     }
 
     @Override
-    public int compareTo(StatSheetRow row) {
+    public int compareTo(GraphRow row) {
         return getStartDate().compareTo(row.getStartDate());
     }
 
@@ -48,7 +48,7 @@ public class StatSheetRow implements Comparable<StatSheetRow> {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        StatSheetRow other = (StatSheetRow) obj;
+        GraphRow other = (GraphRow) obj;
         if (interval == null) {
             if (other.interval != null)
                 return false;

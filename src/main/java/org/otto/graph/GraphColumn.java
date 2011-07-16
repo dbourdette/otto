@@ -1,13 +1,13 @@
 package org.otto.graph;
 
-public class StatSheetColumn {
+public class GraphColumn {
 
     private String title;
 
-    public StatSheetColumn() {
+    public GraphColumn() {
     }
 
-    public StatSheetColumn(String title) {
+    public GraphColumn(String title) {
         this.title = title;
     }
 
@@ -35,7 +35,7 @@ public class StatSheetColumn {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        StatSheetColumn other = (StatSheetColumn) obj;
+        GraphColumn other = (GraphColumn) obj;
         if (title == null) {
             if (other.title != null)
                 return false;
@@ -46,6 +46,6 @@ public class StatSheetColumn {
 
     @Override
     public String toString() {
-        return "StatSheetColumn [title=" + title + "]";
+        return "GraphColumn [title=" + title + "]";
     }
 }

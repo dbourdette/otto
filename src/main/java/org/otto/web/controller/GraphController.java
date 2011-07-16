@@ -6,7 +6,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
-import org.otto.graph.StatSheet;
+import org.otto.graph.Graph;
 import org.otto.web.util.MongoDbHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,7 +31,7 @@ public class GraphController {
 
         Interval interval = new Interval(new DateTime().minusDays(1), new DateTime());
 
-        StatSheet graph = new StatSheet(name);
+        Graph graph = new Graph(name);
         graph.ensureColumnsExists(name);
         graph.addRows(interval);
 

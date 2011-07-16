@@ -16,18 +16,19 @@ import org.springframework.util.Assert;
 import com.google.common.base.Objects;
 
 /**
- * Class containing all data from db, being able to build csv or js inserts.
+ * Class containing graph data.
+ * It is able to build csv exports or js inserts for web pages.
  *
  */
-public class StatSheet {
+public class Graph {
 
     private class CellKey {
 
-        private final StatSheetRow row;
+        private final GraphRow row;
 
-        private final StatSheetColumn column;
+        private final GraphColumn column;
 
-        public CellKey(StatSheetRow row, StatSheetColumn column) {
+        public CellKey(GraphRow row, GraphColumn column) {
             super();
             this.row = row;
             this.column = column;
@@ -67,8 +68,8 @@ public class StatSheet {
             return true;
         }
 
-        private StatSheet getOuterType() {
-            return StatSheet.this;
+        private Graph getOuterType() {
+            return Graph.this;
         }
     }
 
@@ -76,9 +77,9 @@ public class StatSheet {
 
         private int sum;
 
-        private final StatSheetColumn column;
+        private final GraphColumn column;
 
-        public ColumnSum(StatSheetColumn column) {
+        public ColumnSum(GraphColumn column) {
             this.column = column;
         }
 
@@ -90,7 +91,7 @@ public class StatSheet {
             sum += value;
         }
 
-        public StatSheetColumn getColumn() {
+        public GraphColumn getColumn() {
             return column;
         }
 
@@ -111,36 +112,34 @@ public class StatSheet {
 
     private String title;
 
-    private final List<StatSheetRow> rows = new ArrayList<StatSheetRow>();
+    private final List<GraphRow> rows = new ArrayList<GraphRow>();
 
-    private final List<StatSheetColumn> columns = new ArrayList<StatSheetColumn>();
+    private final List<GraphColumn> columns = new ArrayList<GraphColumn>();
 
     private final Map<CellKey, Integer> cells = new HashMap<CellKey, Integer>();
 
     private Integer defaultValue = 0;
 
-    public StatSheet() {
+    public Graph() {
     }
 
-    public static StatSheet sheet(String title) {
-        StatSheet statSheet = new StatSheet(title);
-
-        return statSheet;
+    public static Graph graph(String title) {
+    	return new Graph(title);
     }
 
-    public StatSheet rows(DateTime start, DateTime end) {
+    public Graph rows(DateTime start, DateTime end) {
         addRows(start, end);
 
         return this;
     }
 
-    public StatSheet rows(DateTime start, DateTime end, Duration period) {
+    public Graph rows(DateTime start, DateTime end, Duration period) {
         addRows(start, end, period);
 
         return this;
     }
 
-    public StatSheet(String title) {
+    public Graph(String title) {
         this.title = title;
     }
 
@@ -150,7 +149,7 @@ public class StatSheet {
 
     public void ensureColumnExists(String title) {
         if (!hasColumn(title)) {
-            columns.add(new StatSheetColumn(title));
+            columns.add(new GraphColumn(title));
         }
     }
 
@@ -171,7 +170,7 @@ public class StatSheet {
     public void addRow(Interval interval) {
         Assert.notNull(interval, "Interval can not be null");
 
-        StatSheetRow row = new StatSheetRow(interval);
+        GraphRow row = new GraphRow(interval);
 
         rows.add(row);
 
@@ -183,7 +182,7 @@ public class StatSheet {
     }
 
     public void addRows(DateTime start, DateTime end) {
-        addRows(start, end, StatSheetDurationUtils.findBest(start, end));
+        addRows(start, end, GraphUtils.findBest(start, end));
     }
 
     public void addRows(DateTime start, DateTime end, Duration period) {
@@ -221,8 +220,8 @@ public class StatSheet {
     }
 
     public void setValue(String columnTitle, DateTime date, Integer value) {
-        StatSheetRow row = getRow(date);
-        StatSheetColumn column = getColumn(columnTitle);
+        GraphRow row = getRow(date);
+        GraphColumn column = getColumn(columnTitle);
 
         setValue(row, column, value);
     }
@@ -236,8 +235,8 @@ public class StatSheet {
             return;
         }
 
-        StatSheetRow row = getRow(date);
-        StatSheetColumn column = getColumn(columnTitle);
+        GraphRow row = getRow(date);
+        GraphColumn column = getColumn(columnTitle);
 
         Integer cellValue = cells.get(new CellKey(row, column));
 
@@ -249,8 +248,8 @@ public class StatSheet {
     }
 
     public Integer getValue(String columnTitle, int rowIndex) {
-        StatSheetRow row = rows.get(rowIndex);
-        StatSheetColumn column = getColumn(columnTitle);
+        GraphRow row = rows.get(rowIndex);
+        GraphColumn column = getColumn(columnTitle);
 
         return getValue(row, column);
     }
@@ -283,11 +282,11 @@ public class StatSheet {
      * @param columnTitle
      */
     public void cumulate(String columnTitle) {
-        StatSheetColumn column = getColumn(columnTitle);
+        GraphColumn column = getColumn(columnTitle);
 
         Integer sum = 0;
 
-        for (StatSheetRow row : rows) {
+        for (GraphRow row : rows) {
             Integer value = getValue(row, column);
 
             if (value != null) {
@@ -306,12 +305,12 @@ public class StatSheet {
             return;
         }
 
-        List<ColumnSum> sums = new ArrayList<StatSheet.ColumnSum>();
+        List<ColumnSum> sums = new ArrayList<Graph.ColumnSum>();
 
-        for (StatSheetColumn column : getColumns(columnTitles)) {
+        for (GraphColumn column : getColumns(columnTitles)) {
             ColumnSum sum = new ColumnSum(column);
 
-            for (StatSheetRow row : rows) {
+            for (GraphRow row : rows) {
                 sum.add(getValue(row, column));
             }
 
@@ -332,19 +331,19 @@ public class StatSheet {
 
         builder.append("startDate,endDate");
 
-        for (StatSheetColumn column : columns) {
+        for (GraphColumn column : columns) {
             builder.append(",");
             builder.append(column.getTitle());
         }
 
         builder.append("\n");
 
-        for (StatSheetRow row : rows) {
+        for (GraphRow row : rows) {
             builder.append(row.getStartDate());
             builder.append(",");
             builder.append(row.getEndDate());
 
-            for (StatSheetColumn column : columns) {
+            for (GraphColumn column : columns) {
                 builder.append(",");
                 builder.append(getValue(row, column));
             }
@@ -364,7 +363,7 @@ public class StatSheet {
         builder.append("var data = new google.visualization.DataTable();\n");
         builder.append("data.addColumn('date', 'Date');\n");
 
-        for (StatSheetColumn column : columns) {
+        for (GraphColumn column : columns) {
             builder.append("data.addColumn('number', '" + StringEscapeUtils.escapeJavaScript(column.getTitle())
                            + "');\n");
         }
@@ -374,13 +373,13 @@ public class StatSheet {
         int rowIndex = 0;
         int columnIndex = 0;
 
-        for (StatSheetRow row : rows) {
+        for (GraphRow row : rows) {
             columnIndex = 0;
 
             builder.append("data.setValue(" + rowIndex + ", " + columnIndex + ", new Date("
                            + row.getStartDate().getMillis() + "));\n");
 
-            for (StatSheetColumn column : columns) {
+            for (GraphColumn column : columns) {
                 columnIndex++;
 
                 builder.append("data.setValue(" + rowIndex + ", " + columnIndex + ", " + getValue(row, column) + ");\n");
@@ -435,8 +434,8 @@ public class StatSheet {
         }
     }
 
-    private StatSheetRow getRow(DateTime date) {
-        for (StatSheetRow row : rows) {
+    private GraphRow getRow(DateTime date) {
+        for (GraphRow row : rows) {
             if (row.contains(date)) {
                 return row;
             }
@@ -445,8 +444,8 @@ public class StatSheet {
         throw new IllegalArgumentException("No row found for date " + date);
     }
 
-    private StatSheetColumn getColumn(String title) {
-        StatSheetColumn column = safeGetColumn(title);
+    private GraphColumn getColumn(String title) {
+        GraphColumn column = safeGetColumn(title);
 
         if (column == null) {
             throw new IllegalArgumentException("No column found for title " + title);
@@ -455,8 +454,8 @@ public class StatSheet {
         return column;
     }
 
-    private List<StatSheetColumn> getColumns(String... titles) {
-        List<StatSheetColumn> columns = new ArrayList<StatSheetColumn>();
+    private List<GraphColumn> getColumns(String... titles) {
+        List<GraphColumn> columns = new ArrayList<GraphColumn>();
 
         for (String title : titles) {
             columns.add(getColumn(title));
@@ -465,8 +464,8 @@ public class StatSheet {
         return columns;
     }
 
-    private StatSheetColumn safeGetColumn(String title) {
-        for (StatSheetColumn column : columns) {
+    private GraphColumn safeGetColumn(String title) {
+        for (GraphColumn column : columns) {
             if (Objects.equal(column.getTitle(), title)) {
                 return column;
             }
@@ -475,20 +474,20 @@ public class StatSheet {
         return null;
     }
 
-    private void setValue(StatSheetRow row, StatSheetColumn column, Integer value) {
+    private void setValue(GraphRow row, GraphColumn column, Integer value) {
         cells.put(new CellKey(row, column), value);
     }
 
-    private Integer getValue(StatSheetRow row, StatSheetColumn column) {
+    private Integer getValue(GraphRow row, GraphColumn column) {
         Integer value = cells.get(new CellKey(row, column));
 
         return value == null ? defaultValue : value;
     }
 
-    private void dropColumn(StatSheetColumn column) {
+    private void dropColumn(GraphColumn column) {
         columns.remove(column);
 
-        for (StatSheetRow row : rows) {
+        for (GraphRow row : rows) {
             cells.remove(new CellKey(row, column));
         }
     }
