@@ -48,7 +48,7 @@
 
     <!-- Welcome file -->
     <welcome-file-list>
-        <welcome-file>events</welcome-file>
+        <welcome-file>/index</welcome-file>
     </welcome-file-list>
 
     <!-- Error pages handling -->

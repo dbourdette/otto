@@ -1,9 +1,11 @@
 package org.otto.web.controller;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.Iterator;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletResponse;
 
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
@@ -24,13 +26,32 @@ public class GraphController {
     @Inject
     private MongoDbHelper mongoDbHelper;
 
-    @RequestMapping({"/events/{name}/graph"})
+    @RequestMapping({"/types/{name}/graph"})
     public String graph(@PathVariable String name, Model model) {
         if (mongoDbHelper.notExists(name)) {
-            return "redirect:/events";
+            return "redirect:/types";
         }
 
-        Interval interval = new Interval(new DateTime().minusDays(1), new DateTime());
+        model.addAttribute("graph", buildGraph(name).toHtml(1280, 750));
+
+        return "types/graph";
+    }
+    
+    @RequestMapping({"/types/{name}/graph.csv"})
+    public void csv(@PathVariable String name, HttpServletResponse response) throws IOException {
+        if (mongoDbHelper.notExists(name)) {
+        	response.sendRedirect("/types");
+        	
+        	return;
+        }
+
+        response.setContentType("application/csv");
+        
+        response.getWriter().write(buildGraph(name).toCsv());
+    }
+    
+    private Graph buildGraph(String name) {
+    	Interval interval = new Interval(new DateTime().minusDays(1), new DateTime());
 
         Graph graph = new Graph(name);
         graph.ensureColumnsExists(name);
@@ -46,9 +67,7 @@ public class GraphController {
             graph.increaseValue(name, new DateTime(date));
         }
 
-        model.addAttribute("graph", graph.toHtml(1280, 750));
-
-        return "graph";
+        return graph;
     }
 
     private Iterator<DBObject> findEvents(String name, Interval interval) {

@@ -1,10 +1,10 @@
 package org.otto.web.controller;
 
-import com.google.common.base.Splitter;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
+import java.util.Date;
+import java.util.Iterator;
+
+import javax.inject.Inject;
+
 import org.otto.web.util.MongoDbHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,20 +12,22 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.inject.Inject;
-import java.util.Date;
-import java.util.Iterator;
+import com.google.common.base.Splitter;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
 
 @Controller
 public class EventsController {
 
-    @Inject
+	@Inject
     private DB mongoDb;
 
-    @RequestMapping({"/events/{name}"})
+    @RequestMapping("/types/{name}/events")
     public String events(@PathVariable String name, Model model) {
-        if (!mongoDb.collectionExists(MongoDbHelper.EVENTS_PREFIX + name)) {
-            return "redirect:/events";
+    	if (!mongoDb.collectionExists(MongoDbHelper.EVENTS_PREFIX + name)) {
+            return "redirect:/types";
         }
 
         DBCollection collection = mongoDb.getCollection(MongoDbHelper.EVENTS_PREFIX + name);
@@ -34,20 +36,20 @@ public class EventsController {
 
         model.addAttribute("events", events);
 
-        return "events";
+        return "types/events";
     }
 
-    @RequestMapping(value = "/events/{name}", method = RequestMethod.POST)
+    @RequestMapping(value = "/types/{name}/events", method = RequestMethod.POST)
     public String postEvent(@PathVariable String name, String values) {
         if (!mongoDb.collectionExists(MongoDbHelper.EVENTS_PREFIX + name)) {
-            return "redirect:/events";
+            return "redirect:/types";
         }
 
         DBCollection collection = mongoDb.getCollection(MongoDbHelper.EVENTS_PREFIX + name);
 
         collection.insert(buildDBObject(values));
 
-        return "redirect:/events/{name}";
+        return "redirect:/types/{name}/events";
     }
 
     private BasicDBObject buildDBObject(String values) {

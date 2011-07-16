@@ -16,18 +16,9 @@
 	<widget:header />
 	
 	<article>
-		logs - <a href="/events/${name}/graph">graph</a> <br/><br/>
+		index - <a href="/types/${name}/events">logs</a> - <a href="/types/${name}/graph">graph</a> <br/><br/>
 		
-		<c:forEach var="event" items="${events}">
-			${event}<br/>
-		</c:forEach>
-		
-		<form action="/events/${name}" method="post">
-			<input type="text" size="100" name="values" />
-			<input type="submit" value="poster" />
-		</form>
-		
-		<form:form action="/events/${name}" commandName="form" method="delete">
+		<form:form action="/types/${name}" commandName="form" method="delete">
 			<input type="submit" value="supprimer" />
 		</form:form>
 	</article>

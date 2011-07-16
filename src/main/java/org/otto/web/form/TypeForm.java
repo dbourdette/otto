@@ -9,7 +9,7 @@ import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
-public class EventsForm {
+public class TypeForm {
 
     @NotEmpty
     @Pattern(regexp = "^[A-Za-z0-9]+$", message = "name.invalid")

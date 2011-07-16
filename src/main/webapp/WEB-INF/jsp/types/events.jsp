@@ -16,17 +16,20 @@
 	<widget:header />
 	
 	<article>
-		<h2>Existing event types</h2>
-	
-		<ul>
-			<c:forEach var="type" items="${types}">
-				<li><a href="/types/${type}">${type}</a></li>
-			</c:forEach>
-		</ul>
+		<a href="/types/${name}">index</a> - logs - <a href="/types/${name}/graph">graph</a> <br/><br/>
 		
-		<br/>
+		<c:forEach var="event" items="${events}">
+			${event}<br/>
+		</c:forEach>
 		
-		<a href="/types/form">Create a new event type</a>
+		<form action="/types/${name}/events" method="post">
+			<input type="text" size="100" name="values" />
+			<input type="submit" value="poster" />
+		</form>
+		
+		<form:form action="/types/${name}" commandName="form" method="delete">
+			<input type="submit" value="supprimer" />
+		</form:form>
 	</article>
 	
 	<widget:footer />

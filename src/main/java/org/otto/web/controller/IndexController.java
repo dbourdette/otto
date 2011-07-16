@@ -2,7 +2,7 @@ package org.otto.web.controller;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
-import org.otto.web.form.EventsForm;
+import org.otto.web.form.TypeForm;
 import org.otto.web.util.MongoDbHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,45 +23,18 @@ public class IndexController {
     @Inject
     private DB mongoDb;
 
-    @ModelAttribute("form")
-    public EventsForm form() {
-        return new EventsForm();
-    }
-
-    @RequestMapping({"/", "/events"})
+    @RequestMapping({"/", "/index", "/types"})
     public String index(Model model) {
-        List<String> collections = new ArrayList<String>();
+        List<String> types = new ArrayList<String>();
 
-        for (String collection : mongoDb.getCollectionNames()) {
-            if (collection.startsWith(MongoDbHelper.EVENTS_PREFIX)) {
-                collections.add(collection.substring(MongoDbHelper.EVENTS_PREFIX.length()));
+        for (String name : mongoDb.getCollectionNames()) {
+            if (name.startsWith(MongoDbHelper.EVENTS_PREFIX)) {
+            	types.add(name.substring(MongoDbHelper.EVENTS_PREFIX.length()));
             }
         }
 
-        model.addAttribute("collections", collections);
+        model.addAttribute("types", types);
 
         return "index";
-    }
-
-    @RequestMapping(value = "/events", method = RequestMethod.POST)
-    public String createCollection(@Valid @ModelAttribute("form") EventsForm form, BindingResult result) {
-        if (result.hasErrors()) {
-            return "index";
-        }
-
-        mongoDb.createCollection(MongoDbHelper.EVENTS_PREFIX + form.getName(), new BasicDBObject("capped", false));
-
-        return "redirect:/events";
-    }
-
-    @RequestMapping(value = "/events/{name}", method = RequestMethod.DELETE)
-    public String dropCollection(@PathVariable String name) {
-        if (!mongoDb.collectionExists(MongoDbHelper.EVENTS_PREFIX + name)) {
-            return "redirect:/events";
-        }
-
-        mongoDb.getCollection(MongoDbHelper.EVENTS_PREFIX + name).drop();
-
-        return "redirect:/events";
     }
 }

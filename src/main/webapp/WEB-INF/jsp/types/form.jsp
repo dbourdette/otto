@@ -16,17 +16,12 @@
 	<widget:header />
 	
 	<article>
-		<a href="/events/${name}">logs</a> - graph  <br/><br/>
+		<h2>New event type</h2>
 	
-	    ${graph}
-	
-		<form action="/events/${name}" method="post">
-			<input type="text" size="100" name="values" />
-			<input type="submit" value="poster" />
-		</form>
-		
-		<form:form action="/events/${name}" commandName="form" method="delete">
-			<input type="submit" value="supprimer" />
+		<form:form action="/types" commandName="form" method="post">
+			<form:errors path="name" />
+			<form:input path="name"/>
+			<input type="submit" value="Créer" />
 		</form:form>
 	</article>
 	

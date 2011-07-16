@@ -1,10 +1,13 @@
 x StatSheet -> Graph
 - css
-- csv
+x csv (application/csv ?) 
+- index page for type
+- query form for logs
+- query form for graph / csv
 - security
 - authentication
 - authorizations : ROLE_ADMIN + ROLE_EVENS_{name}
 - auth through ldap
 - add capped collection
-- modify collection
-- delete one event
+- modify type
+- edit / delete one event
