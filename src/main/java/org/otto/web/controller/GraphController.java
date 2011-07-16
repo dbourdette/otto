@@ -1,9 +1,10 @@
 package org.otto.web.controller;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
+import java.util.Date;
+import java.util.Iterator;
+
+import javax.inject.Inject;
+
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.otto.graph.Graph;
@@ -13,9 +14,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.inject.Inject;
-import java.util.Date;
-import java.util.Iterator;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
 
 @Controller
 public class GraphController {

@@ -56,3 +56,7 @@ article ul li {
 	list-style: none;
 	list-style-type: square;
 }
+
+a, a:visited {
+	color:black;
+}
