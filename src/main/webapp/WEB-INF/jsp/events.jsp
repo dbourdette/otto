@@ -5,27 +5,33 @@
 
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 
+<%@ taglib tagdir="/WEB-INF/tags/widgets" prefix="widget" %>
+
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-	<meta charset="utf-8">
-	<title>Otto event server</title>
-</head>
+
+<widget:head />
 
 <body>
-	<form:form action="/events/${name}" commandName="form" method="delete">
-		<input type="submit" value="supprimer" />
-	</form:form>
-
-    logs - <a href="/events/${name}/graph">graph</a> <br/><br/>
+	<widget:header />
 	
-	<c:forEach var="event" items="${events}">
-		${event}<br/>
-	</c:forEach>
+	<article>
+		logs - <a href="/events/${name}/graph">graph</a> <br/><br/>
+		
+		<c:forEach var="event" items="${events}">
+			${event}<br/>
+		</c:forEach>
+		
+		<form action="/events/${name}" method="post">
+			<input type="text" size="100" name="values" />
+			<input type="submit" value="poster" />
+		</form>
+		
+		<form:form action="/events/${name}" commandName="form" method="delete">
+			<input type="submit" value="supprimer" />
+		</form:form>
+	</article>
 	
-	<form action="/events/${name}" method="post">
-		<input type="text" size="150" name="values" />
-		<input type="submit" value="poster" />
-	</form>
+	<widget:footer />
 </body>
 </html>

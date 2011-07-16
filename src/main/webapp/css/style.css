@@ -1,0 +1,58 @@
+
+body {
+	background-color: #EEE;
+	width:800px;
+	margin:auto;
+}
+
+header {
+	border:1px #DDD solid;
+	height: 50px;
+	position: relative;
+	background-color: #FAFAFA;
+	border-radius:0 0 5px 5px;
+	margin-bottom: 5px;
+}
+
+header .logo {
+	position: absolute;
+	left: 20px;
+	top:15px;
+}
+
+footer {
+	position: relative;
+	border:1px #DDD solid;
+	height: 40px;
+	background-color: #FAFAFA;
+	border-radius:5px;
+	margin-top: 5px;
+}
+
+footer .github {
+	position: absolute;
+	right: 10px;
+	top:10px;
+}
+
+article {
+	border:1px #DDD solid;
+	padding: 10px;
+	background-color: #FAFAFA;
+	border-radius:5px;
+}
+
+article h2 {
+	font-size: 18px;
+}
+
+article ul {
+	margin: 0;
+	padding:0 0 0 15px;
+	list-style-position: outside;
+}
+
+article ul li {
+	list-style: none;
+	list-style-type: square;
+}
