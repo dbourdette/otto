@@ -1,0 +1,9 @@
+css
+csv
+security
+authentication
+authorizations : ROLE_ADMIN + ROLE_EVENS_{name}
+auth through ldap
+add capped collection
+modify collection
+delete one event
