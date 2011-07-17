@@ -1,7 +1,8 @@
 x StatSheet -> Graph
+x csv (application/csv ?)
+x index page for type (events per minutes in the last week, day, hour)
+x frequencies
 - css
-x csv (application/csv ?) 
-- index page for type
 - query form for logs
 - query form for graph / csv
 - security
@@ -11,3 +12,8 @@ x csv (application/csv ?)
 - add capped collection
 - modify type
 - edit / delete one event
+- delete type (link + confirmation page)
+- TypeNotFound exception and generic handling mechanism 
+- add event page
+- aggregator (5 min slices for heavy traffic) db.events.news.hit + db.events.news.hit.?
+- event generator

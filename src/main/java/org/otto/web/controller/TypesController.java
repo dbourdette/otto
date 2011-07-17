@@ -1,11 +1,10 @@
 package org.otto.web.controller;
 
-import java.util.Iterator;
-
 import javax.inject.Inject;
 import javax.validation.Valid;
 
 import org.otto.web.form.TypeForm;
+import org.otto.web.util.IntervalUtils;
 import org.otto.web.util.MongoDbHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,22 +14,22 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
-
 @Controller
 public class TypesController {
-
+    
     @Inject
-    private DB mongoDb;
+    private MongoDbHelper mongoDbHelper;
 
     @RequestMapping({"/types/{name}"})
     public String type(@PathVariable String name, Model model) {
-        if (!mongoDb.collectionExists(MongoDbHelper.EVENTS_PREFIX + name)) {
+        if (mongoDbHelper.notExists(name)) {
             return "redirect:/types";
         }
+        
+        model.addAttribute("count", mongoDbHelper.count(name));
+        model.addAttribute("lastWeekFrequency", mongoDbHelper.frequency(name, IntervalUtils.lastWeek()));
+        model.addAttribute("yesterdayFrequency", mongoDbHelper.frequency(name, IntervalUtils.yesterday()));
+        model.addAttribute("todayFrequency", mongoDbHelper.frequency(name, IntervalUtils.today()));
 
         return "types/type";
     }
@@ -48,18 +47,18 @@ public class TypesController {
             return "index";
         }
 
-        mongoDb.createCollection(MongoDbHelper.EVENTS_PREFIX + form.getName(), new BasicDBObject("capped", false));
+        mongoDbHelper.createCollection(form.getName());
 
         return "redirect:/types";
     }
 
     @RequestMapping(value = "/types/{name}", method = RequestMethod.DELETE)
     public String dropType(@PathVariable String name) {
-        if (!mongoDb.collectionExists(MongoDbHelper.EVENTS_PREFIX + name)) {
+    	if (mongoDbHelper.notExists(name)) {
             return "redirect:/types";
         }
 
-        mongoDb.getCollection(MongoDbHelper.EVENTS_PREFIX + name).drop();
+    	mongoDbHelper.getCollection(name).drop();
 
         return "redirect:/types";
     }

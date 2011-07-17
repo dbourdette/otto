@@ -1,7 +1,11 @@
 package org.otto.web.util;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+
+import org.joda.time.Interval;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
@@ -23,7 +27,34 @@ public class MongoDbHelper {
         return !mongoDb.collectionExists(EVENTS_PREFIX + name);
     }
 
+    public long count(String name) {
+        return getCollection(name).count();
+    }
+
+    public Frequency frequency(String name, Interval interval) {
+    	DBCollection collection = getCollection(name);
+
+        BasicDBObject query = intervalQuery(interval);
+
+        int count = collection.find(query).count();
+    	
+        return new Frequency(count, interval.toDuration());
+    }
+    
+    public BasicDBObject intervalQuery(Interval interval) {
+    	BasicDBObject query = new BasicDBObject();
+    	
+        query.append("date", new BasicDBObject("$gt", interval.getStart().toDate()));
+        query.append("date", new BasicDBObject("$lte", interval.getEnd().toDate()));
+        
+        return query;
+    }
+
     public DBCollection getCollection(String name) {
         return mongoDb.getCollection(EVENTS_PREFIX + name);
+    }
+
+    public DBCollection createCollection(String name) {
+        return mongoDb.createCollection(EVENTS_PREFIX + name, new BasicDBObject("capped", false));
     }
 }

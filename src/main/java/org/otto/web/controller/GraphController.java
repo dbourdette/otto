@@ -73,9 +73,7 @@ public class GraphController {
     private Iterator<DBObject> findEvents(String name, Interval interval) {
         DBCollection collection = mongoDbHelper.getCollection(name);
 
-        BasicDBObject query = new BasicDBObject();
-        query.append("date", new BasicDBObject("$gt", interval.getStart().toDate()));
-        query.append("date", new BasicDBObject("$lte", interval.getEnd().toDate()));
+        BasicDBObject query = mongoDbHelper.intervalQuery(interval);
 
         return collection.find(query).sort(new BasicDBObject("date", -1)).iterator();
     }

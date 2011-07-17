@@ -1,21 +1,16 @@
 package org.otto.web.controller;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import org.otto.web.form.TypeForm;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
+
 import org.otto.web.util.MongoDbHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.inject.Inject;
-import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
+import com.mongodb.DB;
 
 @Controller
 public class IndexController {
