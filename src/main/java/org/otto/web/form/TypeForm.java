@@ -12,7 +12,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 public class TypeForm {
 
     @NotEmpty
-    @Pattern(regexp = "^[A-Za-z0-9]+$", message = "name.invalid")
+    @Pattern(regexp = "^[A-Za-z0-9]+$")
     private String name;
 
     public String getName() {

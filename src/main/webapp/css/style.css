@@ -57,6 +57,10 @@ article ul li {
 	list-style-type: square;
 }
 
+article p {
+	margin:5px 0 3px 0;
+}
+
 a, a:visited {
 	color:black;
 }

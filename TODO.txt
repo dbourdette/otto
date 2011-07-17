@@ -2,6 +2,9 @@ x StatSheet -> Graph
 x csv (application/csv ?)
 x index page for type (events per minutes in the last week, day, hour)
 x frequencies
+x add event page
+- Flash scope message (type created, events batched...)
+- batch add with random dates / values
 - css
 - query form for logs
 - query form for graph / csv
@@ -14,6 +17,7 @@ x frequencies
 - edit / delete one event
 - delete type (link + confirmation page)
 - TypeNotFound exception and generic handling mechanism 
-- add event page
 - aggregator (5 min slices for heavy traffic) db.events.news.hit + db.events.news.hit.?
 - event generator
+- threshold and alerts
+- mail reports

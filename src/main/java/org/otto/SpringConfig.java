@@ -27,7 +27,7 @@ public class SpringConfig {
     @Bean
     public FixedLocaleResolver fixedLocaleResolver() {
         FixedLocaleResolver resolver = new FixedLocaleResolver();
-        resolver.setDefaultLocale(Locale.FRANCE);
+        resolver.setDefaultLocale(Locale.ENGLISH);
         return resolver;
     }
 

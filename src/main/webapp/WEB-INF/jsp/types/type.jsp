@@ -17,7 +17,7 @@
 	<widget:header />
 	
 	<article>
-		index - <a href="/types/${name}/events">logs</a> - <a href="/types/${name}/graph">graph</a> <br/><br/>
+		index - <a href="/types/${name}/events">logs</a> - <a href="/types/${name}/graph">graph</a> - <a href="/types/${name}/events/batch">batch add events</a> <br/><br/>
 		
 		Event count in db : ${count} <br/>
 		<br/>

@@ -38,13 +38,13 @@ public class TypesController {
     public String form(Model model) {
         model.addAttribute("form", new TypeForm());
 
-        return "types/form";
+        return "types/type_form";
     }
 
     @RequestMapping(value = "/types", method = RequestMethod.POST)
     public String createType(@Valid @ModelAttribute("form") TypeForm form, BindingResult result) {
         if (result.hasErrors()) {
-            return "index";
+            return "types/type_form";
         }
 
         mongoDbHelper.createCollection(form.getName());

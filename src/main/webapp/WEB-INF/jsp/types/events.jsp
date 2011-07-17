@@ -16,20 +16,11 @@
 	<widget:header />
 	
 	<article>
-		<a href="/types/${name}">index</a> - logs - <a href="/types/${name}/graph">graph</a> <br/><br/>
+		<a href="/types/${name}">index</a> - logs - <a href="/types/${name}/graph">graph</a> - <a href="/types/${name}/events/batch">batch add events</a> <br/><br/>
 		
 		<c:forEach var="event" items="${events}">
 			${event}<br/>
 		</c:forEach>
-		
-		<form action="/types/${name}/events" method="post">
-			<input type="text" size="100" name="values" />
-			<input type="submit" value="poster" />
-		</form>
-		
-		<form:form action="/types/${name}" commandName="form" method="delete">
-			<input type="submit" value="supprimer" />
-		</form:form>
 	</article>
 	
 	<widget:footer />

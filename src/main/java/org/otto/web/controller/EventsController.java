@@ -1,20 +1,21 @@
 package org.otto.web.controller;
 
-import java.util.Date;
 import java.util.Iterator;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 
+import org.otto.web.form.BatchForm;
 import org.otto.web.util.MongoDbHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.google.common.base.Splitter;
 import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 
@@ -22,15 +23,15 @@ import com.mongodb.DBObject;
 public class EventsController {
 
 	@Inject
-    private DB mongoDb;
+    private MongoDbHelper mongoDbHelper;
 
     @RequestMapping("/types/{name}/events")
     public String events(@PathVariable String name, Model model) {
-    	if (!mongoDb.collectionExists(MongoDbHelper.EVENTS_PREFIX + name)) {
+    	if (mongoDbHelper.notExists(name)) {
             return "redirect:/types";
         }
 
-        DBCollection collection = mongoDb.getCollection(MongoDbHelper.EVENTS_PREFIX + name);
+        DBCollection collection = mongoDbHelper.getCollection(name);
 
         Iterator<DBObject> events = collection.find().sort(new BasicDBObject("date", -1)).limit(50).iterator();
 
@@ -39,34 +40,33 @@ public class EventsController {
         return "types/events";
     }
 
-    @RequestMapping(value = "/types/{name}/events", method = RequestMethod.POST)
-    public String postEvent(@PathVariable String name, String values) {
-        if (!mongoDb.collectionExists(MongoDbHelper.EVENTS_PREFIX + name)) {
+    @RequestMapping("/types/{name}/events/batch")
+    public String form(@PathVariable String name, Model model) {
+    	if (mongoDbHelper.notExists(name)) {
             return "redirect:/types";
         }
+    	
+    	model.addAttribute("form", new BatchForm());
 
-        DBCollection collection = mongoDb.getCollection(MongoDbHelper.EVENTS_PREFIX + name);
-
-        collection.insert(buildDBObject(values));
-
-        return "redirect:/types/{name}/events";
+        return "types/batch_add_event_form";
     }
 
-    private BasicDBObject buildDBObject(String values) {
-        BasicDBObject object = new BasicDBObject();
-
-        Iterable<String> keyValues = Splitter.on(",").trimResults().omitEmptyStrings().split(values);
-
-        for (String keyValue : keyValues) {
-            Iterator<String> iterator = Splitter.on("=").trimResults().omitEmptyStrings().split(keyValue).iterator();
-
-            object.append(iterator.next(), iterator.next());
+    @RequestMapping(value = "/types/{name}/events/batch", method = RequestMethod.POST)
+    public String postEvent(@PathVariable String name, @Valid @ModelAttribute("form") BatchForm form, BindingResult bindingResult) {
+    	if (mongoDbHelper.notExists(name)) {
+            return "redirect:/types";
+        }
+        
+        if (bindingResult.hasErrors()) {
+        	return "types/batch_add_event_form";
         }
 
-        if (object.containsField("date") || (!(object.get("date") instanceof Date))) {
-            object.append("date", new Date());
+        DBCollection collection = mongoDbHelper.getCollection(name);
+
+        for (BasicDBObject object : form.buildDBObjects()) {
+        	collection.insert(object);
         }
 
-        return object;
+        return "redirect:/types/{name}/events/batch";
     }
 }
