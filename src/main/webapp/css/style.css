@@ -35,6 +35,16 @@ footer .github {
 	top:10px;
 }
 
+.message {
+	background-color: #EEEEAA;
+	border-radius:5px;
+	margin-bottom: 5px;
+	border:1px #DDD solid;
+	height: 30px;
+	line-height: 30px;
+	padding:0 10px;
+} 
+
 article {
 	border:1px #DDD solid;
 	padding: 10px;

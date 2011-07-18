@@ -14,4 +14,8 @@
 	
 	<mvc:default-servlet-handler />
 	
+	<mvc:interceptors>
+		<bean class="org.otto.web.interceptor.FlashScopeInterceptor" />
+	</mvc:interceptors>
+	
 </beans>

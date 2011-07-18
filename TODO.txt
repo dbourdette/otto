@@ -3,7 +3,8 @@ x csv (application/csv ?)
 x index page for type (events per minutes in the last week, day, hour)
 x frequencies
 x add event page
-- Flash scope message (type created, events batched...)
+x Flash scope message (type created, events batched...)
+- TypeNotFound exception and generic handling mechanism
 - batch add with random dates / values
 - css
 - query form for logs
@@ -15,8 +16,7 @@ x add event page
 - add capped collection
 - modify type
 - edit / delete one event
-- delete type (link + confirmation page)
-- TypeNotFound exception and generic handling mechanism 
+- delete type (link + confirmation page) 
 - aggregator (5 min slices for heavy traffic) db.events.news.hit + db.events.news.hit.?
 - event generator
 - threshold and alerts

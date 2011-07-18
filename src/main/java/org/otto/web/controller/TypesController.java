@@ -4,6 +4,7 @@ import javax.inject.Inject;
 import javax.validation.Valid;
 
 import org.otto.web.form.TypeForm;
+import org.otto.web.util.FlashScope;
 import org.otto.web.util.IntervalUtils;
 import org.otto.web.util.MongoDbHelper;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,9 @@ public class TypesController {
     
     @Inject
     private MongoDbHelper mongoDbHelper;
+    
+    @Inject
+    private FlashScope flashScope;
 
     @RequestMapping({"/types/{name}"})
     public String type(@PathVariable String name, Model model) {
@@ -48,6 +52,8 @@ public class TypesController {
         }
 
         mongoDbHelper.createCollection(form.getName());
+        
+        flashScope.message("type " + form.getName() + " has just been created");
 
         return "redirect:/types";
     }
@@ -59,6 +65,8 @@ public class TypesController {
         }
 
     	mongoDbHelper.getCollection(name).drop();
+    	
+    	flashScope.message("type " + name + " has just been deleted");
 
         return "redirect:/types";
     }

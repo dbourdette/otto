@@ -6,6 +6,7 @@ import javax.inject.Inject;
 import javax.validation.Valid;
 
 import org.otto.web.form.BatchForm;
+import org.otto.web.util.FlashScope;
 import org.otto.web.util.MongoDbHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,6 +25,9 @@ public class EventsController {
 
 	@Inject
     private MongoDbHelper mongoDbHelper;
+	
+	@Inject
+    private FlashScope flashScope;
 
     @RequestMapping("/types/{name}/events")
     public String events(@PathVariable String name, Model model) {
@@ -66,6 +70,8 @@ public class EventsController {
         for (BasicDBObject object : form.buildDBObjects()) {
         	collection.insert(object);
         }
+        
+        flashScope.message(form.getCount() + " events inserted");
 
         return "redirect:/types/{name}/events/batch";
     }
