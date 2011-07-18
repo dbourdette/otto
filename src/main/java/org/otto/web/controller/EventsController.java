@@ -31,11 +31,7 @@ public class EventsController {
 
     @RequestMapping("/types/{name}/events")
     public String events(@PathVariable String name, Model model) {
-    	if (mongoDbHelper.notExists(name)) {
-            return "redirect:/types";
-        }
-
-        DBCollection collection = mongoDbHelper.getCollection(name);
+    	DBCollection collection = mongoDbHelper.getCollection(name);
 
         Iterator<DBObject> events = collection.find().sort(new BasicDBObject("date", -1)).limit(50).iterator();
 
@@ -46,10 +42,6 @@ public class EventsController {
 
     @RequestMapping("/types/{name}/events/batch")
     public String form(@PathVariable String name, Model model) {
-    	if (mongoDbHelper.notExists(name)) {
-            return "redirect:/types";
-        }
-    	
     	model.addAttribute("form", new BatchForm());
 
         return "types/batch_add_event_form";
@@ -57,11 +49,7 @@ public class EventsController {
 
     @RequestMapping(value = "/types/{name}/events/batch", method = RequestMethod.POST)
     public String postEvent(@PathVariable String name, @Valid @ModelAttribute("form") BatchForm form, BindingResult bindingResult) {
-    	if (mongoDbHelper.notExists(name)) {
-            return "redirect:/types";
-        }
-        
-        if (bindingResult.hasErrors()) {
+    	if (bindingResult.hasErrors()) {
         	return "types/batch_add_event_form";
         }
 

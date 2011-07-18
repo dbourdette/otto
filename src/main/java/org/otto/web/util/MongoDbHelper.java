@@ -6,6 +6,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 
 import org.joda.time.Interval;
+import org.otto.web.exception.TypeNotFound;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
@@ -51,6 +52,10 @@ public class MongoDbHelper {
     }
 
     public DBCollection getCollection(String name) {
+    	if (notExists(name)) {
+    		throw new TypeNotFound();
+    	} 
+    	
         return mongoDb.getCollection(EVENTS_PREFIX + name);
     }
 

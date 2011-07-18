@@ -28,10 +28,6 @@ public class GraphController {
 
     @RequestMapping({"/types/{name}/graph"})
     public String graph(@PathVariable String name, Model model) {
-        if (mongoDbHelper.notExists(name)) {
-            return "redirect:/types";
-        }
-
         model.addAttribute("graph", buildGraph(name).toHtml(1280, 750));
 
         return "types/graph";
@@ -39,12 +35,6 @@ public class GraphController {
     
     @RequestMapping({"/types/{name}/graph.csv"})
     public void csv(@PathVariable String name, HttpServletResponse response) throws IOException {
-        if (mongoDbHelper.notExists(name)) {
-        	response.sendRedirect("/types");
-        	
-        	return;
-        }
-
         response.setContentType("application/csv");
         
         response.getWriter().write(buildGraph(name).toCsv());

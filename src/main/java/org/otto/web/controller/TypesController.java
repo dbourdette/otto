@@ -26,10 +26,6 @@ public class TypesController {
 
     @RequestMapping({"/types/{name}"})
     public String type(@PathVariable String name, Model model) {
-        if (mongoDbHelper.notExists(name)) {
-            return "redirect:/types";
-        }
-        
         model.addAttribute("count", mongoDbHelper.count(name));
         model.addAttribute("lastWeekFrequency", mongoDbHelper.frequency(name, IntervalUtils.lastWeek()));
         model.addAttribute("yesterdayFrequency", mongoDbHelper.frequency(name, IntervalUtils.yesterday()));
@@ -60,10 +56,6 @@ public class TypesController {
 
     @RequestMapping(value = "/types/{name}", method = RequestMethod.DELETE)
     public String dropType(@PathVariable String name) {
-    	if (mongoDbHelper.notExists(name)) {
-            return "redirect:/types";
-        }
-
     	mongoDbHelper.getCollection(name).drop();
     	
     	flashScope.message("type " + name + " has just been deleted");

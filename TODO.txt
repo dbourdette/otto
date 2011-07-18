@@ -4,7 +4,7 @@ x index page for type (events per minutes in the last week, day, hour)
 x frequencies
 x add event page
 x Flash scope message (type created, events batched...)
-- TypeNotFound exception and generic handling mechanism
+x TypeNotFound exception and generic handling mechanism
 - batch add with random dates / values
 - css
 - query form for logs
