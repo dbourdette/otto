@@ -5,7 +5,8 @@ x frequencies
 x add event page
 x Flash scope message (type created, events batched...)
 x TypeNotFound exception and generic handling mechanism
-o mongodb "and" for date query
+x mongodb "and" for date query
+- unit test for mongodb
 - batch add with random dates / values
 - css
 - query form for logs
