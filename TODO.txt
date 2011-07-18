@@ -5,18 +5,20 @@ x frequencies
 x add event page
 x Flash scope message (type created, events batched...)
 x TypeNotFound exception and generic handling mechanism
+o mongodb "and" for date query
 - batch add with random dates / values
 - css
 - query form for logs
 - query form for graph / csv
 - security
 - authentication
-- authorizations : ROLE_ADMIN + ROLE_EVENS_{name}
+- authorizations : ROLE_ADMIN + ROLE_EVENTS_{name}
 - auth through ldap
 - add capped collection
 - modify type
 - edit / delete one event
 - delete type (link + confirmation page) 
+- delete all events for a type
 - aggregator (5 min slices for heavy traffic) db.events.news.hit + db.events.news.hit.?
 - event generator
 - threshold and alerts

@@ -18,7 +18,7 @@ public class IntervalUtils {
 	}
 	
 	public static Interval lastWeek() {
-		DateMidnight monday = new DateMidnight().withDayOfWeek(Calendar.MONDAY);
+		DateMidnight monday = new DateMidnight().withDayOfWeek(1);
 		
 		return new Interval(monday.minusDays(7), monday);
 	}

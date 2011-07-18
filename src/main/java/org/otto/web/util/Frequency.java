@@ -22,6 +22,10 @@ public class Frequency {
 		return count / ((double) (duration.getMillis() / (1000 * 60 * 60)));
 	}
 	
+	public Duration getDuration() {
+		return duration;
+	}
+
 	public int getCount() {
 		return count;
 	}
