@@ -2,7 +2,9 @@ package org.otto;
 
 import java.net.UnknownHostException;
 import java.util.Locale;
+
 import javax.inject.Inject;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -12,6 +14,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.i18n.FixedLocaleResolver;
 import org.springframework.web.servlet.view.JstlView;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
+
 import com.mongodb.DB;
 import com.mongodb.Mongo;
 import com.mongodb.MongoException;
@@ -27,7 +30,7 @@ public class SpringConfig {
     @Bean
     public FixedLocaleResolver fixedLocaleResolver() {
         FixedLocaleResolver resolver = new FixedLocaleResolver();
-        resolver.setDefaultLocale(Locale.ENGLISH);
+        resolver.setDefaultLocale(Locale.FRANCE);
         return resolver;
     }
 

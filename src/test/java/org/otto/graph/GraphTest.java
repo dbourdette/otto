@@ -1,7 +1,9 @@
 package org.otto.graph;
 
 import java.io.IOException;
+
 import junit.framework.Assert;
+
 import org.apache.commons.io.IOUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;

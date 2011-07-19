@@ -287,6 +287,20 @@
             <version>1.0.2</version>
             <scope>compile</scope>
         </dependency>
+        
+        <!-- jackson -->
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-core-asl</artifactId>
+            <version>1.5.3</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <version>1.5.3</version>
+            <scope>compile</scope>
+        </dependency>
 
         <!-- google commons -->
         <dependency>

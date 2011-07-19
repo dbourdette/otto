@@ -16,7 +16,7 @@
 	<widget:header />
 	
 	<article>
-		<a href="/types/${name}">index</a> - logs - <a href="/types/${name}/graph">graph</a> - <a href="/types/${name}/events/batch">batch add events</a> <br/><br/>
+		<a href="/types/${name}">index</a> - logs - <a href="/types/${name}/graph">graph</a> - <a href="/types/${name}/events/batch">batch</a> <br/><br/>
 		
 		<c:forEach var="event" items="${events}">
 			${event}<br/>

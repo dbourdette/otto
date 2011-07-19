@@ -16,9 +16,11 @@
 	<widget:header />
 	
 	<article>
-		<a href="/types/${name}">index</a> - <a href="/types/${name}/events">logs</a> - <a href="/types/${name}/graph">graph</a> - batch add events <br/><br/>
+		<a href="/types/${name}">index</a> - <a href="/types/${name}/events">logs</a> - <a href="/types/${name}/graph">graph</a> - batch <br/><br/>
 		
 		<form:form action="/types/${name}/events/batch" commandName="form" method="post">
+			<p>values type</p>
+			<form:radiobuttons path="valuesType" />
 			<p>values</p>
 			<form:errors path="values" />
 			<form:textarea rows="5" cols="50" path="values" />

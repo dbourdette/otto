@@ -16,7 +16,7 @@
 	<widget:header />
 	
 	<article>
-		<a href="/types/${name}">index</a> - <a href="/types/${name}/events">logs</a> - graph - <a href="/types/${name}/events/batch">batch add events</a> <br/><br/>
+		<a href="/types/${name}">index</a> - <a href="/types/${name}/events">logs</a> - graph - <a href="/types/${name}/events/batch">batch</a> <br/><br/>
 	
 		${graph}
 		

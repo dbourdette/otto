@@ -1,7 +1,5 @@
 package org.otto.web.util;
 
-import java.util.Calendar;
-
 import org.joda.time.DateMidnight;
 import org.joda.time.Interval;
 
