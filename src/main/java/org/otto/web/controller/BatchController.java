@@ -53,19 +53,19 @@ public class BatchController {
 
 		DBCollection collection = mongoDbHelper.getCollection(name);
 
-		DBObject object = null;
-		
-		if (form.getValuesType() == BatchValuesType.JSON) {
-			object= parser.fromJson(form.getValues());
-		} else {
-			object = parser.fromKeyValues(form.getValues());
-		} 
-
-		if (object.containsField("date") || (!(object.get("date") instanceof Date))) {
-			object.put("date", new Date());
-		}
-
 		for (int i = 0; i < form.getCount(); i++) {
+			DBObject object = null;
+
+			if (form.getValuesType() == BatchValuesType.JSON) {
+				object = parser.fromJson(form.getValues());
+			} else {
+				object = parser.fromKeyValues(form.getValues());
+			}
+
+			if (object.containsField("date") || (!(object.get("date") instanceof Date))) {
+				object.put("date", form.getDateType().instanciateDate().toDate());
+			}
+
 			collection.insert(object);
 		}
 

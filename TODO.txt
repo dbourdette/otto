@@ -7,8 +7,7 @@ x Flash scope message (type created, events batched...)
 x TypeNotFound exception and generic handling mechanism
 x mongodb "and" for date query
 x batch add json or key values
-o batch add with random dates / values
-- batch with json (nested properties, numerics and dates...)
+x batch add with random dates
 - type configuration (db.events.billing and db.events.billing.config ? db.types.billing.events and db.types.billing.config)
 - unit test for mongodb
 - css
@@ -29,3 +28,5 @@ o batch add with random dates / values
 - mail reports
 - mongo url in jndi
 - mongo transactions (batches, deletes)
+- batch add with random dates with custom range
+- batch with json (nested properties, numerics and dates...)
