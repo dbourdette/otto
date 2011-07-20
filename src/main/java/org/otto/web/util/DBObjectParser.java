@@ -2,6 +2,7 @@ package org.otto.web.util;
 
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
@@ -60,7 +61,17 @@ public class DBObjectParser {
 		for (String token : tokens) {
 			Iterator<String> iterator = Splitter.on("=").trimResults().omitEmptyStrings().split(token).iterator();
 
-			object.append(iterator.next(), iterator.next());
+			object.put(iterator.next(), iterator.next());
+		}
+		
+		return object;
+	}
+	
+	public DBObject fromMap(Map<String, String> map) {
+		BasicDBObject object = new BasicDBObject();
+		
+		for (Map.Entry<String, String> entry : map.entrySet()) {
+			object.put(entry.getKey(), entry.getValue());
 		}
 		
 		return object;

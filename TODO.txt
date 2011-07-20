@@ -8,6 +8,8 @@ x TypeNotFound exception and generic handling mechanism
 x mongodb "and" for date query
 x batch add json or key values
 x batch add with random dates
+x post event
+- support for dates, numerics and booleans
 - type configuration (db.events.billing and db.events.billing.config ? db.types.billing.events and db.types.billing.config)
 - unit test for mongodb
 - css
@@ -29,4 +31,4 @@ x batch add with random dates
 - mongo url in jndi
 - mongo transactions (batches, deletes)
 - batch add with random dates with custom range
-- batch with json (nested properties, numerics and dates...)
+- nested properties in batch with json
