@@ -21,6 +21,7 @@
 		${graph}
 		
 		<a href="/types/${name}/graph.csv">csv</a>
+		- <a href="/types/${name}/graph/table" target="_blank">table</a>
 	</article>
 	
 	<widget:footer />

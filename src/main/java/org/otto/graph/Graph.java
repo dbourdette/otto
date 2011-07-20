@@ -11,7 +11,6 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.joda.time.Interval;
-import org.springframework.util.Assert;
 
 import com.google.common.base.Objects;
 
@@ -109,6 +108,8 @@ public class Graph {
     private static final int DEFAULT_WIDTH = 1200;
 
     private static final int DEFAULT_HEIGHT = 500;
+    
+    private final Duration FIVE_MINUTES = Duration.standardMinutes(5);
 
     private String title;
 
@@ -127,14 +128,12 @@ public class Graph {
     	return new Graph(title);
     }
 
-    public Graph rows(DateTime start, DateTime end) {
-        addRows(start, end);
-
-        return this;
+    public Graph rows(Interval interval) {
+        return rows(interval, FIVE_MINUTES);
     }
 
-    public Graph rows(DateTime start, DateTime end, Duration period) {
-        addRows(start, end, period);
+    public Graph rows(Interval interval, Duration period) {
+        setRows(interval, period);
 
         return this;
     }
@@ -167,30 +166,18 @@ public class Graph {
         return columns.size();
     }
 
-    public void addRow(Interval interval) {
-        Assert.notNull(interval, "Interval can not be null");
-
-        GraphRow row = new GraphRow(interval);
-
-        rows.add(row);
-
-        Collections.sort(rows);
+    public void setRows(Interval interval) {
+    	setRows(interval, FIVE_MINUTES);
     }
+    
+    public void setRows(Interval interval, Duration period) {
+    	rows.clear();
+    	
+        DateTime current = interval.getStart();
 
-    public void addRows(Interval interval) {
-        addRows(interval.getStart(), interval.getEnd());
-    }
-
-    public void addRows(DateTime start, DateTime end) {
-        addRows(start, end, GraphUtils.findBest(start, end));
-    }
-
-    public void addRows(DateTime start, DateTime end, Duration period) {
-        DateTime current = start;
-
-        while (current.isBefore(end)) {
-            addRow(new Interval(current, period));
-
+        while (current.isBefore(interval.getEnd())) {
+            rows.add(new GraphRow(new Interval(current, period)));
+            
             current = current.plus(period);
         }
     }
@@ -357,7 +344,7 @@ public class Graph {
     /**
      * Produces google chart js code.
      */
-    public String toJs(String elementId, Integer width, Integer height) {
+    public String toGoogleJs(String elementId, Integer width, Integer height) {
         StringBuilder builder = new StringBuilder();
 
         builder.append("var data = new google.visualization.DataTable();\n");
@@ -399,7 +386,7 @@ public class Graph {
         return builder.toString();
     }
 
-    public String toHtml(Integer width, Integer height) {
+    public String toGoogleHtml(Integer width, Integer height) {
         String elementId = "chart_div_" + UUID.randomUUID().toString();
 
         StringBuilder builder = new StringBuilder();
@@ -412,12 +399,52 @@ public class Graph {
         builder.append("google.setOnLoadCallback(drawChart);");
         builder.append("function drawChart() {");
 
-        builder.append(toJs(elementId, width, height));
+        builder.append(toGoogleJs(elementId, width, height));
 
         builder.append("}");
         builder.append("</script>");
 
         return builder.toString();
+    }
+    
+    public String toHtmlTable() {
+    	StringBuilder builder = new StringBuilder();
+    	
+    	builder.append("<table>");
+    	
+    	builder.append("<tr>");
+    	
+    	builder.append("<td>");
+    	builder.append("date");
+    	builder.append("</td>"); 
+    	
+    	for (GraphColumn column : columns) {
+    		builder.append("<td>");
+        	builder.append(column.getTitle());
+        	builder.append("</td>");   
+        }
+    	
+    	builder.append("</tr>");
+    	
+    	for (GraphRow row : rows) {
+    		builder.append("<tr>");
+    		
+    		builder.append("<td>");
+        	builder.append(row.getStartDate());
+        	builder.append("</td>");
+    		
+            for (GraphColumn column : columns) {
+            	builder.append("<td>");
+            	builder.append(getValue(row, column));
+            	builder.append("</td>");                
+            }
+
+            builder.append("</tr>");
+        }
+    	
+    	builder.append("</table>");
+    	
+    	return builder.toString();
     }
 
     public String getDatePattern() {

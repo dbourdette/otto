@@ -7,7 +7,9 @@ import java.util.Iterator;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
 
+import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
+import org.joda.time.Duration;
 import org.joda.time.Interval;
 import org.otto.graph.Graph;
 import org.otto.web.util.MongoDbHelper;
@@ -29,7 +31,7 @@ public class GraphController {
     @RequestMapping({"/types/{name}/graph"})
     public String graph(@PathVariable String name, Model model) {
     	model.addAttribute("navItem", "graph");
-        model.addAttribute("graph", buildGraph(name).toHtml(1280, 750));
+        model.addAttribute("graph", buildGraph(name).toGoogleHtml(1280, 750));
 
         return "types/graph";
     }
@@ -41,12 +43,21 @@ public class GraphController {
         response.getWriter().write(buildGraph(name).toCsv());
     }
     
+    @RequestMapping({"/types/{name}/graph/table"})
+    public String table(@PathVariable String name, Model model) throws IOException {
+    	model.addAttribute("table", buildGraph(name).toHtmlTable());
+        
+        return "types/graph_table";
+    }
+    
     private Graph buildGraph(String name) {
-    	Interval interval = new Interval(new DateTime().minusDays(1), new DateTime());
+    	DateMidnight today = new DateMidnight();
+    	
+    	Interval interval = new Interval(today.minusDays(1), today.plusDays(1));
 
         Graph graph = new Graph(name);
         graph.ensureColumnsExists(name);
-        graph.addRows(interval);
+        graph.setRows(interval, Duration.standardMinutes(5));
 
         Iterator<DBObject> events = findEvents(name, interval);
 

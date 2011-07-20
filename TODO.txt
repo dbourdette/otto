@@ -13,33 +13,34 @@ x support for dates, numerics and booleans
 x nav in tag file
 x logs formatting (<pre> ?)
 x more logs
-- simple graph (no google api)
-- pick correct ranges when adding rows in a graph (day range should not be last 24h but full days...)
-- query form for logs
-- logs pagination
+x simple data table (no google api)
+x pick correct ranges when adding rows in a graph (day range should not be last 24h but full days...)
+- query form for graph / csv / table
 - colored logo
 - mongo url in jndi
+- @Async post for remote api
+- iso pattern for dates
+- add capped collection
+- delete all events for a type
+- modify type
 - type configuration (db.events.billing and db.events.billing.config ? db.types.billing.events and db.types.billing.config)
-- unit test for mongodb
-- css
-- query form for graph / csv
+- aggregator (5 min slices for heavy traffic) db.events.news.hit + db.events.news.hit.?
+- delete type (link + confirmation page)
+- support for millis in event dates
 - security
 - authentication
 - authorizations : ROLE_ADMIN + ROLE_EVENTS_{name}
 - auth through ldap
-- add capped collection
-- modify type
+- query form for logs
+- logs pagination
+- unit test for mongodb
+- css
 - edit / delete one event (not for capped ?)
-- delete type (link + confirmation page) 
-- delete all events for a type
-- aggregator (5 min slices for heavy traffic) db.events.news.hit + db.events.news.hit.?
 - thresholds and alerts
 - mail reports
 - mongo transactions (batches, deletes)
 - batch add with random dates with custom range
+- check that random generation generate on all the period
 - nested properties in batch with json
-- @Async post for remote api 
 - add copyright and java file header
-- iso pattern for dates
-- support for millis in event dates
 - mongo shell (textarea)

@@ -6,7 +6,6 @@ import junit.framework.Assert;
 
 import org.apache.commons.io.IOUtils;
 import org.joda.time.DateTime;
-import org.joda.time.Duration;
 import org.joda.time.Interval;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,8 +15,6 @@ public class GraphTest {
     private Graph graph;
 
     private final DateTime now = new DateTime();
-
-    private final Duration FIVE_MINUTES = Duration.standardMinutes(5);
 
     private static final String USER_LOGIN = "user login";
 
@@ -32,7 +29,7 @@ public class GraphTest {
         DateTime end = new DateTime();
         DateTime start = end.minusDays(1);
 
-        Graph graph = Graph.graph("graph").rows(start, end);
+        Graph graph = Graph.graph("graph").rows(new Interval(start, end));
 
         Assert.assertEquals("graph", graph.getTitle());
         Assert.assertEquals(start, graph.getStartDate());
@@ -54,26 +51,8 @@ public class GraphTest {
     }
 
     @Test
-    public void addRow() {
-        graph.addRow(new Interval(now.minusMinutes(10), FIVE_MINUTES));
-        graph.addRow(new Interval(now.minusMinutes(5), FIVE_MINUTES));
-        graph.addRow(new Interval(now.minusMinutes(20), FIVE_MINUTES));
-        graph.addRow(new Interval(now.minusMinutes(15), FIVE_MINUTES));
-
-        Assert.assertEquals("Rows should be sorted", graph.getRowStartDate(0), now.minusMinutes(20));
-        Assert.assertEquals("Rows should be sorted", graph.getRowStartDate(1), now.minusMinutes(15));
-        Assert.assertEquals("Rows should be sorted", graph.getRowStartDate(2), now.minusMinutes(10));
-        Assert.assertEquals("Rows should be sorted", graph.getRowStartDate(3), now.minusMinutes(5));
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void addRowNull() {
-        graph.addRow(null);
-    }
-
-    @Test
-    public void addRows() {
-        graph.addRows(now.minusHours(1), now, FIVE_MINUTES);
+    public void setRows() {
+        graph.setRows(new Interval(now.minusHours(1), now));
 
         Assert.assertEquals("There should be 12 rows", 12, graph.getRowCount());
         Assert.assertEquals("Third row has incorrect bounds", now.minusMinutes(50), graph.getRowStartDate(2));
@@ -81,21 +60,21 @@ public class GraphTest {
 
     @Test
     public void getStartDate() {
-        graph.addRows(now.minusHours(1), now);
+        graph.setRows(new Interval(now.minusHours(1), now));
 
         Assert.assertEquals(now.minusHours(1), graph.getStartDate());
     }
 
     @Test
     public void getEndDate() {
-        graph.addRows(now.minusHours(1), now);
+        graph.setRows(new Interval(now.minusHours(1), now));
 
         Assert.assertEquals(now, graph.getEndDate());
     }
 
     @Test
     public void addRowsAutomaticallyComputeInterval() {
-        graph.addRows(now.minusHours(1), now);
+        graph.setRows(new Interval(now.minusHours(1), now));
 
         Assert.assertEquals("There should be 12 rows", 12, graph.getRowCount());
         Assert.assertEquals("Third row has incorrect bounds", now.minusMinutes(50), graph.getRowStartDate(2));
@@ -103,8 +82,7 @@ public class GraphTest {
 
     @Test
     public void setValue() {
-        graph.addRow(new Interval(now.minusMinutes(10), FIVE_MINUTES));
-        graph.addRow(new Interval(now.minusMinutes(5), FIVE_MINUTES));
+        graph.setRows(new Interval(now.minusMinutes(10), now));
 
         graph.setValue(USER_LOGIN, now.minusMinutes(6), 2);
         graph.setValue(USER_LOGIN, now.minusMinutes(2), 10);
@@ -115,8 +93,7 @@ public class GraphTest {
 
     @Test
     public void setDefaultValue() {
-        graph.addRow(new Interval(now.minusMinutes(10), FIVE_MINUTES));
-        graph.addRow(new Interval(now.minusMinutes(5), FIVE_MINUTES));
+    	graph.setRows(new Interval(now.minusMinutes(10), now));
 
         graph.setDefaultValue(null);
 
@@ -129,8 +106,7 @@ public class GraphTest {
 
     @Test
     public void increaseValue() {
-        graph.addRow(new Interval(now.minusMinutes(10), FIVE_MINUTES));
-        graph.addRow(new Interval(now.minusMinutes(5), FIVE_MINUTES));
+    	graph.setRows(new Interval(now.minusMinutes(10), now));
 
         graph.increaseValue(USER_LOGIN, now.minusMinutes(2));
 
@@ -147,8 +123,7 @@ public class GraphTest {
 
     @Test
     public void cumulate() {
-        graph.addRow(new Interval(now.minusMinutes(10), FIVE_MINUTES));
-        graph.addRow(new Interval(now.minusMinutes(5), FIVE_MINUTES));
+    	graph.setRows(new Interval(now.minusMinutes(10), now));
 
         graph.increaseValue(USER_LOGIN, now.minusMinutes(2));
         graph.increaseValue(USER_LOGIN, now.minusMinutes(3), 10);
@@ -162,8 +137,7 @@ public class GraphTest {
 
     @Test
     public void top() {
-        graph.addRow(new Interval(now.minusMinutes(10), FIVE_MINUTES));
-        graph.addRow(new Interval(now.minusMinutes(5), FIVE_MINUTES));
+    	graph.setRows(new Interval(now.minusMinutes(10), now));
 
         graph.dropColumn(USER_LOGIN);
         graph.ensureColumnsExists("col1", "col2", "col3");
@@ -186,9 +160,7 @@ public class GraphTest {
 
         graph.setDefaultValue(0);
 
-        graph.addRow(new Interval(dateTime.minusMinutes(15), FIVE_MINUTES));
-        graph.addRow(new Interval(dateTime.minusMinutes(10), FIVE_MINUTES));
-        graph.addRow(new Interval(dateTime.minusMinutes(5), FIVE_MINUTES));
+        graph.setRows(new Interval(dateTime.minusMinutes(15), dateTime));
 
         graph.setValue(USER_LOGIN, dateTime.minusMinutes(6), 2);
         graph.setValue(USER_LOGIN, dateTime.minusMinutes(2), 10);
@@ -199,19 +171,17 @@ public class GraphTest {
     }
 
     @Test
-    public void toJs() throws IOException {
+    public void toGoogleJs() throws IOException {
         DateTime dateTime = new DateTime(2010, 10, 10, 0, 0, 0, 0);
 
         graph.setDefaultValue(0);
-        graph.addRow(new Interval(dateTime.minusMinutes(15), FIVE_MINUTES));
-        graph.addRow(new Interval(dateTime.minusMinutes(10), FIVE_MINUTES));
-        graph.addRow(new Interval(dateTime.minusMinutes(5), FIVE_MINUTES));
+        graph.setRows(new Interval(dateTime.minusMinutes(15), dateTime));
 
         graph.setValue(USER_LOGIN, dateTime.minusMinutes(6), 2);
         graph.setValue(USER_LOGIN, dateTime.minusMinutes(2), 10);
 
-        String expected = IOUtils.toString(getClass().getResourceAsStream("GraphTest-toJs.txt"));
+        String expected = IOUtils.toString(getClass().getResourceAsStream("GraphTest-toGoogleJs.txt"));
 
-        Assert.assertEquals("toJs is incorrect", expected, graph.toJs("chart_div", null, null));
+        Assert.assertEquals("toGoogleJs is incorrect", expected, graph.toGoogleJs("chart_div", null, null));
     }
 }
