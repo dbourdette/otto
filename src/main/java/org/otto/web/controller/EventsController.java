@@ -32,6 +32,7 @@ public class EventsController {
 		
 		Iterator<DBObject> events = collection.find().sort(new BasicDBObject("date", -1)).limit(50).iterator();
 
+		model.addAttribute("navItem", "logs");
 		model.addAttribute("events", events);
 
 		return "types/events";

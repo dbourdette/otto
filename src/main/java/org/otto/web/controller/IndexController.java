@@ -29,7 +29,7 @@ public class IndexController {
         }
 
         model.addAttribute("types", types);
-
+        
         return "index";
     }
 }

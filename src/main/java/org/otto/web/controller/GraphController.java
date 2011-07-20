@@ -28,6 +28,7 @@ public class GraphController {
 
     @RequestMapping({"/types/{name}/graph"})
     public String graph(@PathVariable String name, Model model) {
+    	model.addAttribute("navItem", "graph");
         model.addAttribute("graph", buildGraph(name).toHtml(1280, 750));
 
         return "types/graph";

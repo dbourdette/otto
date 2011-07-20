@@ -10,10 +10,18 @@ x batch add json or key values
 x batch add with random dates
 x post event remote api
 x support for dates, numerics and booleans
+x nav in tag file
+o logs formatting (<pre> ?)
+o query form for logs
+o more logs
+o logs pagination
+- simple graph (no google api)
+- pick correct ranges when adding rows in a graph (day range should not be last 24h but full days...)
+- colored logo
+- mongo url in jndi
 - type configuration (db.events.billing and db.events.billing.config ? db.types.billing.events and db.types.billing.config)
 - unit test for mongodb
 - css
-- query form for logs
 - query form for graph / csv
 - security
 - authentication
@@ -21,19 +29,17 @@ x support for dates, numerics and booleans
 - auth through ldap
 - add capped collection
 - modify type
-- edit / delete one event
+- edit / delete one event (not for capped ?)
 - delete type (link + confirmation page) 
 - delete all events for a type
 - aggregator (5 min slices for heavy traffic) db.events.news.hit + db.events.news.hit.?
-- event generator
-- threshold and alerts
+- thresholds and alerts
 - mail reports
-- mongo url in jndi
 - mongo transactions (batches, deletes)
 - batch add with random dates with custom range
 - nested properties in batch with json
 - @Async post for remote api 
-- simple graph (no google api)
 - add copyright and java file header
 - iso pattern for dates
 - support for millis in event dates
+- mongo shell (textarea)

@@ -34,6 +34,7 @@ public class BatchController {
 
 	@RequestMapping("/types/{name}/events/batch")
 	public String form(@PathVariable String name, Model model) {
+		model.addAttribute("navItem", "batch");
 		model.addAttribute("form", new BatchForm());
 
 		return "types/batch_form";

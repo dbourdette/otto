@@ -26,6 +26,7 @@ public class TypesController {
 
     @RequestMapping({"/types/{name}"})
     public String type(@PathVariable String name, Model model) {
+    	model.addAttribute("navItem", "index");
         model.addAttribute("count", mongoDbHelper.count(name));
         model.addAttribute("lastWeekFrequency", mongoDbHelper.frequency(name, IntervalUtils.lastWeek()));
         model.addAttribute("yesterdayFrequency", mongoDbHelper.frequency(name, IntervalUtils.yesterday()));
@@ -36,6 +37,7 @@ public class TypesController {
 
     @RequestMapping({"/types/form"})
     public String form(Model model) {
+    	model.addAttribute("navItem", "index");
         model.addAttribute("form", new TypeForm());
 
         return "types/type_form";

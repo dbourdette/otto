@@ -16,6 +16,8 @@
 	<widget:header />
 	
 	<article>
+		<widget:nav />
+	
 		<h2>New event type</h2>
 	
 		<form:form action="/types" commandName="form" method="post">

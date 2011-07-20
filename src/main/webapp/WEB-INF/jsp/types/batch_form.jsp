@@ -16,7 +16,7 @@
 	<widget:header />
 	
 	<article>
-		<a href="/types/${name}">index</a> - <a href="/types/${name}/events">logs</a> - <a href="/types/${name}/graph">graph</a> - batch <br/><br/>
+		<widget:nav />
 		
 		<form:form action="/types/${name}/events/batch" commandName="form" method="post">
 			<p>

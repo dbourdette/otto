@@ -52,6 +52,16 @@ article {
 	border-radius:5px;
 }
 
+article .type {
+	font-size:18px;
+	font-weight: bold;
+	margin-bottom: 4px;
+}
+
+article .nav {
+	margin-bottom: 14px;
+}
+
 article h2 {
 	font-size: 18px;
 }
