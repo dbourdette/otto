@@ -1,14 +1,13 @@
 package org.otto.web.controller;
 
-import java.util.Date;
 import java.util.Iterator;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.otto.web.util.DBObjectParser;
-import org.otto.web.util.FlashScope;
+import org.joda.time.DateTime;
+import org.otto.event.Event;
 import org.otto.web.util.MongoDbHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,9 +26,6 @@ public class EventsController {
 	@Inject
 	private MongoDbHelper mongoDbHelper;
 
-	@Inject
-	private DBObjectParser parser;
-
 	@RequestMapping
 	public String events(@PathVariable String name, Model model) {
 		DBCollection collection = mongoDbHelper.getCollection(name);
@@ -46,13 +42,11 @@ public class EventsController {
 		DBCollection collection = mongoDbHelper.getCollection(name);
 		
 		@SuppressWarnings("unchecked")
-		DBObject object = parser.fromMap(request.getParameterMap());
+		Event event = Event.fromMap(request.getParameterMap());
 		
-		if (object.containsField("date") || (!(object.get("date") instanceof Date))) {
-			object.put("date", new Date());
-		}
+		event.setDateIfNoneDefined(new DateTime());
 
-		collection.insert(object);
+		collection.insert(event.toDBObject());
 		
 		response.setStatus(200);
 	}

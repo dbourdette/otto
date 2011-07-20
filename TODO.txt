@@ -8,8 +8,8 @@ x TypeNotFound exception and generic handling mechanism
 x mongodb "and" for date query
 x batch add json or key values
 x batch add with random dates
-x post event
-- support for dates, numerics and booleans
+x post event remote api
+x support for dates, numerics and booleans
 - type configuration (db.events.billing and db.events.billing.config ? db.types.billing.events and db.types.billing.config)
 - unit test for mongodb
 - css
@@ -32,3 +32,8 @@ x post event
 - mongo transactions (batches, deletes)
 - batch add with random dates with custom range
 - nested properties in batch with json
+- @Async post for remote api 
+- simple graph (no google api)
+- add copyright and java file header
+- iso pattern for dates
+- support for millis in event dates

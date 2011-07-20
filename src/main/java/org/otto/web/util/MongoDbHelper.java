@@ -1,7 +1,5 @@
 package org.otto.web.util;
 
-import java.util.Date;
-
 import javax.inject.Inject;
 
 import org.joda.time.Interval;
@@ -11,7 +9,6 @@ import org.springframework.stereotype.Component;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
 
 /**
  * User: damien bourdette
