@@ -30,7 +30,7 @@ public class EventsController {
 	public String events(@PathVariable String name, Model model) {
 		DBCollection collection = mongoDbHelper.getCollection(name);
 		
-		Iterator<DBObject> events = collection.find().sort(new BasicDBObject("date", -1)).limit(50).iterator();
+		Iterator<DBObject> events = collection.find().sort(new BasicDBObject("date", -1)).limit(100).iterator();
 
 		model.addAttribute("navItem", "logs");
 		model.addAttribute("events", events);

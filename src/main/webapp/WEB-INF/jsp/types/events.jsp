@@ -18,9 +18,11 @@
 	<article>
 		<widget:nav />
 		
-		<c:forEach var="event" items="${events}">
-			${event}<br/>
-		</c:forEach>
+		<div class="logs">
+			<c:forEach var="event" items="${events}">
+				${event}<br/>
+			</c:forEach>
+		</div>
 	</article>
 	
 	<widget:footer />

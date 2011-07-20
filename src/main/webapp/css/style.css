@@ -1,7 +1,7 @@
 
 body {
 	background-color: #EEE;
-	width:800px;
+	width:900px;
 	margin:auto;
 }
 
@@ -79,6 +79,13 @@ article ul li {
 
 article p {
 	margin:5px 0 3px 0;
+}
+
+article .logs {
+	font-family:monospace;
+	font-size:12px;
+	font-style:normal;
+	line-height:14px;
 }
 
 a, a:visited {

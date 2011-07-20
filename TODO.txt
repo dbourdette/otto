@@ -11,12 +11,12 @@ x batch add with random dates
 x post event remote api
 x support for dates, numerics and booleans
 x nav in tag file
-o logs formatting (<pre> ?)
-o query form for logs
-o more logs
-o logs pagination
+x logs formatting (<pre> ?)
+x more logs
 - simple graph (no google api)
 - pick correct ranges when adding rows in a graph (day range should not be last 24h but full days...)
+- query form for logs
+- logs pagination
 - colored logo
 - mongo url in jndi
 - type configuration (db.events.billing and db.events.billing.config ? db.types.billing.events and db.types.billing.config)
