@@ -111,8 +111,6 @@ public class Graph {
     
     private final Duration FIVE_MINUTES = Duration.standardMinutes(5);
 
-    private String title;
-
     private final List<GraphRow> rows = new ArrayList<GraphRow>();
 
     private final List<GraphColumn> columns = new ArrayList<GraphColumn>();
@@ -124,10 +122,6 @@ public class Graph {
     public Graph() {
     }
 
-    public static Graph graph(String title) {
-    	return new Graph(title);
-    }
-
     public Graph rows(Interval interval) {
         return rows(interval, FIVE_MINUTES);
     }
@@ -136,10 +130,6 @@ public class Graph {
         setRows(interval, period);
 
         return this;
-    }
-
-    public Graph(String title) {
-        this.title = title;
     }
 
     public void dropColumn(String title) {
@@ -239,14 +229,6 @@ public class Graph {
         GraphColumn column = getColumn(columnTitle);
 
         return getValue(row, column);
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getTitle() {
-        return title;
     }
 
     public Integer getDefaultValue() {
@@ -381,7 +363,7 @@ public class Graph {
         builder.append("var chart = new google.visualization.LineChart(document.getElementById('" + elementId
                        + "'));\n");
         builder.append("chart.draw(data, {width: " + (width == null ? DEFAULT_WIDTH : width) + ", height: "
-                       + (height == null ? DEFAULT_HEIGHT : height) + ", title: '" + title + "'});");
+                       + (height == null ? DEFAULT_HEIGHT : height) + "});");
 
         return builder.toString();
     }

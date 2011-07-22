@@ -31,7 +31,7 @@ public class GraphController {
     @RequestMapping({"/types/{name}/graph"})
     public String graph(@PathVariable String name, Model model) {
     	model.addAttribute("navItem", "graph");
-        model.addAttribute("graph", buildGraph(name).toGoogleHtml(1280, 750));
+        model.addAttribute("graph", buildGraph(name).toGoogleHtml(1080, 750));
 
         return "types/graph";
     }
@@ -55,7 +55,7 @@ public class GraphController {
     	
     	Interval interval = new Interval(today.minusDays(1), today.plusDays(1));
 
-        Graph graph = new Graph(name);
+        Graph graph = new Graph();
         graph.ensureColumnsExists(name);
         graph.setRows(interval, Duration.standardMinutes(5));
 

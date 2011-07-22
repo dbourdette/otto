@@ -20,7 +20,7 @@ public class GraphTest {
 
     @Before
     public void init() {
-        graph = new Graph("uber graph");
+        graph = new Graph();
         graph.ensureColumnExists(USER_LOGIN);
     }
 
@@ -29,9 +29,8 @@ public class GraphTest {
         DateTime end = new DateTime();
         DateTime start = end.minusDays(1);
 
-        Graph graph = Graph.graph("graph").rows(new Interval(start, end));
+        Graph graph = new Graph().rows(new Interval(start, end));
 
-        Assert.assertEquals("graph", graph.getTitle());
         Assert.assertEquals(start, graph.getStartDate());
     }
 
