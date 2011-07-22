@@ -1,6 +1,7 @@
 package org.otto.web.controller;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 
@@ -12,9 +13,14 @@ import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.joda.time.Interval;
 import org.otto.graph.Graph;
+import org.otto.web.form.GraphForm;
 import org.otto.web.util.MongoDbHelper;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -28,36 +34,46 @@ public class GraphController {
     @Inject
     private MongoDbHelper mongoDbHelper;
 
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setLenient(false);
+        binder.registerCustomEditor(Date.class, "start", new CustomDateEditor(dateFormat, false));
+        binder.registerCustomEditor(Date.class, "end", new CustomDateEditor(dateFormat, false));
+    }
+    
     @RequestMapping({"/types/{name}/graph"})
-    public String graph(@PathVariable String name, Model model) {
+    public String graph(@PathVariable String name, GraphForm form, BindingResult result, Model model) {
     	model.addAttribute("navItem", "graph");
-        model.addAttribute("graph", buildGraph(name).toGoogleHtml(1080, 750));
+    	model.addAttribute("form", form);
+        model.addAttribute("graph", buildGraph(name, form).toGoogleHtml(1080, 750));
 
         return "types/graph";
     }
     
     @RequestMapping({"/types/{name}/graph.csv"})
-    public void csv(@PathVariable String name, HttpServletResponse response) throws IOException {
+    public void csv(@PathVariable String name, GraphForm form, HttpServletResponse response) throws IOException {
         response.setContentType("application/csv");
         
-        response.getWriter().write(buildGraph(name).toCsv());
+        response.getWriter().write(buildGraph(name, form).toCsv());
     }
     
     @RequestMapping({"/types/{name}/graph/table"})
-    public String table(@PathVariable String name, Model model) throws IOException {
-    	model.addAttribute("table", buildGraph(name).toHtmlTable());
+    public String table(@PathVariable String name, GraphForm form, Model model) throws IOException {
+    	model.addAttribute("table", buildGraph(name, form).toHtmlTable());
         
         return "types/graph_table";
     }
     
-    private Graph buildGraph(String name) {
-    	DateMidnight today = new DateMidnight();
+    private Graph buildGraph(String name, GraphForm form) {
+    	DateMidnight start = new DateMidnight(form.getStart());
+    	DateMidnight end = new DateMidnight(form.getEnd());
     	
-    	Interval interval = new Interval(today.minusDays(1), today.plusDays(1));
+    	Interval interval = new Interval(start, end);
 
         Graph graph = new Graph();
         graph.ensureColumnsExists(name);
-        graph.setRows(interval, Duration.standardMinutes(5));
+        graph.setRows(interval, Duration.standardMinutes(form.getStepInMinutes()));
 
         Iterator<DBObject> events = findEvents(name, interval);
 

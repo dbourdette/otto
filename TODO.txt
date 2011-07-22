@@ -16,16 +16,17 @@ x more logs
 x simple data table (no google api)
 x pick correct ranges when adding rows in a graph (day range should not be last 24h but full days...)
 x "record and visualize custom events"
-- remove graph title
-- query form for graph / csv / table
+x remove graph title
+x query form for graph / csv / table (from, to and step)
 - colored logo
 - mongo url in jndi
 - @Async post for remote api
 - web page js api
-- iso pattern for dates
+- iso pattern for dates (1977-04-22T06:00:00Z) (http://fr.wikipedia.org/wiki/ISO_8601)
 - add capped collection
 - delete all events for a type
 - modify type
+- types -> sources
 - otto.sources.billing.events, otto.configuration, otto.logs
 - type configuration (db.events.billing and db.events.billing.config ? db.types.billing.events and db.types.billing.config)
 - aggregator (5 min slices for heavy traffic) db.events.news.hit + db.events.news.hit.?
@@ -42,10 +43,10 @@ x "record and visualize custom events"
 - edit / delete one event (not for capped ?)
 - thresholds and alerts
 - mail reports
-- mongo transactions (batches, deletes)
 - batch add with random dates with custom range
 - check that random generation generate on all the period
 - nested properties in batch with json
 - add copyright and java file header
 - mongo shell (textarea)
 - action log
+- jquery for date inputs (format yyyy-MM-dd so far)

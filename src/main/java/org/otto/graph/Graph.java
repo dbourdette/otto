@@ -126,8 +126,8 @@ public class Graph {
         return rows(interval, FIVE_MINUTES);
     }
 
-    public Graph rows(Interval interval, Duration period) {
-        setRows(interval, period);
+    public Graph rows(Interval interval, Duration step) {
+        setRows(interval, step);
 
         return this;
     }
@@ -160,15 +160,15 @@ public class Graph {
     	setRows(interval, FIVE_MINUTES);
     }
     
-    public void setRows(Interval interval, Duration period) {
+    public void setRows(Interval interval, Duration step) {
     	rows.clear();
     	
         DateTime current = interval.getStart();
 
         while (current.isBefore(interval.getEnd())) {
-            rows.add(new GraphRow(new Interval(current, period)));
+            rows.add(new GraphRow(new Interval(current, step)));
             
-            current = current.plus(period);
+            current = current.plus(step);
         }
     }
 
