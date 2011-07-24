@@ -20,6 +20,14 @@ header .logo {
 	top:15px;
 }
 
+header .logo .o {
+	color:red;
+}
+
+header .logo .t {
+	color:green;
+}
+
 footer {
 	position: relative;
 	border:1px #DDD solid;
