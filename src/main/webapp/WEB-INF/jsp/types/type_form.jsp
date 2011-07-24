@@ -21,8 +21,18 @@
 		<h2>New event type</h2>
 	
 		<form:form action="/types" commandName="form" method="post">
-			<form:errors path="name" />
-			<form:input path="name"/>
+			<p>
+				name : <form:input path="name"/>
+				<form:errors path="name" />
+			</p>
+			<p>
+				size : <form:input path="sizeInBytes"/> bytes
+				<form:errors path="sizeInBytes" />
+			</p>
+			<p>
+				max events : <form:input path="maxEvents"/> events
+				<form:errors path="maxEvents" />
+			</p>
 			<input type="submit" value="Créer" />
 		</form:form>
 	</article>

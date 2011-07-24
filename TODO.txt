@@ -18,7 +18,7 @@ x pick correct ranges when adding rows in a graph (day range should not be last 
 x "record and visualize custom events"
 x remove graph title
 x query form for graph / csv / table (from, to and step)
-- colored logo
+x colored logo
 - add capped collection
 - delete all events for a type
 - types -> sources
@@ -50,3 +50,6 @@ x query form for graph / csv / table (from, to and step)
 - add copyright and java file header
 - mongo shell (textarea)
 - jquery for date inputs (format yyyy-MM-dd so far)
+- modify to capped collection
+- form layout
+- display size and max for capped collections

@@ -4,6 +4,7 @@ import javax.inject.Inject;
 
 import org.joda.time.Interval;
 import org.otto.web.exception.TypeNotFound;
+import org.otto.web.form.TypeForm;
 import org.springframework.stereotype.Component;
 
 import com.mongodb.BasicDBObject;
@@ -25,10 +26,6 @@ public class MongoDbHelper {
 
     public boolean notExists(String name) {
         return !mongoDb.collectionExists(EVENTS_PREFIX + name);
-    }
-
-    public long count(String name) {
-        return getCollection(name).count();
     }
 
     public Frequency frequency(String name, Interval interval) {
@@ -58,7 +55,20 @@ public class MongoDbHelper {
         return mongoDb.getCollection(EVENTS_PREFIX + name);
     }
 
-    public DBCollection createCollection(String name) {
-        return mongoDb.createCollection(EVENTS_PREFIX + name, new BasicDBObject("capped", false));
+    public DBCollection createCollection(TypeForm form) {
+    	BasicDBObject capping = new BasicDBObject();
+    	
+    	if (form.getSizeInBytes() == null) {
+    		capping.put("capped", false);
+    	} else {
+    		capping.put("capped", true);
+    		capping.put("size", form.getSizeInBytes());
+    		
+    		if (form.getMaxEvents() != null) {
+    			capping.put("max", form.getMaxEvents());
+    		}
+    	}
+
+        return mongoDb.createCollection(EVENTS_PREFIX + form.getName(), capping);
     }
 }

@@ -1,7 +1,5 @@
 package org.otto.web.form;
 
-import java.util.Date;
-
 import org.joda.time.DateTime;
 import org.otto.web.util.RandomDateUtils;
 

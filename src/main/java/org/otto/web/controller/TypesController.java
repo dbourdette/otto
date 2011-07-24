@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.mongodb.DBCollection;
+
 @Controller
 public class TypesController {
     
@@ -27,17 +29,20 @@ public class TypesController {
     @RequestMapping({"/types/{name}"})
     public String type(@PathVariable String name, Model model) {
     	model.addAttribute("navItem", "index");
-        model.addAttribute("count", mongoDbHelper.count(name));
+    	
+    	DBCollection collection = mongoDbHelper.getCollection(name);
+    	
+        model.addAttribute("count", collection.count());
+        model.addAttribute("capped", collection.isCapped());
         model.addAttribute("lastWeekFrequency", mongoDbHelper.frequency(name, IntervalUtils.lastWeek()));
         model.addAttribute("yesterdayFrequency", mongoDbHelper.frequency(name, IntervalUtils.yesterday()));
         model.addAttribute("todayFrequency", mongoDbHelper.frequency(name, IntervalUtils.today()));
-
+        
         return "types/type";
     }
 
     @RequestMapping({"/types/form"})
     public String form(Model model) {
-    	model.addAttribute("navItem", "index");
         model.addAttribute("form", new TypeForm());
 
         return "types/type_form";
@@ -49,7 +54,7 @@ public class TypesController {
             return "types/type_form";
         }
 
-        mongoDbHelper.createCollection(form.getName());
+        mongoDbHelper.createCollection(form);
         
         flashScope.message("type " + form.getName() + " has just been created");
 
