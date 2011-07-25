@@ -22,7 +22,7 @@
 		Event count in db : ${count} <br/>
 		<br/>
 		Capped ? : ${capped}
-		<br/>
+		<br/><br/>
 		Event frequency : <br/>
 		<ul>
 			<li>today : <fmt:formatNumber value="${todayFrequency.eventsPerMinute}" pattern="# ###.######"/> events per minute</li>

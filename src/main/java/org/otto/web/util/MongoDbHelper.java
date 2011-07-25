@@ -1,9 +1,13 @@
 package org.otto.web.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.Interval;
-import org.otto.web.exception.TypeNotFound;
+import org.otto.web.exception.SourceNotFound;
 import org.otto.web.form.SourceForm;
 import org.springframework.stereotype.Component;
 
@@ -19,13 +23,15 @@ import com.mongodb.DBCollection;
 @Component
 public class MongoDbHelper {
 
-    public static final String EVENTS_PREFIX = "events.";
+	private static final String EVENTS = ".events";
 
-    @Inject
+	private static final String OTTO = "otto.";
+	
+	@Inject
     private DB mongoDb;
 
     public boolean notExists(String name) {
-        return !mongoDb.collectionExists(EVENTS_PREFIX + name);
+        return !mongoDb.collectionExists(qualifedName(name));
     }
 
     public Frequency frequency(String name, Interval interval) {
@@ -49,10 +55,10 @@ public class MongoDbHelper {
 
     public DBCollection getCollection(String name) {
     	if (notExists(name)) {
-    		throw new TypeNotFound();
+    		throw new SourceNotFound();
     	} 
     	
-        return mongoDb.getCollection(EVENTS_PREFIX + name);
+        return mongoDb.getCollection(qualifedName(name));
     }
 
     public DBCollection createCollection(SourceForm form) {
@@ -69,6 +75,22 @@ public class MongoDbHelper {
     		}
     	}
 
-        return mongoDb.createCollection(EVENTS_PREFIX + form.getName(), capping);
+        return mongoDb.createCollection(qualifedName(form.getName()), capping);
+    }
+    
+    public List<String> getSources() {
+    	List<String> sources = new ArrayList<String>();
+
+        for (String name : mongoDb.getCollectionNames()) {
+            if (name.startsWith(OTTO) && name.endsWith(EVENTS)) {
+            	sources.add(StringUtils.substringBetween(name, OTTO, EVENTS));
+            }
+        }
+        
+        return sources;
+    }
+    
+    public String qualifedName(String name) {
+    	return OTTO + name + EVENTS;
     }
 }

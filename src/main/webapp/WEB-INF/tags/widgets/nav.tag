@@ -2,9 +2,8 @@
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
-<div class="source">${name}</div>
-
 <div class="nav">
+	<span class="source">${name}</span> :
 	<c:if test="${navItem eq 'index'}">
 		index
 	</c:if>

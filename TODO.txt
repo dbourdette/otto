@@ -21,8 +21,9 @@ x query form for graph / csv / table (from, to and step)
 x colored logo
 x add capped collection
 x types -> sources
-- delete all events for a source
+- events.billing -> otto.billing.events
 - action log (otto.logs)
+- delete all events for a source
 - otto.sources.billing.events, otto.configuration 
 - type configuration (db.events.billing and db.events.billing.config ? db.sources.billing.events and db.sources.billing.config)
 - aggregator (5 min slices for heavy traffic) db.events.news.hit + db.events.news.hit.?
