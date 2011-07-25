@@ -16,17 +16,17 @@
 	<widget:header />
 	
 	<article>
-		<h2>Existing event types</h2>
+		<h2>Existing event sources</h2>
 	
 		<ul>
-			<c:forEach var="type" items="${types}">
-				<li><a href="/types/${type}">${type}</a></li>
+			<c:forEach var="source" items="${sources}">
+				<li><a href="/sources/${source}">${source}</a></li>
 			</c:forEach>
 		</ul>
 		
 		<br/>
 		
-		<a href="/types/form">Create a new event type</a>
+		<a href="/sources/form">Create a new event source</a>
 	</article>
 	
 	<widget:footer />

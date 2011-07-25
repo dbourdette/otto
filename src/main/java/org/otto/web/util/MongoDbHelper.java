@@ -4,7 +4,7 @@ import javax.inject.Inject;
 
 import org.joda.time.Interval;
 import org.otto.web.exception.TypeNotFound;
-import org.otto.web.form.TypeForm;
+import org.otto.web.form.SourceForm;
 import org.springframework.stereotype.Component;
 
 import com.mongodb.BasicDBObject;
@@ -55,7 +55,7 @@ public class MongoDbHelper {
         return mongoDb.getCollection(EVENTS_PREFIX + name);
     }
 
-    public DBCollection createCollection(TypeForm form) {
+    public DBCollection createCollection(SourceForm form) {
     	BasicDBObject capping = new BasicDBObject();
     	
     	if (form.getSizeInBytes() == null) {

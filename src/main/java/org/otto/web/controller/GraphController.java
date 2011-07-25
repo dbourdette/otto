@@ -42,27 +42,27 @@ public class GraphController {
         binder.registerCustomEditor(Date.class, "end", new CustomDateEditor(dateFormat, false));
     }
     
-    @RequestMapping({"/types/{name}/graph"})
+    @RequestMapping({"/sources/{name}/graph"})
     public String graph(@PathVariable String name, GraphForm form, BindingResult result, Model model) {
     	model.addAttribute("navItem", "graph");
     	model.addAttribute("form", form);
         model.addAttribute("graph", buildGraph(name, form).toGoogleHtml(1080, 750));
 
-        return "types/graph";
+        return "sources/graph";
     }
     
-    @RequestMapping({"/types/{name}/graph.csv"})
+    @RequestMapping({"/sources/{name}/graph.csv"})
     public void csv(@PathVariable String name, GraphForm form, HttpServletResponse response) throws IOException {
         response.setContentType("application/csv");
         
         response.getWriter().write(buildGraph(name, form).toCsv());
     }
     
-    @RequestMapping({"/types/{name}/graph/table"})
+    @RequestMapping({"/sources/{name}/graph/table"})
     public String table(@PathVariable String name, GraphForm form, Model model) throws IOException {
     	model.addAttribute("table", buildGraph(name, form).toHtmlTable());
         
-        return "types/graph_table";
+        return "sources/graph_table";
     }
     
     private Graph buildGraph(String name, GraphForm form) {

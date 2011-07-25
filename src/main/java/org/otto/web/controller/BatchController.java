@@ -32,19 +32,19 @@ public class BatchController {
 	@Inject
 	private FlashScope flashScope;
 
-	@RequestMapping("/types/{name}/events/batch")
+	@RequestMapping("/sources/{name}/events/batch")
 	public String form(@PathVariable String name, Model model) {
 		model.addAttribute("navItem", "batch");
 		model.addAttribute("form", new BatchForm());
 
-		return "types/batch_form";
+		return "sources/batch_form";
 	}
 
-	@RequestMapping(value = "/types/{name}/events/batch", method = RequestMethod.POST)
+	@RequestMapping(value = "/sources/{name}/events/batch", method = RequestMethod.POST)
 	public String postEvent(@PathVariable String name, @Valid @ModelAttribute("form") BatchForm form,
 			BindingResult bindingResult) throws JsonParseException, IOException {
 		if (bindingResult.hasErrors()) {
-			return "types/batch_form";
+			return "sources/batch_form";
 		}
 
 		DBCollection collection = mongoDbHelper.getCollection(name);
@@ -65,6 +65,6 @@ public class BatchController {
 
 		flashScope.message(form.getCount() + " events inserted");
 
-		return "redirect:/types/{name}/events/batch";
+		return "redirect:/sources/{name}/events/batch";
 	}
 }

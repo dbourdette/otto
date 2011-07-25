@@ -20,7 +20,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 
 @Controller
-@RequestMapping("/types/{name}/events")
+@RequestMapping("/sources/{name}/events")
 public class EventsController {
 
 	@Inject
@@ -35,7 +35,7 @@ public class EventsController {
 		model.addAttribute("navItem", "logs");
 		model.addAttribute("events", events);
 
-		return "types/events";
+		return "sources/events";
 	}
 	
 	@RequestMapping(method = RequestMethod.POST)

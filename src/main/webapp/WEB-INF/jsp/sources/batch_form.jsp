@@ -17,23 +17,28 @@
 	
 	<article>
 		<widget:nav />
-	
-		<h2>New event type</h2>
-	
-		<form:form action="/types" commandName="form" method="post">
+		
+		<form:form action="/sources/${name}/events/batch" commandName="form" method="post">
 			<p>
-				name : <form:input path="name"/>
-				<form:errors path="name" />
+				<span>number of times</span>
+				<form:errors path="count" />
+				<form:input path="count" size="4" />
 			</p>
 			<p>
-				size : <form:input path="sizeInBytes"/> bytes
-				<form:errors path="sizeInBytes" />
+				<span>date</span>
+				<form:radiobuttons path="dateType" />
 			</p>
 			<p>
-				max events : <form:input path="maxEvents"/> events
-				<form:errors path="maxEvents" />
+				<span>values type</span>
+				<form:radiobuttons path="valuesType" />
 			</p>
-			<input type="submit" value="Créer" />
+			<p>
+				<span>values</span><br/>
+				<form:errors path="values" />
+				<form:textarea rows="5" cols="50" path="values" />
+			</p>
+			<br/>
+			<input type="submit" value="poster" />
 		</form:form>
 	</article>
 	

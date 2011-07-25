@@ -19,14 +19,14 @@ x "record and visualize custom events"
 x remove graph title
 x query form for graph / csv / table (from, to and step)
 x colored logo
-- add capped collection
-- delete all events for a type
-- types -> sources
-- otto.sources.billing.events, otto.configuration, otto.logs
-- type configuration (db.events.billing and db.events.billing.config ? db.types.billing.events and db.types.billing.config)
+x add capped collection
+x types -> sources
+- delete all events for a source
+- action log (otto.logs)
+- otto.sources.billing.events, otto.configuration 
+- type configuration (db.events.billing and db.events.billing.config ? db.sources.billing.events and db.sources.billing.config)
 - aggregator (5 min slices for heavy traffic) db.events.news.hit + db.events.news.hit.?
 - @Async post for remote api
-- action log
 - mongo url in jndi
 - web page js api
 - iso pattern for dates (1977-04-22T06:00:00Z) (http://fr.wikipedia.org/wiki/ISO_8601)

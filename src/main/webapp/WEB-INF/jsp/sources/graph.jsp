@@ -19,7 +19,7 @@
 	<article>
 		<widget:nav />
 	
-		<form:form action="/types/${name}/graph" commandName="form" method="GET">
+		<form:form action="/sources/${name}/graph" commandName="form" method="GET">
 			From <form:input path="start" size="10" /> to <form:input path="end" size="10" /> with step <form:input path="stepInMinutes" size="5"/> minute(s)
 			<input type="submit" value="display" />
 		</form:form>
@@ -31,8 +31,8 @@
 		
 		<c:set var="query">start=${start}&end=${end}&stepInMinutes=${form.stepInMinutes}</c:set>
 		
-		<a href="/types/${name}/graph.csv?${query}">csv</a>
-		- <a href="/types/${name}/graph/table?${query}" target="_blank">table</a>
+		<a href="/sources/${name}/graph.csv?${query}">csv</a>
+		- <a href="/sources/${name}/graph/table?${query}" target="_blank">table</a>
 	</article>
 	
 	<widget:footer />

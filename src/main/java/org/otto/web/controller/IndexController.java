@@ -18,17 +18,17 @@ public class IndexController {
     @Inject
     private DB mongoDb;
 
-    @RequestMapping({"/", "/index", "/types"})
+    @RequestMapping({"/", "/index", "/sources"})
     public String index(Model model) {
-        List<String> types = new ArrayList<String>();
+        List<String> sources = new ArrayList<String>();
 
         for (String name : mongoDb.getCollectionNames()) {
             if (name.startsWith(MongoDbHelper.EVENTS_PREFIX)) {
-            	types.add(name.substring(MongoDbHelper.EVENTS_PREFIX.length()));
+            	sources.add(name.substring(MongoDbHelper.EVENTS_PREFIX.length()));
             }
         }
 
-        model.addAttribute("types", types);
+        model.addAttribute("sources", sources);
         
         return "index";
     }
