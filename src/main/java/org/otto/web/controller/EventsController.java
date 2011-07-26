@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.joda.time.DateTime;
 import org.otto.event.Event;
-import org.otto.web.util.MongoDbHelper;
+import org.otto.event.Sources;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,11 +24,11 @@ import com.mongodb.DBObject;
 public class EventsController {
 
 	@Inject
-	private MongoDbHelper mongoDbHelper;
+	private Sources sources;
 
 	@RequestMapping
 	public String events(@PathVariable String name, Model model) {
-		DBCollection collection = mongoDbHelper.getCollection(name);
+		DBCollection collection = sources.getCollection(name);
 		
 		Iterator<DBObject> events = collection.find().sort(new BasicDBObject("date", -1)).limit(100).iterator();
 
@@ -40,7 +40,7 @@ public class EventsController {
 	
 	@RequestMapping(method = RequestMethod.POST)
 	public void post(@PathVariable String name, HttpServletRequest request, HttpServletResponse response) {
-		DBCollection collection = mongoDbHelper.getCollection(name);
+		DBCollection collection = sources.getCollection(name);
 		
 		@SuppressWarnings("unchecked")
 		Event event = Event.fromMap(request.getParameterMap());

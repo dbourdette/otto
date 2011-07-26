@@ -7,10 +7,10 @@ import javax.validation.Valid;
 
 import org.codehaus.jackson.JsonParseException;
 import org.otto.event.Event;
+import org.otto.event.Sources;
 import org.otto.web.form.BatchForm;
 import org.otto.web.form.BatchValuesType;
 import org.otto.web.util.FlashScope;
-import org.otto.web.util.MongoDbHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,7 +27,7 @@ import com.mongodb.DBCollection;
 @Controller
 public class BatchController {
 	@Inject
-	private MongoDbHelper mongoDbHelper;
+	private Sources sources;
 
 	@Inject
 	private FlashScope flashScope;
@@ -47,7 +47,7 @@ public class BatchController {
 			return "sources/batch_form";
 		}
 
-		DBCollection collection = mongoDbHelper.getCollection(name);
+		DBCollection collection = sources.getCollection(name);
 
 		for (int i = 0; i < form.getCount(); i++) {
 			Event event = null;
@@ -63,7 +63,7 @@ public class BatchController {
 			collection.insert(event.toDBObject());
 		}
 
-		flashScope.message(form.getCount() + " events inserted");
+		flashScope.message(form.getCount() + " events inserted for source " + name);
 
 		return "redirect:/sources/{name}/events/batch";
 	}

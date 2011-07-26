@@ -21,7 +21,7 @@ x query form for graph / csv / table (from, to and step)
 x colored logo
 x add capped collection
 x types -> sources
-- events.billing -> otto.billing.events
+x events.billing -> otto.billing.events
 - action log (otto.logs)
 - delete all events for a source
 - otto.sources.billing.events, otto.configuration 
@@ -37,6 +37,7 @@ x types -> sources
 - security
 - authentication
 - authorizations : ROLE_ADMIN + ROLE_EVENTS_{name}
+- write user name in logs
 - auth through ldap
 - query form for logs
 - logs pagination
@@ -54,3 +55,4 @@ x types -> sources
 - modify to capped collection
 - form layout
 - display size and max for capped collections
+- logs pagination

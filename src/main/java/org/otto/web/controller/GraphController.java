@@ -12,9 +12,9 @@ import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.joda.time.Interval;
+import org.otto.event.Sources;
 import org.otto.graph.Graph;
 import org.otto.web.form.GraphForm;
-import org.otto.web.util.MongoDbHelper;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,7 +32,7 @@ import com.mongodb.DBObject;
 public class GraphController {
 
     @Inject
-    private MongoDbHelper mongoDbHelper;
+    private Sources sources;
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -89,9 +89,9 @@ public class GraphController {
     }
 
     private Iterator<DBObject> findEvents(String name, Interval interval) {
-        DBCollection collection = mongoDbHelper.getCollection(name);
+        DBCollection collection = sources.getCollection(name);
 
-        BasicDBObject query = mongoDbHelper.intervalQuery(interval);
+        BasicDBObject query = sources.intervalQuery(interval);
 
         return collection.find(query).sort(new BasicDBObject("date", -1)).iterator();
     }

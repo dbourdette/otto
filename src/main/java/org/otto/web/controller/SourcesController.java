@@ -3,10 +3,10 @@ package org.otto.web.controller;
 import javax.inject.Inject;
 import javax.validation.Valid;
 
+import org.otto.event.Sources;
 import org.otto.web.form.SourceForm;
 import org.otto.web.util.FlashScope;
 import org.otto.web.util.IntervalUtils;
-import org.otto.web.util.MongoDbHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,7 +21,7 @@ import com.mongodb.DBCollection;
 public class SourcesController {
     
     @Inject
-    private MongoDbHelper mongoDbHelper;
+    private Sources sources;
     
     @Inject
     private FlashScope flashScope;
@@ -30,13 +30,13 @@ public class SourcesController {
     public String source(@PathVariable String name, Model model) {
     	model.addAttribute("navItem", "index");
     	
-    	DBCollection collection = mongoDbHelper.getCollection(name);
+    	DBCollection collection = sources.getCollection(name);
     	
         model.addAttribute("count", collection.count());
         model.addAttribute("capped", collection.isCapped());
-        model.addAttribute("lastWeekFrequency", mongoDbHelper.frequency(name, IntervalUtils.lastWeek()));
-        model.addAttribute("yesterdayFrequency", mongoDbHelper.frequency(name, IntervalUtils.yesterday()));
-        model.addAttribute("todayFrequency", mongoDbHelper.frequency(name, IntervalUtils.today()));
+        model.addAttribute("lastWeekFrequency", sources.frequency(name, IntervalUtils.lastWeek()));
+        model.addAttribute("yesterdayFrequency", sources.frequency(name, IntervalUtils.yesterday()));
+        model.addAttribute("todayFrequency", sources.frequency(name, IntervalUtils.today()));
         
         return "sources/source";
     }
@@ -54,7 +54,7 @@ public class SourcesController {
             return "sources/source_form";
         }
 
-        mongoDbHelper.createCollection(form);
+        sources.createCollection(form);
         
         flashScope.message("source " + form.getName() + " has just been created");
 
@@ -63,10 +63,10 @@ public class SourcesController {
 
     @RequestMapping(value = "/sources/{name}", method = RequestMethod.DELETE)
     public String dropSource(@PathVariable String name) {
-    	mongoDbHelper.getCollection(name).drop();
+    	sources.getCollection(name).drop();
     	
     	flashScope.message("source " + name + " has just been deleted");
-
+    	
         return "redirect:/sources";
     }
 }

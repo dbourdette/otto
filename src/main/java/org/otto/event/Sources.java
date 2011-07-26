@@ -1,4 +1,4 @@
-package org.otto.web.util;
+package org.otto.event;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +9,8 @@ import org.apache.commons.lang.StringUtils;
 import org.joda.time.Interval;
 import org.otto.web.exception.SourceNotFound;
 import org.otto.web.form.SourceForm;
+import org.otto.web.util.Constants;
+import org.otto.web.util.Frequency;
 import org.springframework.stereotype.Component;
 
 import com.mongodb.BasicDBObject;
@@ -21,18 +23,12 @@ import com.mongodb.DBCollection;
  * Time: 13:34
  */
 @Component
-public class MongoDbHelper {
+public class Sources {
 
-	private static final String EVENTS = ".events";
-
-	private static final String OTTO = "otto.";
+	
 	
 	@Inject
     private DB mongoDb;
-
-    public boolean notExists(String name) {
-        return !mongoDb.collectionExists(qualifedName(name));
-    }
 
     public Frequency frequency(String name, Interval interval) {
     	DBCollection collection = getCollection(name);
@@ -58,7 +54,7 @@ public class MongoDbHelper {
     		throw new SourceNotFound();
     	} 
     	
-        return mongoDb.getCollection(qualifedName(name));
+        return mongoDb.getCollection(qualifiedName(name));
     }
 
     public DBCollection createCollection(SourceForm form) {
@@ -75,22 +71,26 @@ public class MongoDbHelper {
     		}
     	}
 
-        return mongoDb.createCollection(qualifedName(form.getName()), capping);
+        return mongoDb.createCollection(qualifiedName(form.getName()), capping);
     }
     
-    public List<String> getSources() {
+    public List<String> getNames() {
     	List<String> sources = new ArrayList<String>();
 
         for (String name : mongoDb.getCollectionNames()) {
-            if (name.startsWith(OTTO) && name.endsWith(EVENTS)) {
-            	sources.add(StringUtils.substringBetween(name, OTTO, EVENTS));
+            if (name.startsWith(Constants.OTTO) && name.endsWith(Constants.EVENTS)) {
+            	sources.add(StringUtils.substringBetween(name, Constants.OTTO, Constants.EVENTS));
             }
         }
         
         return sources;
     }
     
-    public String qualifedName(String name) {
-    	return OTTO + name + EVENTS;
+    public String qualifiedName(String name) {
+    	return Constants.OTTO + name + Constants.EVENTS;
+    }
+
+    private boolean notExists(String name) {
+        return !mongoDb.collectionExists(qualifiedName(name));
     }
 }
