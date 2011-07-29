@@ -27,7 +27,7 @@ x type configuration (otto.sources.billing.config)
 x aggregator (ex : 5 min slices for heavy traffic) otto.sources.news.config
 x timeframe -> aggregation
 x delete all events for a source
-- delete type (link + confirmation page)
+x delete type (link + confirmation page)
 - attribute name (count, size, hits...) for aggregation
 - otto.sources.billing.events, otto.configuration 
 - @Async post for remote api

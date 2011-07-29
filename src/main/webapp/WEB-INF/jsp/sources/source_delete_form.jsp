@@ -18,12 +18,12 @@
 	<article>
 		<widget:nav />
 		
-		<p>You are about to delete all events for source ${name}</p>
+		<p>You are about to delete ${name} source</p>
 		
 		<br/>
 		
-		<form:form action="/sources/${name}/events" commandName="form" method="delete">
-			<input type="submit" value="delete events" />
+		<form:form action="/sources/${name}" commandName="form" method="delete">
+			<input type="submit" value="delete source" />
 		</form:form>
 	</article>
 	

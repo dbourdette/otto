@@ -63,6 +63,13 @@ public class SourcesController {
         return "redirect:/sources";
     }
 
+    @RequestMapping("/sources/{name}/delete")
+    public String dropSourceForm(@PathVariable String name, Model model) {
+    	model.addAttribute("navItem", "index");
+        
+        return "sources/source_delete_form";
+    }
+
     @RequestMapping(value = "/sources/{name}", method = RequestMethod.DELETE)
     public String dropSource(@PathVariable String name) {
     	sources.getSource(name).drop();

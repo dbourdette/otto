@@ -31,11 +31,10 @@
 			<li>yesterday : <fmt:formatNumber value="${yesterdayFrequency.eventsPerMinute}" pattern="# ###.######"/> events per minute</li>
 			<li>last week : <fmt:formatNumber value="${lastWeekFrequency.eventsPerMinute}" pattern="# ###.######"/> events per minute</li>
 		</ul>
+		
 		<br/>
 		
-		<form:form action="/sources/${name}" commandName="form" method="delete">
-			<input type="submit" value="delete source" />
-		</form:form>
+		<a href="/sources/${name}/delete">delete source</a>
 	</article>
 	
 	<widget:footer />
