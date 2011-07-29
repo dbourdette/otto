@@ -67,6 +67,10 @@ public class DBSource {
 			events.update(event.toDBObject(), inc, true, false);
 		}
 	}
+	
+	public void clearEvents() {
+		events.remove(new BasicDBObject());
+	}
 
 	public void saveTimeFrame(TimeFrame timeFrame) {
 		BasicDBObject filter = new BasicDBObject();

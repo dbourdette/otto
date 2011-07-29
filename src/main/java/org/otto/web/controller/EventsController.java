@@ -8,6 +8,7 @@ import org.joda.time.DateTime;
 import org.otto.event.DBSource;
 import org.otto.event.Event;
 import org.otto.event.Sources;
+import org.otto.web.util.FlashScope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +21,9 @@ public class EventsController {
 
 	@Inject
 	private Sources sources;
+    
+    @Inject
+    private FlashScope flashScope;
 
 	@RequestMapping
 	public String events(@PathVariable String name, Model model) {
@@ -29,6 +33,24 @@ public class EventsController {
 		model.addAttribute("events", source.findEvents(100));
 
 		return "sources/events";
+	}
+
+	@RequestMapping("/delete")
+	public String clearForm(@PathVariable String name, Model model) {
+		model.addAttribute("navItem", "logs");
+
+		return "sources/events_delete_form";
+	}
+
+	@RequestMapping(method = RequestMethod.DELETE)
+	public String clear(@PathVariable String name) {
+		DBSource source = sources.getSource(name);
+		
+		source.clearEvents();
+		
+		flashScope.message("Events have been cleared for source " + name);
+
+		return "redirect:/sources/{name}/events";
 	}
 	
 	@RequestMapping(method = RequestMethod.POST)

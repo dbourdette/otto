@@ -26,15 +26,15 @@ x action log (otto.logs)
 x type configuration (otto.sources.billing.config)
 x aggregator (ex : 5 min slices for heavy traffic) otto.sources.news.config
 x timeframe -> aggregation
+x delete all events for a source
+- delete type (link + confirmation page)
 - attribute name (count, size, hits...) for aggregation
-- delete all events for a source
 - otto.sources.billing.events, otto.configuration 
 - @Async post for remote api
 - mongo url in jndi
 - web page js api
 - iso pattern for dates (1977-04-22T06:00:00Z) (http://fr.wikipedia.org/wiki/ISO_8601)
 - modify type
-- delete type (link + confirmation page)
 - support for millis in event dates
 - security
 - authentication

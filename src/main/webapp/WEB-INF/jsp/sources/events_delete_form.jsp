@@ -18,15 +18,13 @@
 	<article>
 		<widget:nav />
 		
-		<div class="logs">
-			<c:forEach var="event" items="${events}">
-				${event}<br/>
-			</c:forEach>
-		</div>
+		<p>You are about to delete all events</p>
 		
 		<br/>
 		
-		<a href="/sources/${name}/events/delete">Delete events</a>
+		<form:form action="/sources/${name}/events" commandName="form" method="delete">
+			<input type="submit" value="delete events" />
+		</form:form>
 	</article>
 	
 	<widget:footer />

@@ -47,7 +47,7 @@ public class Logs {
 	}
 
 	public List<DBObject> top() {
-		return logs().find().limit(100).toArray();
+		return logs().find().sort(new BasicDBObject("date", -1)).limit(100).toArray();
 	}
 
 	private DBCollection logs() {

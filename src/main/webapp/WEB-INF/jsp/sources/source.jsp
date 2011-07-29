@@ -34,7 +34,7 @@
 		<br/>
 		
 		<form:form action="/sources/${name}" commandName="form" method="delete">
-			<input type="submit" value="supprimer" />
+			<input type="submit" value="delete source" />
 		</form:form>
 	</article>
 	
