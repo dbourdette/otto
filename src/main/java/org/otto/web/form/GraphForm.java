@@ -11,6 +11,8 @@ public class GraphForm {
 	
 	public int stepInMinutes;
 	
+	public String sumColumn;
+	
 	public GraphForm() {
 		DateMidnight today = new DateMidnight();
 		
@@ -42,5 +44,13 @@ public class GraphForm {
 
 	public void setStepInMinutes(int stepInMinutes) {
 		this.stepInMinutes = stepInMinutes;
+	}
+
+	public String getSumColumn() {
+		return sumColumn;
+	}
+
+	public void setSumColumn(String sumColumn) {
+		this.sumColumn = sumColumn;
 	}
 }

@@ -8,6 +8,7 @@ import java.util.Iterator;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
@@ -83,7 +84,13 @@ public class GraphController {
 
             Date date = (Date) event.get("date");
 
-            graph.increaseValue(name, new DateTime(date));
+            if (StringUtils.isEmpty(form.getSumColumn())) {
+            	graph.increaseValue(name, new DateTime(date));
+            } else {
+            	Integer value = (Integer) event.get(form.getSumColumn());
+            	
+            	graph.increaseValue(name, new DateTime(date), value);
+            }
         }
 
         return graph;
