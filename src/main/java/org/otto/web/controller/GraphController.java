@@ -12,6 +12,7 @@ import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.joda.time.Interval;
+import org.otto.event.DBSource;
 import org.otto.event.Sources;
 import org.otto.graph.Graph;
 import org.otto.web.form.GraphForm;
@@ -24,8 +25,6 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 
 @Controller
@@ -75,7 +74,9 @@ public class GraphController {
         graph.ensureColumnsExists(name);
         graph.setRows(interval, Duration.standardMinutes(form.getStepInMinutes()));
 
-        Iterator<DBObject> events = findEvents(name, interval);
+        DBSource source = sources.getSource(name);
+        
+        Iterator<DBObject> events = source.findEvents(interval);
 
         while (events.hasNext()) {
             DBObject event = events.next();
@@ -86,13 +87,5 @@ public class GraphController {
         }
 
         return graph;
-    }
-
-    private Iterator<DBObject> findEvents(String name, Interval interval) {
-        DBCollection collection = sources.getCollection(name);
-
-        BasicDBObject query = sources.intervalQuery(interval);
-
-        return collection.find(query).sort(new BasicDBObject("date", -1)).iterator();
     }
 }

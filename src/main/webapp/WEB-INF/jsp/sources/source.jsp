@@ -22,6 +22,8 @@
 		Event count in db : ${count} <br/>
 		<br/>
 		Capped ? : ${capped}
+		<br/>
+		<a href="/sources/${name}/aggregation/form">TimeFrame</a> : ${timeFrame eq 'MILLISECOND' ? 'none' : timeFrame}
 		<br/><br/>
 		Event frequency : <br/>
 		<ul>

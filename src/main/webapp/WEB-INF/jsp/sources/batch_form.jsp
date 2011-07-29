@@ -38,7 +38,7 @@
 				<form:textarea rows="5" cols="50" path="values" />
 			</p>
 			<br/>
-			<input type="submit" value="poster" />
+			<input type="submit" value="Post" />
 		</form:form>
 	</article>
 	

@@ -6,6 +6,7 @@ import javax.inject.Inject;
 import javax.validation.Valid;
 
 import org.codehaus.jackson.JsonParseException;
+import org.otto.event.DBSource;
 import org.otto.event.Event;
 import org.otto.event.Sources;
 import org.otto.web.form.BatchForm;
@@ -18,8 +19,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
-import com.mongodb.DBCollection;
 
 /**
  * @author damien bourdette
@@ -46,8 +45,8 @@ public class BatchController {
 		if (bindingResult.hasErrors()) {
 			return "sources/batch_form";
 		}
-
-		DBCollection collection = sources.getCollection(name);
+		
+		DBSource source = sources.getSource(name);
 
 		for (int i = 0; i < form.getCount(); i++) {
 			Event event = null;
@@ -60,7 +59,7 @@ public class BatchController {
 			
 			event.setDateIfNoneDefined(form.getDateType().instanciateDate());
 
-			collection.insert(event.toDBObject());
+			source.post(event);
 		}
 
 		flashScope.message(form.getCount() + " events inserted for source " + name);
