@@ -29,12 +29,12 @@ x timeframe -> aggregation
 x delete all events for a source
 x delete type (link + confirmation page)
 x sum attribute for graphs
+x mongo url in jndi
+x mongo db name in jndi
 - split on attributes for graphs
 - attribute name (count, size, hits...) for aggregation
 - otto.sources.billing.events, otto.configuration 
 - @Async post for remote api
-- mongo url in jndi
-- mongo db name in jndi
 - web page js api
 - iso pattern for dates (1977-04-22T06:00:00Z) (http://fr.wikipedia.org/wiki/ISO_8601)
 - modify type
