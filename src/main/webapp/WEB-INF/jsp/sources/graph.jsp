@@ -19,8 +19,13 @@
 	<article>
 		<widget:nav />
 	
-		<form:form action="/types/${name}/graph" commandName="form" method="GET">
-			From <form:input path="start" size="10" /> to <form:input path="end" size="10" /> with step <form:input path="stepInMinutes" size="5"/> minute(s)
+		<form:form action="/sources/${name}/graph" commandName="form" method="GET">
+			<p>
+				From <form:input path="start" size="10" /> to <form:input path="end" size="10" /> with step <form:input path="stepInMinutes" size="5"/> minute(s)
+			</p>
+			<p>
+				Sum on <form:input path="sumColumn"/>
+			</p>
 			<input type="submit" value="display" />
 		</form:form>
 	
@@ -29,10 +34,10 @@
 		<c:set var="start"><fmt:formatDate value="${form.start}" pattern="yyyy-MM-dd" /></c:set>
 		<c:set var="end"><fmt:formatDate value="${form.end}" pattern="yyyy-MM-dd" /></c:set>
 		
-		<c:set var="query">start=${start}&end=${end}&stepInMinutes=${form.stepInMinutes}</c:set>
+		<c:set var="query">start=${start}&end=${end}&stepInMinutes=${form.stepInMinutes}&sumColumn=${form.sumColumn}</c:set>
 		
-		<a href="/types/${name}/graph.csv?${query}">csv</a>
-		- <a href="/types/${name}/graph/table?${query}" target="_blank">table</a>
+		<a href="/sources/${name}/graph.csv?${query}">csv</a>
+		- <a href="/sources/${name}/graph/table?${query}" target="_blank">table</a>
 	</article>
 	
 	<widget:footer />

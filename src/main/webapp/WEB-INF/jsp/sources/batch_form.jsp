@@ -18,7 +18,7 @@
 	<article>
 		<widget:nav />
 		
-		<form:form action="/types/${name}/events/batch" commandName="form" method="post">
+		<form:form action="/sources/${name}/events/batch" commandName="form" method="post">
 			<p>
 				<span>number of times</span>
 				<form:errors path="count" />
@@ -38,7 +38,7 @@
 				<form:textarea rows="5" cols="50" path="values" />
 			</p>
 			<br/>
-			<input type="submit" value="poster" />
+			<input type="submit" value="Post" />
 		</form:form>
 	</article>
 	

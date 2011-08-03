@@ -16,17 +16,15 @@
 	<widget:header />
 	
 	<article>
-		<h2>Existing event sources</h2>
-	
-		<ul>
-			<c:forEach var="source" items="${sources}">
-				<li><a href="/sources/${source}">${source}</a></li>
-			</c:forEach>
-		</ul>
+		<widget:nav />
+		
+		<p>You are about to delete ${name} source</p>
 		
 		<br/>
 		
-		<a href="/sources/form">Create a new event source</a>
+		<form:form action="/sources/${name}" commandName="form" method="delete">
+			<input type="submit" value="delete source" />
+		</form:form>
 	</article>
 	
 	<widget:footer />

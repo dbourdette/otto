@@ -1,23 +1,20 @@
 package org.otto;
 
-import java.net.UnknownHostException;
-import java.util.Locale;
-
-import javax.inject.Inject;
-
+import com.mongodb.DB;
+import com.mongodb.Mongo;
+import com.mongodb.MongoException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
-import org.springframework.core.env.Environment;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.i18n.FixedLocaleResolver;
 import org.springframework.web.servlet.view.JstlView;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
-import com.mongodb.DB;
-import com.mongodb.Mongo;
-import com.mongodb.MongoException;
+import javax.inject.Inject;
+import java.net.UnknownHostException;
+import java.util.Locale;
 
 @Configuration
 @EnableWebMvc
@@ -25,7 +22,10 @@ import com.mongodb.MongoException;
 public class SpringConfig {
 
     @Inject
-    private Environment environment;
+    private String mongoUrl;
+
+    @Inject
+    private String mongoDbName;
 
     @Bean
     public FixedLocaleResolver fixedLocaleResolver() {
@@ -53,7 +53,7 @@ public class SpringConfig {
 
     @Bean
     public DB mongoDb() throws MongoException, UnknownHostException {
-        Mongo mongo = new Mongo(environment.getProperty("mongodb.url", "localhost"));
-        return mongo.getDB("events");
+        Mongo mongo = new Mongo(mongoUrl);
+        return mongo.getDB(mongoDbName);
     }
 }

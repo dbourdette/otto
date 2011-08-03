@@ -22,8 +22,8 @@ public class ExceptionResolver extends DefaultHandlerExceptionResolver {
 	@Override
 	public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler,
 			Exception ex) {
-		if (ex instanceof TypeNotFound) {
-			flashScope.message("Type not found");
+		if (ex instanceof SourceNotFound) {
+			flashScope.message("Source not found");
 
 			return new ModelAndView(new RedirectView("/index"));
 		}

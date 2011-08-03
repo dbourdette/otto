@@ -16,17 +16,25 @@
 	<widget:header />
 	
 	<article>
-		<h2>Existing event sources</h2>
+		<widget:nav />
 	
-		<ul>
-			<c:forEach var="source" items="${sources}">
-				<li><a href="/sources/${source}">${source}</a></li>
-			</c:forEach>
-		</ul>
-		
-		<br/>
-		
-		<a href="/sources/form">Create a new event source</a>
+		<h2>New event type</h2>
+	
+		<form:form action="/sources" commandName="form" method="post">
+			<p>
+				name : <form:input path="name"/>
+				<form:errors path="name" />
+			</p>
+			<p>
+				size : <form:input path="sizeInBytes"/> bytes
+				<form:errors path="sizeInBytes" />
+			</p>
+			<p>
+				max events : <form:input path="maxEvents"/> events
+				<form:errors path="maxEvents" />
+			</p>
+			<input type="submit" value="Create" />
+		</form:form>
 	</article>
 	
 	<widget:footer />

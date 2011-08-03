@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
+import org.otto.logs.Logs;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
@@ -21,11 +22,16 @@ public class FlashScope {
 	
 	@Inject
 	private HttpServletRequest request;
+    
+    @Inject
+    private Logs logs;
 	
 	private Map<String, Object> map = new HashMap<String, Object>();
 	
 	public void message(String message) {
 		put("message", message);
+		
+		logs.trace(message);
 	} 
 	
 	public void put(String name, Object value) {

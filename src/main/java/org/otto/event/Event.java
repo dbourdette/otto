@@ -135,11 +135,19 @@ public class Event {
 		return value.getValue();
 	}
 	
+	public DateTime getDate() {
+		return (DateTime) get(DATE_KEY);
+	}
+	
+	public void setDate(DateTime date) {
+		values.put(DATE_KEY, new EventValue(EventValueType.DATE, date));
+	}
+	
 	public void setDateIfNoneDefined(DateTime date) {
 		EventValue value = values.get(DATE_KEY);
 		
 		if (value == null || value.getType() != EventValueType.DATE) {
-			values.put(DATE_KEY, new EventValue(EventValueType.DATE, date));
+			setDate(date);
 		}
 	}	
 }

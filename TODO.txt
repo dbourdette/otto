@@ -18,23 +18,31 @@ x pick correct ranges when adding rows in a graph (day range should not be last 
 x "record and visualize custom events"
 x remove graph title
 x query form for graph / csv / table (from, to and step)
-- colored logo
-- mongo url in jndi
+x colored logo
+x add capped collection
+x types -> sources
+x events.billing -> otto.billing.events
+x action log (otto.logs)
+x type configuration (otto.sources.billing.config)
+x aggregator (ex : 5 min slices for heavy traffic) otto.sources.news.config
+x timeframe -> aggregation
+x delete all events for a source
+x delete type (link + confirmation page)
+x sum attribute for graphs
+x mongo url in jndi
+x mongo db name in jndi
+- split on attributes for graphs
+- attribute name (count, size, hits...) for aggregation
+- otto.sources.billing.events, otto.configuration 
 - @Async post for remote api
 - web page js api
 - iso pattern for dates (1977-04-22T06:00:00Z) (http://fr.wikipedia.org/wiki/ISO_8601)
-- add capped collection
-- delete all events for a type
 - modify type
-- types -> sources
-- otto.sources.billing.events, otto.configuration, otto.logs
-- type configuration (db.events.billing and db.events.billing.config ? db.types.billing.events and db.types.billing.config)
-- aggregator (5 min slices for heavy traffic) db.events.news.hit + db.events.news.hit.?
-- delete type (link + confirmation page)
 - support for millis in event dates
 - security
 - authentication
 - authorizations : ROLE_ADMIN + ROLE_EVENTS_{name}
+- write user name in logs
 - auth through ldap
 - query form for logs
 - logs pagination
@@ -48,5 +56,10 @@ x query form for graph / csv / table (from, to and step)
 - nested properties in batch with json
 - add copyright and java file header
 - mongo shell (textarea)
-- action log
 - jquery for date inputs (format yyyy-MM-dd so far)
+- modify to capped collection
+- form layout
+- display size and max for capped collections
+- logs pagination
+- localize enums
+- load sources config at startup and on change

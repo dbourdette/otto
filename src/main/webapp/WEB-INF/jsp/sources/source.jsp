@@ -21,17 +21,20 @@
 		
 		Event count in db : ${count} <br/>
 		<br/>
+		Capped ? : ${capped}
+		<br/>
+		<a href="/sources/${name}/aggregation/form">TimeFrame</a> : ${timeFrame eq 'MILLISECOND' ? 'none' : timeFrame}
+		<br/><br/>
 		Event frequency : <br/>
 		<ul>
 			<li>today : <fmt:formatNumber value="${todayFrequency.eventsPerMinute}" pattern="# ###.######"/> events per minute</li>
 			<li>yesterday : <fmt:formatNumber value="${yesterdayFrequency.eventsPerMinute}" pattern="# ###.######"/> events per minute</li>
 			<li>last week : <fmt:formatNumber value="${lastWeekFrequency.eventsPerMinute}" pattern="# ###.######"/> events per minute</li>
 		</ul>
+		
 		<br/>
 		
-		<form:form action="/types/${name}" commandName="form" method="delete">
-			<input type="submit" value="supprimer" />
-		</form:form>
+		<a href="/sources/${name}/delete">delete source</a>
 	</article>
 	
 	<widget:footer />

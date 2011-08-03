@@ -18,12 +18,14 @@
 	<article>
 		<widget:nav />
 	
-		<h2>New event type</h2>
+		<h2>Source time frame</h2>
 	
-		<form:form action="/types" commandName="form" method="post">
-			<form:errors path="name" />
-			<form:input path="name"/>
-			<input type="submit" value="Créer" />
+		<form:form action="/sources/${name}/aggregation" commandName="form" method="post">
+			<p>
+				time frame : <form:select path="timeFrame" items="${timeFrames}" />
+				<form:errors path="timeFrame" />
+			</p>
+			<input type="submit" value="Save" />
 		</form:form>
 	</article>
 	

@@ -16,17 +16,17 @@
 	<widget:header />
 	
 	<article>
-		<h2>Existing event sources</h2>
-	
-		<ul>
-			<c:forEach var="source" items="${sources}">
-				<li><a href="/sources/${source}">${source}</a></li>
+		<widget:nav />
+		
+		<div class="logs">
+			<c:forEach var="event" items="${events}">
+				${event}<br/>
 			</c:forEach>
-		</ul>
+		</div>
 		
 		<br/>
 		
-		<a href="/sources/form">Create a new event source</a>
+		<a href="/sources/${name}/events/delete">Delete events</a>
 	</article>
 	
 	<widget:footer />
