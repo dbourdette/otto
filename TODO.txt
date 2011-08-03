@@ -18,7 +18,6 @@ x pick correct ranges when adding rows in a graph (day range should not be last 
 x "record and visualize custom events"
 x remove graph title
 x query form for graph / csv / table (from, to and step)
-- query form for graph / csv / table (split on : no split, url, product..., count attribute : no attribute, hits...)
 - colored logo
 - mongo url in jndi
 - @Async post for remote api
