@@ -1,14 +1,13 @@
 package org.otto.event;
 
-import java.util.Iterator;
-
-import org.joda.time.Interval;
-import org.otto.web.util.Frequency;
-
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
+import org.joda.time.Interval;
+import org.otto.web.util.Frequency;
+
+import java.util.Iterator;
 
 /**
  * @author damien bourdette
@@ -27,12 +26,20 @@ public class DBSource {
 		return source;
 	}
 	
-	public long count() {
+	public long getCount() {
 		return events.count();
 	}
 	
 	public boolean isCapped() {
 		return events.isCapped();
+	}
+
+	public Integer getSize() {
+		return (Integer) events.getStats().get("storageSize");
+	}
+
+	public Integer getMax() {
+		return (Integer) events.getStats().get("max");
 	}
 	
 	public Frequency frequency(Interval interval) {

@@ -29,8 +29,10 @@ public class Sources {
 			throw new SourceNotFound();
 		}
 
-		return DBSource.fromCollection(mongoDb.getCollection(qualifiedName(name)),
-				mongoDb.getCollection(qualifiedConfigName(name)));
+        DBCollection events = mongoDb.getCollection(qualifiedName(name));
+        DBCollection config = mongoDb.getCollection(qualifiedConfigName(name));
+
+		return DBSource.fromCollection(events, config);
 	}
 
 	public DBCollection createCollection(SourceForm form) {

@@ -32,6 +32,7 @@ x sum attribute for graphs
 x mongo url in jndi
 x mongo db name in jndi
 x split on attribute for graphs
+x display size and max for capped collections
 - attribute name (count, size, hits...) for aggregation
 - otto.sources.billing.events, otto.configuration 
 - @Async post for remote api
@@ -66,4 +67,3 @@ x split on attribute for graphs
 - filter out default context.xml
 - be able to start otto on command line (java -jar otto.jar with main class in META-INF)
 - Delete events : display message that capped collection can not be cleared
-- Save size and max in config for display in index page of collection. Display unknown if value has been set in config.
