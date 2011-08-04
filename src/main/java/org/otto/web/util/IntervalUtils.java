@@ -1,5 +1,6 @@
 package org.otto.web.util;
 
+import com.mongodb.BasicDBObject;
 import org.joda.time.DateMidnight;
 import org.joda.time.Interval;
 
@@ -19,5 +20,14 @@ public class IntervalUtils {
 		DateMidnight monday = new DateMidnight().withDayOfWeek(1);
 		
 		return new Interval(monday.minusDays(7), monday);
+	}
+
+	public static BasicDBObject query(Interval interval) {
+		BasicDBObject criteria = new BasicDBObject();
+
+		criteria.append("$gt", interval.getStart().toDate());
+		criteria.append("$lte", interval.getEnd().toDate());
+
+		return new BasicDBObject("date", criteria);
 	}
 }

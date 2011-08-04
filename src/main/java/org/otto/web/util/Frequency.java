@@ -2,7 +2,6 @@ package org.otto.web.util;
 
 import org.joda.time.Duration;
 
-
 public class Frequency {
 	
 	private int count;

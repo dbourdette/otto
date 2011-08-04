@@ -35,7 +35,7 @@ public class Sources {
 		return DBSource.fromCollection(events, config);
 	}
 
-	public DBCollection createCollection(SourceForm form) {
+	public DBSource createSource(SourceForm form) {
 		BasicDBObject capping = new BasicDBObject();
 
 		if (form.getSizeInBytes() == null) {
@@ -49,7 +49,10 @@ public class Sources {
 			}
 		}
 
-		return mongoDb.createCollection(qualifiedName(form.getName()), capping);
+		DBCollection events = mongoDb.createCollection(qualifiedName(form.getName()), capping);
+        DBCollection config = mongoDb.getCollection(qualifiedConfigName(form.getName()));
+
+        return DBSource.fromCollection(events, config);
 	}
 
 	public List<String> getNames() {
@@ -64,11 +67,11 @@ public class Sources {
 		return sources;
 	}
 
-	public String qualifiedName(String name) {
+	private String qualifiedName(String name) {
 		return Constants.SOURCES + name + Constants.EVENTS;
 	}
 
-	public String qualifiedConfigName(String name) {
+	private String qualifiedConfigName(String name) {
 		return Constants.SOURCES + name + Constants.CONFIG;
 	}
 }

@@ -35,9 +35,9 @@ public class SourcesController {
     	
         model.addAttribute("source", source);
         model.addAttribute("timeFrame", source.getTimeFrame());
-        model.addAttribute("lastWeekFrequency", source.frequency(IntervalUtils.lastWeek()));
-        model.addAttribute("yesterdayFrequency", source.frequency(IntervalUtils.yesterday()));
-        model.addAttribute("todayFrequency", source.frequency(IntervalUtils.today()));
+        model.addAttribute("lastWeekFrequency", source.findEventsFrequency(IntervalUtils.lastWeek()));
+        model.addAttribute("yesterdayFrequency", source.findEventsFrequency(IntervalUtils.yesterday()));
+        model.addAttribute("todayFrequency", source.findEventsFrequency(IntervalUtils.today()));
         
         return "sources/source";
     }
@@ -55,7 +55,7 @@ public class SourcesController {
             return "sources/source_form";
         }
 
-        sources.createCollection(form);
+        sources.createSource(form);
         
         flashScope.message("source " + form.getName() + " has just been created");
 
