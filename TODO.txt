@@ -33,6 +33,7 @@ x mongo url in jndi
 x mongo db name in jndi
 x split on attribute for graphs
 x display size and max for capped collections
+x display stats for collections
 - attribute name (count, size, hits...) for aggregation
 - otto.sources.billing.events, otto.configuration 
 - @Async post for remote api

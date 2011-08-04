@@ -36,6 +36,8 @@
 		</ul>
 		
 		<br/>
+		Statistics : ${source.stats}
+        <br/><br/>
 		
 		<a href="/sources/${name}/delete">delete source</a>
 	</article>

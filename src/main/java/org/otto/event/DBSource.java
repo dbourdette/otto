@@ -1,9 +1,6 @@
 package org.otto.event;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
+import com.mongodb.*;
 import org.joda.time.Interval;
 import org.otto.web.util.Frequency;
 
@@ -40,6 +37,10 @@ public class DBSource {
 
 	public Integer getMax() {
 		return (Integer) events.getStats().get("max");
+	}
+
+	public CommandResult getStats() {
+		return events.getStats();
 	}
 	
 	public Frequency frequency(Interval interval) {
