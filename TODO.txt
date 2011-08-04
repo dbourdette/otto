@@ -31,35 +31,39 @@ x delete type (link + confirmation page)
 x sum attribute for graphs
 x mongo url in jndi
 x mongo db name in jndi
-- split on attributes for graphs
-- attribute name (count, size, hits...) for aggregation
-- otto.sources.billing.events, otto.configuration 
+x split on attribute for graphs
+x display size and max for capped collections
+x display stats for collections
+x Delete events : display message that capped collection can not be cleared
+- display config and events table names on source index page
+- query form for logs
+- logs pagination
+- attribute name (count, size, hits...) for aggregation / and display it on source index page
+- format size and max when on source index page
+- allow formated size when creating a capped source (ex : 200m / 20M / 100k...)
+- add copyright and java file header
+- jquery for date inputs (format yyyy-MM-dd so far)
+- modify to capped collection
+- mongo shell (textarea)
+- load sources config at startup and on change (for perf, not loading source when posting events)
+- filter out default context.xml
+- be able to start otto on command line (java -jar otto.jar with main class in META-INF)
 - @Async post for remote api
 - web page js api
 - iso pattern for dates (1977-04-22T06:00:00Z) (http://fr.wikipedia.org/wiki/ISO_8601)
-- modify type
+- cap an existing not capped source
 - support for millis in event dates
 - security
 - authentication
 - authorizations : ROLE_ADMIN + ROLE_EVENTS_{name}
 - write user name in logs
 - auth through ldap
-- query form for logs
-- logs pagination
-- unit test for mongodb
+- unit test for mongodb -> integration tests
 - css
-- edit / delete one event (not for capped ?)
+- edit / delete one event - not for capped
 - thresholds and alerts
 - mail reports
 - batch add with random dates with custom range
 - check that random generation generate on all the period
 - nested properties in batch with json
-- add copyright and java file header
-- mongo shell (textarea)
-- jquery for date inputs (format yyyy-MM-dd so far)
-- modify to capped collection
-- form layout
-- display size and max for capped collections
-- logs pagination
 - localize enums
-- load sources config at startup and on change

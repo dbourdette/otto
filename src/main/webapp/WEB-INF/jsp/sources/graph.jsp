@@ -20,13 +20,16 @@
 		<widget:nav />
 	
 		<form:form action="/sources/${name}/graph" commandName="form" method="GET">
-			<p>
-				From <form:input path="start" size="10" /> to <form:input path="end" size="10" /> with step <form:input path="stepInMinutes" size="5"/> minute(s)
+            <p style="float: left">
+				From <form:input path="start" size="10" tabindex="1" /> to <form:input path="end" size="10" tabindex="2" /> with step <form:input path="stepInMinutes" size="5" tabindex="3" /> minute(s)
 			</p>
-			<p>
-				Sum on <form:input path="sumColumn"/>
+			<p style="float: right">
+                <input type="submit" value="display" tabindex="6" />
+            </p>
+            <p style="float: right;margin-right: 20px;">
+				Split on <form:input path="splitColumn" tabindex="4" /> Sum on <form:input path="sumColumn" tabindex="5" />
 			</p>
-			<input type="submit" value="display" />
+            <p style="clear:both;"/>
 		</form:form>
 	
 		${graph}

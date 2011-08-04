@@ -1,13 +1,10 @@
 package org.otto.web.controller;
 
-import javax.inject.Inject;
-import javax.validation.Valid;
-
 import org.otto.event.DBSource;
 import org.otto.event.Sources;
 import org.otto.event.TimeFrame;
-import org.otto.web.form.SourceForm;
 import org.otto.web.form.AggregationForm;
+import org.otto.web.form.SourceForm;
 import org.otto.web.util.FlashScope;
 import org.otto.web.util.IntervalUtils;
 import org.springframework.stereotype.Controller;
@@ -17,6 +14,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import javax.inject.Inject;
+import javax.validation.Valid;
 
 @Controller
 public class SourcesController {
@@ -33,12 +33,11 @@ public class SourcesController {
     	
     	DBSource source = sources.getSource(name);
     	
-        model.addAttribute("count", source.count());
-        model.addAttribute("capped", source.isCapped());
+        model.addAttribute("source", source);
         model.addAttribute("timeFrame", source.getTimeFrame());
-        model.addAttribute("lastWeekFrequency", source.frequency(IntervalUtils.lastWeek()));
-        model.addAttribute("yesterdayFrequency", source.frequency(IntervalUtils.yesterday()));
-        model.addAttribute("todayFrequency", source.frequency(IntervalUtils.today()));
+        model.addAttribute("lastWeekFrequency", source.findEventsFrequency(IntervalUtils.lastWeek()));
+        model.addAttribute("yesterdayFrequency", source.findEventsFrequency(IntervalUtils.yesterday()));
+        model.addAttribute("todayFrequency", source.findEventsFrequency(IntervalUtils.today()));
         
         return "sources/source";
     }
@@ -56,7 +55,7 @@ public class SourcesController {
             return "sources/source_form";
         }
 
-        sources.createCollection(form);
+        sources.createSource(form);
         
         flashScope.message("source " + form.getName() + " has just been created");
 

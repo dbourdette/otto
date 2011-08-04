@@ -1,13 +1,6 @@
 package org.otto.web.controller;
 
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Iterator;
-
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletResponse;
-
+import com.mongodb.DBObject;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
@@ -26,7 +19,12 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.mongodb.DBObject;
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Iterator;
 
 @Controller
 public class GraphController {
@@ -41,55 +39,63 @@ public class GraphController {
         binder.registerCustomEditor(Date.class, "start", new CustomDateEditor(dateFormat, false));
         binder.registerCustomEditor(Date.class, "end", new CustomDateEditor(dateFormat, false));
     }
-    
+
     @RequestMapping({"/sources/{name}/graph"})
     public String graph(@PathVariable String name, GraphForm form, BindingResult result, Model model) {
-    	model.addAttribute("navItem", "graph");
-    	model.addAttribute("form", form);
+        model.addAttribute("navItem", "graph");
+        model.addAttribute("form", form);
         model.addAttribute("graph", buildGraph(name, form).toGoogleHtml(1080, 750));
 
         return "sources/graph";
     }
-    
+
     @RequestMapping({"/sources/{name}/graph.csv"})
     public void csv(@PathVariable String name, GraphForm form, HttpServletResponse response) throws IOException {
         response.setContentType("application/csv");
-        
+
         response.getWriter().write(buildGraph(name, form).toCsv());
     }
-    
+
     @RequestMapping({"/sources/{name}/graph/table"})
     public String table(@PathVariable String name, GraphForm form, Model model) throws IOException {
-    	model.addAttribute("table", buildGraph(name, form).toHtmlTable());
-        
+        model.addAttribute("table", buildGraph(name, form).toHtmlTable());
+
         return "sources/graph_table";
     }
-    
+
     private Graph buildGraph(String name, GraphForm form) {
-    	DateMidnight start = new DateMidnight(form.getStart());
-    	DateMidnight end = new DateMidnight(form.getEnd());
-    	
-    	Interval interval = new Interval(start, end);
+        DateMidnight start = new DateMidnight(form.getStart());
+        DateMidnight end = new DateMidnight(form.getEnd());
+
+        Interval interval = new Interval(start, end);
 
         Graph graph = new Graph();
-        graph.ensureColumnsExists(name);
+
         graph.setRows(interval, Duration.standardMinutes(form.getStepInMinutes()));
 
         DBSource source = sources.getSource(name);
-        
+
         Iterator<DBObject> events = source.findEvents(interval);
 
         while (events.hasNext()) {
             DBObject event = events.next();
 
+            String columnName = name;
+
+            if (StringUtils.isNotEmpty(form.getSplitColumn())) {
+                columnName = event.get(form.getSplitColumn()).toString();
+            }
+
+            graph.ensureColumnsExists(columnName);
+
             Date date = (Date) event.get("date");
 
             if (StringUtils.isEmpty(form.getSumColumn())) {
-            	graph.increaseValue(name, new DateTime(date));
+                graph.increaseValue(columnName, new DateTime(date));
             } else {
-            	Integer value = (Integer) event.get(form.getSumColumn());
-            	
-            	graph.increaseValue(name, new DateTime(date), value);
+                Integer value = (Integer) event.get(form.getSumColumn());
+
+                graph.increaseValue(columnName, new DateTime(date), value);
             }
         }
 

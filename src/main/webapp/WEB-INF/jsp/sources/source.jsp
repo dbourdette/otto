@@ -19,10 +19,13 @@
 	<article>
 		<widget:nav />
 		
-		Event count in db : ${count} <br/>
+		Event count in db : ${source.count} <br/>
 		<br/>
-		Capped ? : ${capped}
-		<br/>
+		Capping : ${source.capped ? 'yes' : 'no'}
+        <c:if test="${source.capped}">
+            (size : ${source.size}, max : ${source.max})
+        </c:if>
+		<br/><br/>
 		<a href="/sources/${name}/aggregation/form">TimeFrame</a> : ${timeFrame eq 'MILLISECOND' ? 'none' : timeFrame}
 		<br/><br/>
 		Event frequency : <br/>
@@ -33,6 +36,8 @@
 		</ul>
 		
 		<br/>
+		Statistics : ${source.stats}
+        <br/><br/>
 		
 		<a href="/sources/${name}/delete">delete source</a>
 	</article>

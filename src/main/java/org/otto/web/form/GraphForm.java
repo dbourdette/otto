@@ -1,8 +1,8 @@
 package org.otto.web.form;
 
-import java.util.Date;
-
 import org.joda.time.DateMidnight;
+
+import java.util.Date;
 
 public class GraphForm {
 	public Date start;
@@ -12,6 +12,8 @@ public class GraphForm {
 	public int stepInMinutes;
 	
 	public String sumColumn;
+
+    public String splitColumn;
 	
 	public GraphForm() {
 		DateMidnight today = new DateMidnight();
@@ -53,4 +55,12 @@ public class GraphForm {
 	public void setSumColumn(String sumColumn) {
 		this.sumColumn = sumColumn;
 	}
+
+    public String getSplitColumn() {
+        return splitColumn;
+    }
+
+    public void setSplitColumn(String splitColumn) {
+        this.splitColumn = splitColumn;
+    }
 }

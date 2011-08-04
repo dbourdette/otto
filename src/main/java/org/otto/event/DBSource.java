@@ -1,14 +1,11 @@
 package org.otto.event;
 
-import java.util.Iterator;
-
+import com.mongodb.*;
 import org.joda.time.Interval;
 import org.otto.web.util.Frequency;
+import org.otto.web.util.IntervalUtils;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
+import java.util.Iterator;
 
 /**
  * @author damien bourdette
@@ -27,24 +24,28 @@ public class DBSource {
 		return source;
 	}
 	
-	public long count() {
+	public long getCount() {
 		return events.count();
 	}
 	
 	public boolean isCapped() {
 		return events.isCapped();
 	}
-	
-	public Frequency frequency(Interval interval) {
-		BasicDBObject query = intervalQuery(interval);
 
-		int count = events.find(query).count();
+	public Integer getSize() {
+		return (Integer) events.getStats().get("storageSize");
+	}
 
-		return new Frequency(count, interval.toDuration());
+	public Integer getMax() {
+		return (Integer) events.getStats().get("max");
+	}
+
+	public CommandResult getStats() {
+		return events.getStats();
 	}
 
     public Iterator<DBObject> findEvents(Interval interval) {
-        BasicDBObject query = intervalQuery(interval);
+        BasicDBObject query = IntervalUtils.query(interval);
 
         return events.find(query).sort(new BasicDBObject("date", -1)).iterator();
     }
@@ -52,6 +53,14 @@ public class DBSource {
     public Iterator<DBObject> findEvents(int count) {
     	return events.find().sort(new BasicDBObject("date", -1)).limit(count).iterator();
     }
+
+	public Frequency findEventsFrequency(Interval interval) {
+		BasicDBObject query = IntervalUtils.query(interval);
+
+		int count = events.find(query).count();
+
+		return new Frequency(count, interval.toDuration());
+	}
 	
 	public void post(Event event) {
 		TimeFrame timeFrame = getTimeFrame();
@@ -113,14 +122,5 @@ public class DBSource {
 	public void drop() {
 		events.drop();
 		config.drop();
-	}
-	
-	private BasicDBObject intervalQuery(Interval interval) {
-		BasicDBObject criteria = new BasicDBObject();
-
-		criteria.append("$gt", interval.getStart().toDate());
-		criteria.append("$lte", interval.getEnd().toDate());
-
-		return new BasicDBObject("date", criteria);
 	}
 }
