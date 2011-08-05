@@ -17,10 +17,12 @@
 package org.otto.graph;
 
 import java.io.IOException;
+import java.util.Locale;
 
 import junit.framework.Assert;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.junit.Before;

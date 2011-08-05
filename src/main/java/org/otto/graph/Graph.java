@@ -21,6 +21,8 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.joda.time.Interval;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.util.*;
 
@@ -120,6 +122,8 @@ public class Graph {
     private static final int DEFAULT_WIDTH = 1200;
 
     private static final int DEFAULT_HEIGHT = 500;
+
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
     
     private final Duration FIVE_MINUTES = Duration.standardMinutes(5);
 
@@ -320,9 +324,9 @@ public class Graph {
         builder.append("\n");
 
         for (GraphRow row : rows) {
-            builder.append(row.getStartDate());
+            builder.append(DATE_TIME_FORMATTER.print(row.getStartDate()));
             builder.append(",");
-            builder.append(row.getEndDate());
+            builder.append(DATE_TIME_FORMATTER.print(row.getEndDate()));
 
             for (GraphColumn column : columns) {
                 builder.append(",");
