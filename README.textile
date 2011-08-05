@@ -1,5 +1,6 @@
 h1. oTTo, the event server
 
+
 oTTo is a java web application (.war) for recording and visualising custom events.
 
 It is used to collect information, monitor ongoing and past activity and generate reports and graphs.
