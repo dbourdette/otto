@@ -18,9 +18,7 @@ package org.otto.graph;
 
 import com.google.common.base.Objects;
 import org.apache.commons.lang.StringEscapeUtils;
-import org.joda.time.DateTime;
-import org.joda.time.Duration;
-import org.joda.time.Interval;
+import org.joda.time.*;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -361,8 +359,10 @@ public class Graph {
         for (GraphRow row : rows) {
             columnIndex = 0;
 
+            ;
+
             builder.append("data.setValue(" + rowIndex + ", " + columnIndex + ", new Date("
-                           + row.getStartDate().getMillis() + "));\n");
+                           + row.getStartDate().withZone(DateTimeZone.UTC).getMillis() + "));\n");
 
             for (GraphColumn column : columns) {
                 columnIndex++;
