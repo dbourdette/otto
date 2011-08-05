@@ -34,7 +34,13 @@
 			<li>yesterday : <fmt:formatNumber value="${yesterdayFrequency.eventsPerMinute}" pattern="# ###.######"/> events per minute</li>
 			<li>last week : <fmt:formatNumber value="${lastWeekFrequency.eventsPerMinute}" pattern="# ###.######"/> events per minute</li>
 		</ul>
-		
+
+        <br/>
+        Collection name in mongodb : ${source.collectionName}
+        <br/>
+        Config Collection name in mongodb : ${source.configCollectionName}
+        <br/>
+
 		<br/>
 		Statistics : ${source.stats}
         <br/><br/>

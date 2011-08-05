@@ -32,12 +32,20 @@ public class DBSource {
 		return events.isCapped();
 	}
 
-	public Integer getSize() {
-		return (Integer) events.getStats().get("storageSize");
+	public Long getSize() {
+		return events.getStats().getLong("storageSize");
 	}
 
-	public Integer getMax() {
-		return (Integer) events.getStats().get("max");
+	public Long getMax() {
+		return events.getStats().getLong("max");
+	}
+
+	public String getCollectionName() {
+		return events.getName();
+	}
+
+	public String getConfigCollectionName() {
+		return config.getName();
 	}
 
 	public CommandResult getStats() {

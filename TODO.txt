@@ -35,7 +35,7 @@ x split on attribute for graphs
 x display size and max for capped collections
 x display stats for collections
 x Delete events : display message that capped collection can not be cleared
-- display config and events table names on source index page
+x display config and events table names on source index page
 - query form for logs
 - logs pagination
 - attribute name (count, size, hits...) for aggregation / and display it on source index page
@@ -67,3 +67,4 @@ x Delete events : display message that capped collection can not be cleared
 - check that random generation generate on all the period
 - nested properties in batch with json
 - localize enums
+- test selenium
