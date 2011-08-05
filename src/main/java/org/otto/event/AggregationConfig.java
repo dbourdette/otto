@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
-package org.otto.web.form;
+package org.otto.event;
 
-import org.otto.event.TimeFrame;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>
  * @version \$Revision$
  */
-public class AggregationForm {
-	private TimeFrame timeFrame;
+public class AggregationConfig {
+	private TimeFrame timeFrame = TimeFrame.MILLISECOND;
+
+    private String attributeName = "count";
 
 	public TimeFrame getTimeFrame() {
 		return timeFrame;
@@ -32,4 +34,12 @@ public class AggregationForm {
 	public void setTimeFrame(TimeFrame timeFrame) {
 		this.timeFrame = timeFrame;
 	}
+
+    public String getAttributeName() {
+        return StringUtils.isEmpty(attributeName) ? "count" : attributeName;
+    }
+
+    public void setAttributeName(String attributeName) {
+        this.attributeName = attributeName;
+    }
 }

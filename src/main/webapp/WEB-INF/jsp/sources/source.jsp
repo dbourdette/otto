@@ -42,7 +42,9 @@
             (size : ${source.size}, max : <fmt:formatNumber value="${source.max}" type="number" />)
         </c:if>
 		<br/><br/>
-		<a href="/sources/${name}/aggregation/form">TimeFrame</a> : ${timeFrame eq 'MILLISECOND' ? 'none' : timeFrame}
+		<a href="/sources/${name}/aggregation/form">Aggregation</a> :
+		<c:if test="${aggregation.timeFrame eq 'MILLISECOND'}">none</c:if>
+        <c:if test="${not (aggregation.timeFrame eq 'MILLISECOND')}">${aggregation.timeFrame} on attribute ${aggregation.attributeName}</c:if>
 		<br/><br/>
 		Event frequency : <br/>
 		<ul>

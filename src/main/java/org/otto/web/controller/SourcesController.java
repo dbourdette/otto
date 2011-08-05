@@ -17,10 +17,10 @@
 package org.otto.web.controller;
 
 import org.apache.commons.lang.StringUtils;
+import org.otto.event.AggregationConfig;
 import org.otto.event.DBSource;
 import org.otto.event.Sources;
 import org.otto.event.TimeFrame;
-import org.otto.web.form.AggregationForm;
 import org.otto.web.form.SourceForm;
 import org.otto.web.util.FlashScope;
 import org.otto.web.util.IntervalUtils;
@@ -55,7 +55,7 @@ public class SourcesController {
         DBSource source = sources.getSource(name);
 
         model.addAttribute("source", source);
-        model.addAttribute("timeFrame", source.getTimeFrame());
+        model.addAttribute("aggregation", source.getAggregation());
         model.addAttribute("lastWeekFrequency", source.findEventsFrequency(IntervalUtils.lastWeek()));
         model.addAttribute("yesterdayFrequency", source.findEventsFrequency(IntervalUtils.yesterday()));
         model.addAttribute("todayFrequency", source.findEventsFrequency(IntervalUtils.today()));
@@ -109,24 +109,21 @@ public class SourcesController {
 
     @RequestMapping("/sources/{name}/aggregation/form")
     public String aggregation(@PathVariable String name, Model model) {
-        AggregationForm form = new AggregationForm();
-        form.setTimeFrame(sources.getSource(name).getTimeFrame());
-
-        model.addAttribute("form", form);
+        model.addAttribute("form", sources.getSource(name).getAggregation());
         model.addAttribute("timeFrames", TimeFrame.values());
 
         return "sources/aggregation_form";
     }
 
     @RequestMapping(value = "/sources/{name}/aggregation", method = RequestMethod.POST)
-    public String saveAggregation(@PathVariable String name, @Valid @ModelAttribute("form") AggregationForm form, BindingResult result, Model model) {
+    public String saveAggregation(@PathVariable String name, @Valid @ModelAttribute("form") AggregationConfig form, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("timeFrames", TimeFrame.values());
 
             return "sources/aggregation_form";
         }
 
-        sources.getSource(name).saveTimeFrame(form.getTimeFrame());
+        sources.getSource(name).saveAggregation(form);
 
         return "redirect:/sources/{name}";
     }

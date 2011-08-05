@@ -41,6 +41,10 @@
 				time frame : <form:select path="timeFrame" items="${timeFrames}" />
 				<form:errors path="timeFrame" />
 			</p>
+            <p>
+				attribute name : <form:input path="attributeName" />
+				<form:errors path="attributeName" />
+			</p>
 			<input type="submit" value="Save" />
 		</form:form>
 	</article>

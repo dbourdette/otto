@@ -89,15 +89,15 @@ public class DBSource {
     }
 
     public void post(Event event) {
-        TimeFrame timeFrame = getTimeFrame();
+        AggregationConfig config = getAggregation();
 
-        if (timeFrame == null || timeFrame == TimeFrame.MILLISECOND) {
+        if (config.getTimeFrame() == null || config.getTimeFrame() == TimeFrame.MILLISECOND) {
             events.insert(event.toDBObject());
         } else {
-            event.setDate(timeFrame.roundDate(event.getDate()));
+            event.setDate(config.getTimeFrame().roundDate(event.getDate()));
 
             BasicDBObject inc = new BasicDBObject();
-            inc.put("$inc", new BasicDBObject("count", 1));
+            inc.put("$inc", new BasicDBObject(config.getAttributeName(), 1));
 
             events.update(event.toDBObject(), inc, true, false);
         }
@@ -107,42 +107,48 @@ public class DBSource {
         events.remove(new BasicDBObject());
     }
 
-    public void saveTimeFrame(TimeFrame timeFrame) {
+    public void saveAggregation(AggregationConfig form) {
         BasicDBObject filter = new BasicDBObject();
         filter.put("name", "aggregation");
 
         BasicDBObject values = new BasicDBObject();
         values.put("name", "aggregation");
 
-        if (timeFrame == null) {
-            values.put("value", null);
+        if (form.getTimeFrame() == null) {
+            values.put("timeFrame", null);
         } else {
-            values.put("value", timeFrame.name());
+            values.put("timeFrame", form.getTimeFrame().name());
         }
+
+        values.put("attributeName", form.getAttributeName());
 
         config.update(filter, values, true, false);
     }
 
-    public TimeFrame getTimeFrame() {
+    public AggregationConfig getAggregation() {
         DBCursor cursor = config.find(new BasicDBObject("name", "aggregation"));
 
         if (!cursor.hasNext()) {
-            return TimeFrame.MILLISECOND;
+            return new AggregationConfig();
         }
 
         DBObject property = cursor.next();
 
         if (property == null) {
-            return TimeFrame.MILLISECOND;
+            return new AggregationConfig();
         }
 
-        String value = (String) property.get("value");
+        AggregationConfig config = new AggregationConfig();
 
-        if (value == null) {
-            return TimeFrame.MILLISECOND;
+        String timeFrame = (String) property.get("timeFrame");
+
+        if (timeFrame != null) {
+            config.setTimeFrame(TimeFrame.valueOf(timeFrame));
         }
 
-        return TimeFrame.valueOf(value);
+        config.setAttributeName((String) property.get("attributeName"));
+
+        return config;
     }
 
     public void drop() {

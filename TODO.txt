@@ -40,10 +40,11 @@ x format size and max when on source index page
 x allow formated size when creating a capped source (ex : 200m / 20M / 100k...)
 x java file header
 x copyright in java files
-- cloudbees
+x cloudbees
+x attribute name (count, size, hits...) for aggregation / and display it on source index page
 - query form for logs
 - logs pagination
-- attribute name (count, size, hits...) for aggregation / and display it on source index page
+- allow spaces and some more chars in source name + create a valid db name + ensure that a name / db name is available when creating a source
 - jquery for date inputs (format yyyy-MM-dd so far)
 - modify to capped collection
 - mongo shell (textarea)
