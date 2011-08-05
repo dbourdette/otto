@@ -16,17 +16,15 @@
 
 package org.otto.graph;
 
-import java.io.IOException;
-import java.util.Locale;
-
 import junit.framework.Assert;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>
@@ -114,7 +112,7 @@ public class GraphTest {
 
     @Test
     public void setDefaultValue() {
-    	graph.setRows(new Interval(now.minusMinutes(10), now));
+        graph.setRows(new Interval(now.minusMinutes(10), now));
 
         graph.setDefaultValue(null);
 
@@ -127,7 +125,7 @@ public class GraphTest {
 
     @Test
     public void increaseValue() {
-    	graph.setRows(new Interval(now.minusMinutes(10), now));
+        graph.setRows(new Interval(now.minusMinutes(10), now));
 
         graph.increaseValue(USER_LOGIN, now.minusMinutes(2));
 
@@ -144,7 +142,7 @@ public class GraphTest {
 
     @Test
     public void cumulate() {
-    	graph.setRows(new Interval(now.minusMinutes(10), now));
+        graph.setRows(new Interval(now.minusMinutes(10), now));
 
         graph.increaseValue(USER_LOGIN, now.minusMinutes(2));
         graph.increaseValue(USER_LOGIN, now.minusMinutes(3), 10);
@@ -158,7 +156,7 @@ public class GraphTest {
 
     @Test
     public void top() {
-    	graph.setRows(new Interval(now.minusMinutes(10), now));
+        graph.setRows(new Interval(now.minusMinutes(10), now));
 
         graph.dropColumn(USER_LOGIN);
         graph.ensureColumnsExists("col1", "col2", "col3");
@@ -188,6 +186,8 @@ public class GraphTest {
 
         String expected = IOUtils.toString(getClass().getResourceAsStream("GraphTest-toCsv.txt"));
 
+        expected = StringUtils.replace(expected, "\r\n", "\n");
+
         Assert.assertEquals("toCsv is incorrect", expected, graph.toCsv());
     }
 
@@ -202,6 +202,8 @@ public class GraphTest {
         graph.setValue(USER_LOGIN, dateTime.minusMinutes(2), 10);
 
         String expected = IOUtils.toString(getClass().getResourceAsStream("GraphTest-toGoogleJs.txt"));
+
+        expected = StringUtils.replace(expected, "\r\n", "\n");
 
         Assert.assertEquals("toGoogleJs is incorrect", expected, graph.toGoogleJs("chart_div", null, null));
     }

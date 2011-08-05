@@ -42,8 +42,8 @@ x java file header
 x copyright in java files
 x cloudbees
 x attribute name (count, size, hits...) for aggregation / and display it on source index page
+x 2 units tests fails on cloudbees due to timezone diff
 - store a default value for stepInMinutes, sumColumn and splitColumn in source configuration
-- 2 units tests fails on cloudbees due to timezone diff
 - query form for logs
 - logs pagination
 - allow spaces and some more chars in source name + create a valid db name + ensure that a name / db name is available when creating a source
