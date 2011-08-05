@@ -36,16 +36,17 @@ x display size and max for capped collections
 x display stats for collections
 x Delete events : display message that capped collection can not be cleared
 x display config and events table names on source index page
+x format size and max when on source index page
+x allow formated size when creating a capped source (ex : 200m / 20M / 100k...)
+- better format size parsing when creating a source (ex 100M 200K) - support for random spaces, lower case...
 - query form for logs
 - logs pagination
 - attribute name (count, size, hits...) for aggregation / and display it on source index page
-- format size and max when on source index page
-- allow formated size when creating a capped source (ex : 200m / 20M / 100k...)
 - add copyright and java file header
 - jquery for date inputs (format yyyy-MM-dd so far)
 - modify to capped collection
 - mongo shell (textarea)
-- load sources config at startup and on change (for perf, not loading source when posting events)
+- load sources config at startup and on change (for perf, not loading source when posting events), pre read aggregation conf...
 - filter out default context.xml
 - be able to start otto on command line (java -jar otto.jar with main class in META-INF)
 - @Async post for remote api

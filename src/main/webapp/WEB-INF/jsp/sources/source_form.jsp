@@ -26,8 +26,8 @@
 				<form:errors path="name" />
 			</p>
 			<p>
-				size : <form:input path="sizeInBytes"/> bytes
-				<form:errors path="sizeInBytes" />
+				size : <form:input path="size"/> (ex : 100M)
+				<form:errors path="size" />
 			</p>
 			<p>
 				max events : <form:input path="maxEvents"/> events

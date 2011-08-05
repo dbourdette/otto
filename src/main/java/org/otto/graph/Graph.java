@@ -1,18 +1,12 @@
 package org.otto.graph;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
+import com.google.common.base.Objects;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.joda.time.Interval;
 
-import com.google.common.base.Objects;
+import java.util.*;
 
 /**
  * Class containing graph data.
@@ -247,8 +241,8 @@ public class Graph {
 
     /**
      * Apply a cumulative sum to given columns
-     * 
-     * @param columnTitle
+     *
+     * @param columnTitle column on which sum is operated
      */
     public void cumulate(String columnTitle) {
         GraphColumn column = getColumn(columnTitle);

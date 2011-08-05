@@ -23,7 +23,7 @@
 		<br/>
 		Capping : ${source.capped ? 'yes' : 'no'}
         <c:if test="${source.capped}">
-            (size : ${source.size}, max : ${source.max})
+            (size : ${source.size}, max : <fmt:formatNumber value="${source.max}" type="number" />)
         </c:if>
 		<br/><br/>
 		<a href="/sources/${name}/aggregation/form">TimeFrame</a> : ${timeFrame eq 'MILLISECOND' ? 'none' : timeFrame}

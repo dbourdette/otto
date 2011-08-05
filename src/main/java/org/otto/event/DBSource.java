@@ -4,6 +4,7 @@ import com.mongodb.*;
 import org.joda.time.Interval;
 import org.otto.web.util.Frequency;
 import org.otto.web.util.IntervalUtils;
+import org.otto.web.util.SizeInBytes;
 
 import java.util.Iterator;
 
@@ -32,8 +33,8 @@ public class DBSource {
 		return events.isCapped();
 	}
 
-	public Long getSize() {
-		return events.getStats().getLong("storageSize");
+	public SizeInBytes getSize() {
+		return new SizeInBytes(events.getStats().getLong("storageSize"));
 	}
 
 	public Long getMax() {

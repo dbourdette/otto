@@ -18,7 +18,6 @@ import java.util.Locale;
 
 @Configuration
 @EnableWebMvc
-@PropertySource("spring.properties")
 public class SpringConfig {
 
     @Inject
