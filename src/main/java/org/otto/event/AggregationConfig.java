@@ -14,35 +14,32 @@
  * limitations under the License.
  */
 
-package org.otto.web.util;
+package org.otto.event;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import junit.framework.Assert;
-
-import org.joda.time.DateMidnight;
-import org.joda.time.DateTime;
-import org.junit.Test;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>
  * @version \$Revision$
  */
-public class RandomDateUtilsTest {
-	@Test
-	public void today() {
-		List<DateTime> dates = new ArrayList<DateTime>();
-		
-		for (int i = 0; i < 100; i++) {
-			DateTime randomDate = RandomDateUtils.today();
-			
-			Assert.assertFalse("Same date generated twice", dates.contains(randomDate));
-			
-			Assert.assertTrue(randomDate.isAfter(new DateMidnight().minus(1)));
-			Assert.assertTrue(randomDate.isBefore(new DateTime().plus(1)));
-			
-			dates.add(randomDate);
-		}
+public class AggregationConfig {
+	private TimeFrame timeFrame = TimeFrame.MILLISECOND;
+
+    private String attributeName = "count";
+
+	public TimeFrame getTimeFrame() {
+		return timeFrame;
 	}
+
+	public void setTimeFrame(TimeFrame timeFrame) {
+		this.timeFrame = timeFrame;
+	}
+
+    public String getAttributeName() {
+        return StringUtils.isEmpty(attributeName) ? "count" : attributeName;
+    }
+
+    public void setAttributeName(String attributeName) {
+        this.attributeName = attributeName;
+    }
 }
