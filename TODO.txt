@@ -39,7 +39,7 @@ x display config and events table names on source index page
 x format size and max when on source index page
 x allow formated size when creating a capped source (ex : 200m / 20M / 100k...)
 x java file header
-- copyright in java files
+x copyright in java files
 - cloudbees
 - query form for logs
 - logs pagination
