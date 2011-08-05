@@ -3,7 +3,8 @@ package org.otto.event;
 import org.joda.time.DateTime;
 
 /**
- * @author damien bourdette
+ * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>
+ * @version \$Revision$
  */
 public enum TimeFrame {
 	MILLISECOND, THIRTY_SECONDS, ONE_MINUTE, FIVE_MINUTES, THIRTY_MINUTES, ONE_HOUR, TWELVE_HOURS, ONE_DAY;

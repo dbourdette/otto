@@ -3,6 +3,10 @@ package org.otto.graph;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 
+/**
+ * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>
+ * @version \$Revision$
+ */
 public class GraphUtils {
 
     private static final Duration ONE_DAY = Duration.standardDays(1);

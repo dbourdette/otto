@@ -12,7 +12,8 @@ import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 
 /**
- * @author damien bourdette
+ * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>
+ * @version \$Revision$
  */
 @Component
 @Scope(value = "request", proxyMode = ScopedProxyMode.TARGET_CLASS)

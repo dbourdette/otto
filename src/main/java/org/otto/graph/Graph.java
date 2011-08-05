@@ -12,6 +12,8 @@ import java.util.*;
  * Class containing graph data.
  * It is able to build csv exports or js inserts for web pages.
  *
+ * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>
+ * @version \$Revision$
  */
 public class Graph {
 

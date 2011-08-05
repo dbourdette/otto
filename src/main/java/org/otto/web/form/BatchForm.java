@@ -3,7 +3,8 @@ package org.otto.web.form;
 import javax.validation.constraints.Min;
 
 /**
- * @author damien bourdette
+ * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>
+ * @version \$Revision$
  */
 public class BatchForm {
 	private String values;

@@ -5,7 +5,8 @@ import org.joda.time.DateMidnight;
 import org.joda.time.Interval;
 
 /**
- * @author damien bourdette
+ * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>
+ * @version \$Revision$
  */
 public class IntervalUtils {
 	public static Interval yesterday() {

@@ -16,6 +16,10 @@ import javax.inject.Inject;
 import java.net.UnknownHostException;
 import java.util.Locale;
 
+/**
+ * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>
+ * @version \$Revision$
+ */
 @Configuration
 @EnableWebMvc
 public class SpringConfig {

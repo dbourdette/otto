@@ -3,6 +3,10 @@ package org.otto.graph;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 
+/**
+ * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>
+ * @version \$Revision$
+ */
 public class GraphRow implements Comparable<GraphRow> {
 
     private Interval interval;

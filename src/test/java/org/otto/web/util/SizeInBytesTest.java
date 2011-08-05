@@ -5,8 +5,8 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 /**
- * @author RTL Group DTIT software development team (last changed by $LastChangedBy$)
- * @version $Revision$
+ * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>
+ * @version \$Revision$
  */
 public class SizeInBytesTest {
     @Test

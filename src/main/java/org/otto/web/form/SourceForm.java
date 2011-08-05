@@ -11,6 +11,10 @@ import org.otto.web.util.SizeInBytes;
 
 import javax.validation.constraints.Pattern;
 
+/**
+ * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>
+ * @version \$Revision$
+ */
 public class SourceForm {
 
     @NotEmpty

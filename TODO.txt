@@ -38,11 +38,12 @@ x Delete events : display message that capped collection can not be cleared
 x display config and events table names on source index page
 x format size and max when on source index page
 x allow formated size when creating a capped source (ex : 200m / 20M / 100k...)
-- better format size parsing when creating a source (ex 100M 200K) - support for random spaces, lower case...
+x java file header
+- copyright in java files
+- cloudbees
 - query form for logs
 - logs pagination
 - attribute name (count, size, hits...) for aggregation / and display it on source index page
-- add copyright and java file header
 - jquery for date inputs (format yyyy-MM-dd so far)
 - modify to capped collection
 - mongo shell (textarea)
@@ -69,3 +70,5 @@ x allow formated size when creating a capped source (ex : 200m / 20M / 100k...)
 - nested properties in batch with json
 - localize enums
 - test selenium
+- better format size parsing when creating a source (ex 100M 200K) - support for random spaces, lower case...
+- docs

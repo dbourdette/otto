@@ -1,5 +1,9 @@
 package org.otto.graph;
 
+/**
+ * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>
+ * @version \$Revision$
+ */
 public class GraphColumn {
 
     private String title;

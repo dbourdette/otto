@@ -1,7 +1,8 @@
 package org.otto.web.util;
 
 /**
- * @author damien bourdette
+ * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>
+ * @version \$Revision$
  */
 public class Constants {
 	public static final String EVENTS = ".events";

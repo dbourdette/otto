@@ -1,18 +1,17 @@
 package org.otto.event;
 
-import java.io.IOException;
-
+import com.mongodb.DBObject;
 import junit.framework.Assert;
-
 import org.codehaus.jackson.JsonParseException;
 import org.joda.time.DateTime;
 import org.junit.Test;
 
-import com.mongodb.DBObject;
+import java.io.IOException;
 
 
 /**
- * @author damien bourdette
+ * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>
+ * @version \$Revision$
  */
 public class EventTest {
 	

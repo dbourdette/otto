@@ -7,7 +7,8 @@ import org.joda.time.DateTime;
 import org.joda.time.Interval;
 
 /**
- * @author damien bourdette
+ * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>
+ * @version \$Revision$
  */
 public class RandomDateUtils {
 	public static DateTime today() {

@@ -4,7 +4,8 @@ import org.joda.time.DateTime;
 import org.otto.web.util.RandomDateUtils;
 
 /**
- * @author damien bourdette
+ * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>
+ * @version \$Revision$
  */
 public enum BatchDateType {
 	CURRENT, RANDOM_TODAY, RANDOM_LAST_7_DAYS;

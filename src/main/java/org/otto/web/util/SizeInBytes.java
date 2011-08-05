@@ -3,7 +3,8 @@ package org.otto.web.util;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * @author damien bourdette
+ * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>
+ * @version \$Revision$
  */
 public class SizeInBytes {
     private static final long SCALE = 1024;

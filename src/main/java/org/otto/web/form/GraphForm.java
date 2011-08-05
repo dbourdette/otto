@@ -4,6 +4,10 @@ import org.joda.time.DateMidnight;
 
 import java.util.Date;
 
+/**
+ * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>
+ * @version \$Revision$
+ */
 public class GraphForm {
 	public Date start;
 	
