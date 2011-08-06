@@ -359,10 +359,8 @@ public class Graph {
         for (GraphRow row : rows) {
             columnIndex = 0;
 
-            ;
-
             builder.append("data.setValue(" + rowIndex + ", " + columnIndex + ", new Date("
-                           + row.getStartDate().withZone(DateTimeZone.UTC).getMillis() + "));\n");
+                           + row.getStartDate().getMillis() + "));\n");
 
             for (GraphColumn column : columns) {
                 columnIndex++;

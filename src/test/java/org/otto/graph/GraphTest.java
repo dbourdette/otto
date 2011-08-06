@@ -20,6 +20,7 @@ import junit.framework.Assert;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.joda.time.Interval;
 import org.junit.Before;
 import org.junit.Test;
@@ -193,7 +194,7 @@ public class GraphTest {
 
     @Test
     public void toGoogleJs() throws IOException {
-        DateTime dateTime = new DateTime(2010, 10, 10, 0, 0, 0, 0);
+        DateTime dateTime = new DateTime(2010, 10, 10, 0, 0, 0, 0, DateTimeZone.forID("+02:00"));
 
         graph.setDefaultValue(0);
         graph.setRows(new Interval(dateTime.minusMinutes(15), dateTime));
