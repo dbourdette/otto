@@ -16,5 +16,5 @@
 
 <Context>
     <Environment name="mongo/url" type="java.lang.String" value="localhost"/>
-    <Environment name="mongo/dbName" type="java.lang.String" value="events"/>
+    <Environment name="mongo/dbName" type="java.lang.String" value="otto"/>
 </Context>
