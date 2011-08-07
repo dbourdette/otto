@@ -21,6 +21,7 @@ import org.otto.event.AggregationConfig;
 import org.otto.event.DBSource;
 import org.otto.event.Sources;
 import org.otto.event.TimeFrame;
+import org.otto.web.form.CappingForm;
 import org.otto.web.form.SourceForm;
 import org.otto.web.util.FlashScope;
 import org.otto.web.util.IntervalUtils;
@@ -124,6 +125,32 @@ public class SourcesController {
         }
 
         sources.getSource(name).saveAggregation(form);
+
+        return "redirect:/sources/{name}";
+    }
+
+    @RequestMapping("/sources/{name}/capping/form")
+    public String capping(@PathVariable String name, Model model) {
+        model.addAttribute("form", new CappingForm());
+
+        return "sources/capping_form";
+    }
+
+    @RequestMapping(value = "/sources/{name}/capping", method = RequestMethod.POST)
+    public String saveCapping(@PathVariable String name, @Valid @ModelAttribute("form") CappingForm form, BindingResult result, Model model) {
+        if (StringUtils.isNotEmpty(form.getSize())) {
+            try {
+                form.getSizeInBytes();
+            } catch (Exception e) {
+                result.rejectValue("size", "size.invalidPattern");
+            }
+        }
+
+        if (result.hasErrors()) {
+            return "sources/capping_form";
+        }
+
+        sources.getSource(name).cap(form);
 
         return "redirect:/sources/{name}";
     }

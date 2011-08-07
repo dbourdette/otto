@@ -18,6 +18,9 @@ package org.otto.event;
 
 import com.mongodb.*;
 import org.joda.time.Interval;
+import org.otto.web.exception.SourceNotFound;
+import org.otto.web.form.CappingForm;
+import org.otto.web.util.Constants;
 import org.otto.web.util.Frequency;
 import org.otto.web.util.IntervalUtils;
 import org.otto.web.util.SizeInBytes;
@@ -29,15 +32,25 @@ import java.util.Iterator;
  * @version \$Revision$
  */
 public class DBSource {
+    private DB mongoDb;
+
+    private String name;
+
     private DBCollection events;
 
     private DBCollection config;
 
-    public static DBSource fromCollection(DBCollection events, DBCollection config) {
+    public static DBSource fromDb(DB mongoDb, String name) {
+        if (!mongoDb.collectionExists(qualifiedName(name))) {
+            throw new SourceNotFound();
+        }
+
         DBSource source = new DBSource();
 
-        source.events = events;
-        source.config = config;
+        source.mongoDb = mongoDb;
+        source.name = name;
+        source.events = mongoDb.getCollection(qualifiedName(name));
+        source.config = mongoDb.getCollection(qualifiedConfigName(name));
 
         return source;
     }
@@ -151,8 +164,34 @@ public class DBSource {
         return config;
     }
 
+    public void cap(CappingForm form) {
+        SizeInBytes sizeInBytes = form.getSizeInBytes();
+
+        if (sizeInBytes == null) {
+            return;
+        }
+
+        BasicDBObject capping = new BasicDBObject();
+
+        capping.put("convertToCapped", qualifiedName(name));
+        capping.put("capped", true);
+        capping.put("size", sizeInBytes.getValue());
+
+        mongoDb.command(capping);
+    }
+
     public void drop() {
         events.drop();
         config.drop();
     }
+
+    static String qualifiedName(String name) {
+        return Constants.SOURCES + name + Constants.EVENTS;
+    }
+
+    static String qualifiedConfigName(String name) {
+        return Constants.SOURCES + name + Constants.CONFIG;
+    }
 }
+
+

@@ -41,14 +41,7 @@ public class Sources {
     private DB mongoDb;
 
     public DBSource getSource(String name) {
-        if (!mongoDb.collectionExists(qualifiedName(name))) {
-            throw new SourceNotFound();
-        }
-
-        DBCollection events = mongoDb.getCollection(qualifiedName(name));
-        DBCollection config = mongoDb.getCollection(qualifiedConfigName(name));
-
-        return DBSource.fromCollection(events, config);
+       return DBSource.fromDb(mongoDb, name);
     }
 
     public DBSource createSource(SourceForm form) {
@@ -67,10 +60,9 @@ public class Sources {
             }
         }
 
-        DBCollection events = mongoDb.createCollection(qualifiedName(form.getName()), capping);
-        DBCollection config = mongoDb.getCollection(qualifiedConfigName(form.getName()));
+        mongoDb.createCollection(DBSource.qualifiedName(form.getName()), capping);
 
-        return DBSource.fromCollection(events, config);
+        return DBSource.fromDb(mongoDb, form.getName());
     }
 
     public List<String> getNames() {
@@ -83,13 +75,5 @@ public class Sources {
         }
 
         return sources;
-    }
-
-    private String qualifiedName(String name) {
-        return Constants.SOURCES + name + Constants.EVENTS;
-    }
-
-    private String qualifiedConfigName(String name) {
-        return Constants.SOURCES + name + Constants.CONFIG;
     }
 }

@@ -35,6 +35,14 @@ public class SizeInBytes {
         this.value = value;
     }
 
+    public static SizeInBytes fromValueNullSafe(String value) {
+        if (StringUtils.isNotEmpty(value)) {
+            return SizeInBytes.fromValue(value);
+        } else {
+            return null;
+        }
+    }
+
     public static SizeInBytes fromValue(String value) {
         if (StringUtils.isEmpty(value)) {
             throw new IllegalArgumentException("value is not a valid size");

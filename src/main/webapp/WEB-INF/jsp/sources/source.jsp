@@ -41,6 +41,9 @@
         <c:if test="${source.capped}">
             (size : ${source.size}, max : <fmt:formatNumber value="${source.max}" type="number" />)
         </c:if>
+        <c:if test="${not source.capped}">
+            (<a href="/sources/${name}/capping/form">add capping</a>)
+        </c:if>
 		<br/><br/>
 		<a href="/sources/${name}/aggregation/form">Aggregation</a> :
 		<c:if test="${aggregation.timeFrame eq 'MILLISECOND'}">none</c:if>

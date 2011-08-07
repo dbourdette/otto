@@ -43,9 +43,10 @@ x copyright in java files
 x cloudbees
 x attribute name (count, size, hits...) for aggregation / and display it on source index page
 x 2 units tests fails on cloudbees due to timezone diff
-- store a default value for stepInMinutes, sumColumn and splitColumn in source configuration
-- modify to capped collection
+x modify to capped collection
 - be able to start otto on command line (java -jar otto.jar with main class in META-INF)
+- use spring mapping (http://www.springsource.org/spring-data/mongodb) ?
+- store a default value for stepInMinutes, sumColumn and splitColumn in source configuration
 - jquery for date inputs (format yyyy-MM-dd so far)
 - query form (key values or json) for logs (+ distinct, order, count ?)
 - logs pagination
@@ -75,4 +76,4 @@ x 2 units tests fails on cloudbees due to timezone diff
 - test selenium
 - better format size parsing when creating a source (ex 100M 200K) - support for random spaces, lower case...
 - docs
-- use spring mapping (http://www.springsource.org/spring-data/mongodb) ?
+- correct message when creating an already existing source
