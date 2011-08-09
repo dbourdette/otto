@@ -44,9 +44,10 @@ x cloudbees
 x attribute name (count, size, hits...) for aggregation / and display it on source index page
 x 2 units tests fails on cloudbees due to timezone diff
 x modify to capped collection
-o be able to start otto on command line (java -jar otto.jar with main class in META-INF) (http://eclipsesource.com/blogs/2009/10/02/executable-wars-with-jetty/)
-- use spring mapping (http://www.springsource.org/spring-data/mongodb) ?
 - store a default value for stepInMinutes, sumColumn and splitColumn in source configuration
+- use spring mapping (http://www.springsource.org/spring-data/mongodb) ?
+- be able to start otto on command line (java -jar otto.jar with main class in META-INF) (http://eclipsesource.com/blogs/2009/10/02/executable-wars-with-jetty/)
+-> create a new module for otto-launcher-x.x.x.jar
 - jquery for date inputs (format yyyy-MM-dd so far)
 - query form (key values or json) for logs (+ distinct, order, count ?)
 - logs pagination
