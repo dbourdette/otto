@@ -40,13 +40,15 @@ x format size and max when on source index page
 x allow formated size when creating a capped source (ex : 200m / 20M / 100k...)
 x java file header
 x copyright in java files
-x cloudbees
+x dev@cloudbees
 x attribute name (count, size, hits...) for aggregation / and display it on source index page
 x 2 units tests fails on cloudbees due to timezone diff
 x modify to capped collection
 x use spring mapping (http://www.springsource.org/spring-data/mongodb) ? -> nope
 x store a default value for stepInMinutes, sumColumn and splitColumn in source configuration
 x correct message when creating an already existing source
+- run@cloudbees config http://wiki.cloudbees.com/bin/view/RUN/CloudBeesWebXml + mongolab
+- Using platform encoding (Cp1252 actually) to copy filtered resources, i.e. build is platform dependent!
 - jquery for date inputs (format yyyy-MM-dd so far)
 - query form (key values or json) for logs (+ distinct, order, count ?)
 - logs pagination and events count
@@ -79,4 +81,5 @@ x correct message when creating an already existing source
 - weird graph when no data
 - be able to start otto on command line (java -jar otto.jar with main class in META-INF) (http://eclipsesource.com/blogs/2009/10/02/executable-wars-with-jetty/)
 -> create a new module for otto-launcher-x.x.x.jar
-- cloudbees config http://wiki.cloudbees.com/bin/view/RUN/CloudBeesWebXml
+- org.otto -> otto
+

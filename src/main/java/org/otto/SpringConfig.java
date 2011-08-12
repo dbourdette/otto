@@ -25,6 +25,7 @@ import com.mongodb.MongoException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.i18n.FixedLocaleResolver;
 import org.springframework.web.servlet.view.JstlView;
@@ -47,6 +48,12 @@ public class SpringConfig {
 
     @Inject
     private String mongoDbName;
+
+    @Inject
+    private String mongoDbUsername;
+
+    @Inject
+    private String mongoDbPassword;
 
     @Bean
     public FixedLocaleResolver fixedLocaleResolver() {
@@ -79,7 +86,13 @@ public class SpringConfig {
 
     @Bean
     public DB mongoDb() throws MongoException, UnknownHostException {
-        return mongo().getDB(mongoDbName);
+        DB db = mongo().getDB(mongoDbName);
+
+        if (org.apache.commons.lang.StringUtils.isNotEmpty(mongoDbUsername)) {
+            db.authenticate(mongoDbUsername, mongoDbPassword.toCharArray());
+        }
+
+        return db;
     }
 
     @Bean
