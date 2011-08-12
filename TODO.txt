@@ -57,8 +57,7 @@ x correct message when creating an already existing source
 - @Async post for remote api
 - web page js api
 - iso pattern for dates (1977-04-22T06:00:00Z) (http://fr.wikipedia.org/wiki/ISO_8601)
-- cap an existing not capped source
-- support for millis in event dates
+- support for millis in event dates ?
 - security
 - authentication
 - authorizations : ROLE_ADMIN + ROLE_EVENTS_{name}
@@ -66,7 +65,7 @@ x correct message when creating an already existing source
 - auth through ldap
 - unit test for mongodb -> integration tests
 - css
-- edit / delete one event - not for capped
+- edit / delete one event from logs - not for capped
 - thresholds and alerts
 - mail reports
 - batch add with random dates with custom range
