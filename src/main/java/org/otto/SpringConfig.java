@@ -35,6 +35,7 @@ import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
+import javax.servlet.ServletContext;
 import java.net.UnknownHostException;
 import java.util.Locale;
 
@@ -47,20 +48,7 @@ import java.util.Locale;
 public class SpringConfig {
 
     @Inject
-    @Qualifier("mongoUrl")
-    private String mongoUrl;
-
-    @Inject
-    @Qualifier("mongoDbName")
-    private String mongoDbName;
-
-    @Inject
-    @Qualifier("mongoDbUsername")
-    private String mongoDbUsername;
-
-    @Inject
-    @Qualifier("mongoDbPassword")
-    private String mongoDbPassword;
+    private ServletContext servletContext;
 
     @Bean
     public FixedLocaleResolver fixedLocaleResolver() {
@@ -88,15 +76,21 @@ public class SpringConfig {
 
     @Bean
     public Mongo mongo() throws MongoException, UnknownHostException {
-        return new Mongo(mongoUrl);
+        String url = servletContext.getInitParameter("mongo/url");
+
+        return new Mongo(url);
     }
 
     @Bean
     public DB mongoDb() throws MongoException, UnknownHostException {
-        DB db = mongo().getDB(mongoDbName);
+        String dbName = servletContext.getInitParameter("mongo/dbName");
+        String username = servletContext.getInitParameter("mongo/username");
+        String password = servletContext.getInitParameter("mongo/password");
 
-        if (org.apache.commons.lang.StringUtils.isNotEmpty(mongoDbUsername)) {
-            db.authenticate(mongoDbUsername, mongoDbPassword.toCharArray());
+        DB db = mongo().getDB(dbName);
+
+        if (org.apache.commons.lang.StringUtils.isNotEmpty(username)) {
+            db.authenticate(username, password.toCharArray());
         }
 
         return db;
@@ -104,7 +98,9 @@ public class SpringConfig {
 
     @Bean
     public Datastore dataStore() throws MongoException, UnknownHostException {
-        return morphia().createDatastore(mongo(), mongoDbName);
+        String dbName = servletContext.getInitParameter("mongo/dbName");
+
+        return morphia().createDatastore(mongo(), dbName);
     }
 
     @Bean

@@ -19,12 +19,10 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:mvc="http://www.springframework.org/schema/mvc"
-       xmlns:jee="http://www.springframework.org/schema/jee"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
-       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
-       http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.0.xsd">
+       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd">
 
     <context:annotation-config/>
 
@@ -35,10 +33,5 @@
     <mvc:interceptors>
         <bean class="org.otto.web.interceptor.FlashScopeInterceptor"/>
     </mvc:interceptors>
-
-    <jee:jndi-lookup id="mongoUrl" jndi-name="mongo/url" expected-type="java.lang.String" default-value="localhost"/>
-    <jee:jndi-lookup id="mongoDbName" jndi-name="mongo/dbName" expected-type="java.lang.String" default-value="otto"/>
-    <jee:jndi-lookup id="mongoDbUsername" jndi-name="mongo/username" expected-type="java.lang.String" default-value=" "/>
-    <jee:jndi-lookup id="mongoDbPassword" jndi-name="mongo/password" expected-type="java.lang.String" default-value=" "/>
 
 </beans>
