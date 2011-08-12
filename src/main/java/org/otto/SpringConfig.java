@@ -22,6 +22,8 @@ import com.google.code.morphia.Morphia;
 import com.mongodb.DB;
 import com.mongodb.Mongo;
 import com.mongodb.MongoException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
@@ -31,6 +33,7 @@ import org.springframework.web.servlet.i18n.FixedLocaleResolver;
 import org.springframework.web.servlet.view.JstlView;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
+import javax.annotation.Resource;
 import javax.inject.Inject;
 import java.net.UnknownHostException;
 import java.util.Locale;
@@ -44,15 +47,19 @@ import java.util.Locale;
 public class SpringConfig {
 
     @Inject
+    @Qualifier("mongoUrl")
     private String mongoUrl;
 
     @Inject
+    @Qualifier("mongoDbName")
     private String mongoDbName;
 
     @Inject
+    @Qualifier("mongoDbUsername")
     private String mongoDbUsername;
 
     @Inject
+    @Qualifier("mongoDbPassword")
     private String mongoDbPassword;
 
     @Bean
