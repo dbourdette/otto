@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.otto.event;
+package org.otto.source;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;

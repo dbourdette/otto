@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.otto.event;
+package org.otto.source;
 
 import junit.framework.Assert;
 import org.joda.time.DateTime;

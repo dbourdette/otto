@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.otto.event;
+package org.otto.source;
 
 import com.google.common.base.Strings;
 import com.mongodb.BasicDBObject;

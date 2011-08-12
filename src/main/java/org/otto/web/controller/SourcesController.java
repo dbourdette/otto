@@ -17,11 +17,11 @@
 package org.otto.web.controller;
 
 import org.apache.commons.lang.StringUtils;
-import org.otto.event.AggregationConfig;
-import org.otto.event.DBSource;
-import org.otto.event.DefaultGraphParameters;
-import org.otto.event.Sources;
-import org.otto.event.TimeFrame;
+import org.otto.source.AggregationConfig;
+import org.otto.source.DBSource;
+import org.otto.source.DefaultGraphParameters;
+import org.otto.source.Sources;
+import org.otto.source.TimeFrame;
 import org.otto.web.form.CappingForm;
 import org.otto.web.form.SourceForm;
 import org.otto.web.util.FlashScope;

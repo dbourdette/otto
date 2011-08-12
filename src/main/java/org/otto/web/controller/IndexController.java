@@ -16,7 +16,7 @@
 
 package org.otto.web.controller;
 
-import org.otto.event.Sources;
+import org.otto.source.Sources;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;

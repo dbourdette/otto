@@ -14,32 +14,42 @@
  * limitations under the License.
  */
 
-package org.otto.event;
-
-import org.apache.commons.lang.StringUtils;
+package org.otto.source;
 
 /**
+ * Default values for graph form for a given source.
+ *
  * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>
  * @version \$Revision$
  */
-public class AggregationConfig {
-	private TimeFrame timeFrame = TimeFrame.MILLISECOND;
+public class DefaultGraphParameters {
+    public int stepInMinutes = 5;
 
-    private String attributeName = "count";
+	public String sumColumn;
 
-	public TimeFrame getTimeFrame() {
-		return timeFrame;
-	}
+    public String splitColumn;
 
-	public void setTimeFrame(TimeFrame timeFrame) {
-		this.timeFrame = timeFrame;
-	}
-
-    public String getAttributeName() {
-        return StringUtils.isEmpty(attributeName) ? "count" : attributeName;
+    public int getStepInMinutes() {
+        return stepInMinutes;
     }
 
-    public void setAttributeName(String attributeName) {
-        this.attributeName = attributeName;
+    public void setStepInMinutes(int stepInMinutes) {
+        this.stepInMinutes = stepInMinutes;
+    }
+
+    public String getSumColumn() {
+        return sumColumn;
+    }
+
+    public void setSumColumn(String sumColumn) {
+        this.sumColumn = sumColumn;
+    }
+
+    public String getSplitColumn() {
+        return splitColumn;
+    }
+
+    public void setSplitColumn(String splitColumn) {
+        this.splitColumn = splitColumn;
     }
 }

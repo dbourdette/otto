@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.otto.event;
+package org.otto.source;
 
 import com.mongodb.DBObject;
 import junit.framework.Assert;

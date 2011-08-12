@@ -14,28 +14,32 @@
  * limitations under the License.
  */
 
-package org.otto.event;
+package org.otto.source;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>
  * @version \$Revision$
  */
-public class EventValue {
-	private Object value;
-	
-	private EventValueType type;
+public class AggregationConfig {
+	private TimeFrame timeFrame = TimeFrame.MILLISECOND;
 
-	public EventValue(EventValueType type, Object value) {
-		super();
-		this.type = type;
-		this.value = value;
+    private String attributeName = "count";
+
+	public TimeFrame getTimeFrame() {
+		return timeFrame;
 	}
 
-	public Object getValue() {
-		return value;
+	public void setTimeFrame(TimeFrame timeFrame) {
+		this.timeFrame = timeFrame;
 	}
 
-	public EventValueType getType() {
-		return type;
-	}
+    public String getAttributeName() {
+        return StringUtils.isEmpty(attributeName) ? "count" : attributeName;
+    }
+
+    public void setAttributeName(String attributeName) {
+        this.attributeName = attributeName;
+    }
 }

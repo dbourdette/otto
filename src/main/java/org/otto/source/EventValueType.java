@@ -14,42 +14,12 @@
  * limitations under the License.
  */
 
-package org.otto.event;
+package org.otto.source;
 
 /**
- * Default values for graph form for a given source.
- *
  * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>
  * @version \$Revision$
  */
-public class DefaultGraphParameters {
-    public int stepInMinutes = 5;
-
-	public String sumColumn;
-
-    public String splitColumn;
-
-    public int getStepInMinutes() {
-        return stepInMinutes;
-    }
-
-    public void setStepInMinutes(int stepInMinutes) {
-        this.stepInMinutes = stepInMinutes;
-    }
-
-    public String getSumColumn() {
-        return sumColumn;
-    }
-
-    public void setSumColumn(String sumColumn) {
-        this.sumColumn = sumColumn;
-    }
-
-    public String getSplitColumn() {
-        return splitColumn;
-    }
-
-    public void setSplitColumn(String splitColumn) {
-        this.splitColumn = splitColumn;
-    }
+public enum EventValueType {
+	STRING, INTEGER, BOOLEAN, DATE;
 }

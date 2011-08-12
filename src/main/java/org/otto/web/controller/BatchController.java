@@ -17,9 +17,9 @@
 package org.otto.web.controller;
 
 import org.codehaus.jackson.JsonParseException;
-import org.otto.event.DBSource;
-import org.otto.event.Event;
-import org.otto.event.Sources;
+import org.otto.source.DBSource;
+import org.otto.source.Event;
+import org.otto.source.Sources;
 import org.otto.web.form.BatchForm;
 import org.otto.web.form.BatchValuesType;
 import org.otto.web.util.FlashScope;
