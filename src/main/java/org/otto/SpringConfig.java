@@ -16,12 +16,14 @@
 
 package org.otto;
 
+import com.google.code.morphia.AdvancedDatastore;
+import com.google.code.morphia.Datastore;
+import com.google.code.morphia.Morphia;
 import com.mongodb.DB;
 import com.mongodb.Mongo;
 import com.mongodb.MongoException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.i18n.FixedLocaleResolver;
@@ -71,8 +73,22 @@ public class SpringConfig {
     }
 
     @Bean
+    public Mongo mongo() throws MongoException, UnknownHostException {
+        return new Mongo(mongoUrl);
+    }
+
+    @Bean
     public DB mongoDb() throws MongoException, UnknownHostException {
-        Mongo mongo = new Mongo(mongoUrl);
-        return mongo.getDB(mongoDbName);
+        return mongo().getDB(mongoDbName);
+    }
+
+    @Bean
+    public Datastore dataStore() throws MongoException, UnknownHostException {
+        return morphia().createDatastore(mongo(), mongoDbName);
+    }
+
+    @Bean
+    public Morphia morphia() throws MongoException, UnknownHostException {
+        return new Morphia();
     }
 }

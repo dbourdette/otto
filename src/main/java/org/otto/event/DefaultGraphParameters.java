@@ -14,32 +14,42 @@
  * limitations under the License.
  */
 
-package org.otto.web.util;
-
-import org.joda.time.DateMidnight;
-import org.joda.time.DateTime;
-import org.joda.time.Interval;
-
-import java.util.Random;
+package org.otto.event;
 
 /**
+ * Default values for graph form for a given source.
+ *
  * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>
  * @version \$Revision$
  */
-public class RandomDateUtils {
-	public static DateTime today() {
-		return in(new Interval(new DateMidnight(), new DateTime()));
-	}
-	
-	public static DateTime last7Days() {
-		return in(new Interval(new DateMidnight().minusDays(6), new DateTime()));
-	}
-	
-	public static DateTime in(Interval interval) {
-		Random random = new Random();
-		
-		long millis = (long) ((interval.getEndMillis() - interval.getStartMillis()) * random.nextDouble());
-		
-		return interval.getStart().plus(millis);
-	}
+public class DefaultGraphParameters {
+    public int stepInMinutes = 5;
+
+	public String sumColumn;
+
+    public String splitColumn;
+
+    public int getStepInMinutes() {
+        return stepInMinutes;
+    }
+
+    public void setStepInMinutes(int stepInMinutes) {
+        this.stepInMinutes = stepInMinutes;
+    }
+
+    public String getSumColumn() {
+        return sumColumn;
+    }
+
+    public void setSumColumn(String sumColumn) {
+        this.sumColumn = sumColumn;
+    }
+
+    public String getSplitColumn() {
+        return splitColumn;
+    }
+
+    public void setSplitColumn(String splitColumn) {
+        this.splitColumn = splitColumn;
+    }
 }

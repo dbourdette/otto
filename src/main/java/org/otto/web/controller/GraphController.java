@@ -23,6 +23,7 @@ import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.joda.time.Interval;
 import org.otto.event.DBSource;
+import org.otto.event.DefaultGraphParameters;
 import org.otto.event.Sources;
 import org.otto.graph.Graph;
 import org.otto.web.form.GraphForm;
@@ -36,12 +37,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.Locale;
+import java.util.Map;
 
 /**
  * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>
@@ -62,7 +64,24 @@ public class GraphController {
     }
 
     @RequestMapping({"/sources/{name}/graph"})
-    public String graph(@PathVariable String name, GraphForm form, BindingResult result, Model model) {
+    public String graph(@PathVariable String name, GraphForm form, BindingResult result, Model model, HttpServletRequest request) {
+        DBSource source = sources.getSource(name);
+        DefaultGraphParameters parameters = source.getDefaultGraphParameters();
+
+        Map<String, String> map = request.getParameterMap();
+
+        if (!map.containsKey("stepInMinutes")) {
+            form.setStepInMinutes(parameters.getStepInMinutes());
+        }
+
+        if (!map.containsKey("splitColumn")) {
+            form.setSplitColumn(parameters.getSplitColumn());
+        }
+
+        if (!map.containsKey("sumColumn")) {
+            form.setSumColumn(parameters.getSumColumn());
+        }
+
         model.addAttribute("navItem", "graph");
         model.addAttribute("form", form);
         model.addAttribute("graph", buildGraph(name, form).toGoogleHtml(1080, 750));

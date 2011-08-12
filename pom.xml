@@ -36,6 +36,11 @@
             <name>Spring milstones</name>
             <url>http://maven.springframework.org/milestone</url>
         </repository>
+        <repository>
+            <id>morphia.googlecode.com</id>
+            <name>Morphia repository</name>
+            <url>http://morphia.googlecode.com/svn/mavenrepo</url>
+        </repository>
     </repositories>
 
     <properties>
@@ -276,11 +281,17 @@
             <scope>compile</scope>
         </dependency>
 
-        <!-- database drivers -->
+        <!-- database drivers and morphia -->
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>
             <version>2.5.2</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.morphia</groupId>
+            <artifactId>morphia</artifactId>
+            <version>0.99</version>
             <scope>compile</scope>
         </dependency>
 

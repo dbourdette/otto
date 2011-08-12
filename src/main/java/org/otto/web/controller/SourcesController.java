@@ -19,6 +19,7 @@ package org.otto.web.controller;
 import org.apache.commons.lang.StringUtils;
 import org.otto.event.AggregationConfig;
 import org.otto.event.DBSource;
+import org.otto.event.DefaultGraphParameters;
 import org.otto.event.Sources;
 import org.otto.event.TimeFrame;
 import org.otto.web.form.CappingForm;
@@ -60,6 +61,7 @@ public class SourcesController {
         model.addAttribute("lastWeekFrequency", source.findEventsFrequency(IntervalUtils.lastWeek()));
         model.addAttribute("yesterdayFrequency", source.findEventsFrequency(IntervalUtils.yesterday()));
         model.addAttribute("todayFrequency", source.findEventsFrequency(IntervalUtils.today()));
+        model.addAttribute("defaultGraphParameters", source.getDefaultGraphParameters());
 
         return "sources/source";
     }
@@ -125,6 +127,24 @@ public class SourcesController {
         }
 
         sources.getSource(name).saveAggregation(form);
+
+        return "redirect:/sources/{name}";
+    }
+
+    @RequestMapping("/sources/{name}/default-graph-params/form")
+    public String defaultGraphParameters(@PathVariable String name, Model model) {
+        model.addAttribute("form", sources.getSource(name).getDefaultGraphParameters());
+
+        return "sources/default_graph_params_form";
+    }
+
+    @RequestMapping(value = "/sources/{name}/default-graph-params", method = RequestMethod.POST)
+    public String saveDefaultGraphParameters(@PathVariable String name, @Valid @ModelAttribute("form") DefaultGraphParameters form, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            return "sources/default_graph_params_form";
+        }
+
+        sources.getSource(name).setDefaultGraphParameters(form);
 
         return "redirect:/sources/{name}";
     }

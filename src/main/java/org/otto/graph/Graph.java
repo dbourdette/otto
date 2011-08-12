@@ -18,11 +18,18 @@ package org.otto.graph;
 
 import com.google.common.base.Objects;
 import org.apache.commons.lang.StringEscapeUtils;
-import org.joda.time.*;
+import org.joda.time.DateTime;
+import org.joda.time.Duration;
+import org.joda.time.Interval;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Class containing graph data.

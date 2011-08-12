@@ -16,7 +16,12 @@
 
 package org.otto.event;
 
-import com.mongodb.*;
+import com.mongodb.BasicDBObject;
+import com.mongodb.CommandResult;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
 import org.joda.time.Interval;
 import org.otto.web.exception.SourceNotFound;
 import org.otto.web.form.CappingForm;
@@ -53,6 +58,14 @@ public class DBSource {
         source.config = mongoDb.getCollection(qualifiedConfigName(name));
 
         return source;
+    }
+
+    public static String qualifiedName(String name) {
+        return Constants.SOURCES + name + Constants.EVENTS;
+    }
+
+    public static String qualifiedConfigName(String name) {
+        return Constants.SOURCES + name + Constants.CONFIG;
     }
 
     public long getCount() {
@@ -121,11 +134,9 @@ public class DBSource {
     }
 
     public void saveAggregation(AggregationConfig form) {
-        BasicDBObject filter = new BasicDBObject();
-        filter.put("name", "aggregation");
+        BasicDBObject filter = new BasicDBObject("name", "aggregation");
 
-        BasicDBObject values = new BasicDBObject();
-        values.put("name", "aggregation");
+        BasicDBObject values = new BasicDBObject("name", "aggregation");
 
         if (form.getTimeFrame() == null) {
             values.put("timeFrame", null);
@@ -139,29 +150,44 @@ public class DBSource {
     }
 
     public AggregationConfig getAggregation() {
-        DBCursor cursor = config.find(new BasicDBObject("name", "aggregation"));
+        DBObject dbObject = findConfigItem("aggregation");
 
-        if (!cursor.hasNext()) {
-            return new AggregationConfig();
+        AggregationConfig aggregationConfig = new AggregationConfig();
+
+        if (dbObject != null) {
+            String timeFrame = (String) dbObject.get("timeFrame");
+
+            aggregationConfig.setTimeFrame(TimeFrame.safeValueOf(timeFrame, TimeFrame.MILLISECOND));
+            aggregationConfig.setAttributeName((String) dbObject.get("attributeName"));
         }
 
-        DBObject property = cursor.next();
+        return aggregationConfig;
+    }
 
-        if (property == null) {
-            return new AggregationConfig();
+    public DefaultGraphParameters getDefaultGraphParameters() {
+        DBObject dbObject = findConfigItem("defaultGraphParameters");
+
+        DefaultGraphParameters parameters = new DefaultGraphParameters();
+
+        if (dbObject != null) {
+            parameters.setStepInMinutes((Integer) dbObject.get("stepInMinutes"));
+            parameters.setSplitColumn((String) dbObject.get("splitColumn"));
+            parameters.setSumColumn((String) dbObject.get("sumColumn"));
         }
 
-        AggregationConfig config = new AggregationConfig();
+        return parameters;
+    }
 
-        String timeFrame = (String) property.get("timeFrame");
+    public void setDefaultGraphParameters(DefaultGraphParameters params) {
+        BasicDBObject filter = new BasicDBObject("name", "defaultGraphParameters");
 
-        if (timeFrame != null) {
-            config.setTimeFrame(TimeFrame.valueOf(timeFrame));
-        }
+        BasicDBObject values = new BasicDBObject("name", "defaultGraphParameters");
 
-        config.setAttributeName((String) property.get("attributeName"));
+        values.put("stepInMinutes", params.getStepInMinutes());
+        values.put("splitColumn", params.getSplitColumn());
+        values.put("sumColumn", params.getSumColumn());
 
-        return config;
+        config.update(filter, values, true, false);
     }
 
     public void cap(CappingForm form) {
@@ -185,12 +211,14 @@ public class DBSource {
         config.drop();
     }
 
-    static String qualifiedName(String name) {
-        return Constants.SOURCES + name + Constants.EVENTS;
-    }
+    private DBObject findConfigItem(String name) {
+        DBCursor cursor = config.find(new BasicDBObject("name", name));
 
-    static String qualifiedConfigName(String name) {
-        return Constants.SOURCES + name + Constants.CONFIG;
+        if (!cursor.hasNext()) {
+            return null;
+        }
+
+        return cursor.next();
     }
 }
 

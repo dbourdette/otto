@@ -18,9 +18,7 @@ package org.otto.event;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
-import com.mongodb.DBCollection;
 import org.apache.commons.lang.StringUtils;
-import org.otto.web.exception.SourceNotFound;
 import org.otto.web.form.SourceForm;
 import org.otto.web.util.Constants;
 import org.otto.web.util.SizeInBytes;
