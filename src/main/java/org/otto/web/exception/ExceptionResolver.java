@@ -43,6 +43,10 @@ public class ExceptionResolver extends DefaultHandlerExceptionResolver {
 			flashScope.message("Source not found");
 
 			return new ModelAndView(new RedirectView("/index"));
+		} else if (ex instanceof SourceAlreadyExists) {
+			flashScope.message("Source already exists");
+
+			return new ModelAndView(new RedirectView("/index"));
 		}
 
 		return super.resolveException(request, response, handler, ex);

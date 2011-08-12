@@ -17,6 +17,7 @@
 package org.otto.web.form;
 
 import org.joda.time.DateMidnight;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -25,8 +26,10 @@ import java.util.Date;
  * @version \$Revision$
  */
 public class GraphForm {
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
 	public Date start;
-	
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
 	public Date end;
 	
 	public int stepInMinutes;

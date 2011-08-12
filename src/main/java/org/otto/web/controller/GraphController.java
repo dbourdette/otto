@@ -27,20 +27,17 @@ import org.otto.event.DefaultGraphParameters;
 import org.otto.event.Sources;
 import org.otto.graph.Graph;
 import org.otto.web.form.GraphForm;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
@@ -55,16 +52,8 @@ public class GraphController {
     @Inject
     private Sources sources;
 
-    @InitBinder
-    public void initBinder(WebDataBinder binder) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        dateFormat.setLenient(false);
-        binder.registerCustomEditor(Date.class, "start", new CustomDateEditor(dateFormat, false));
-        binder.registerCustomEditor(Date.class, "end", new CustomDateEditor(dateFormat, false));
-    }
-
     @RequestMapping({"/sources/{name}/graph"})
-    public String graph(@PathVariable String name, GraphForm form, BindingResult result, Model model, HttpServletRequest request) {
+    public String graph(@PathVariable String name, @Valid GraphForm form, BindingResult result, Model model, HttpServletRequest request) {
         DBSource source = sources.getSource(name);
         DefaultGraphParameters parameters = source.getDefaultGraphParameters();
 

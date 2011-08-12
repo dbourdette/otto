@@ -19,6 +19,7 @@ package org.otto.event;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import org.apache.commons.lang.StringUtils;
+import org.otto.web.exception.SourceAlreadyExists;
 import org.otto.web.form.SourceForm;
 import org.otto.web.util.Constants;
 import org.otto.web.util.SizeInBytes;
@@ -43,6 +44,12 @@ public class Sources {
     }
 
     public DBSource createSource(SourceForm form) {
+        String collectionName = DBSource.qualifiedName(form.getName());
+
+        if (mongoDb.collectionExists(collectionName)) {
+            throw new SourceAlreadyExists();
+        }
+
         BasicDBObject capping = new BasicDBObject();
 
         SizeInBytes sizeInBytes = form.getSizeInBytes();
@@ -58,7 +65,7 @@ public class Sources {
             }
         }
 
-        mongoDb.createCollection(DBSource.qualifiedName(form.getName()), capping);
+        mongoDb.createCollection(collectionName, capping);
 
         return DBSource.fromDb(mongoDb, form.getName());
     }
