@@ -79,3 +79,4 @@ x correct message when creating an already existing source
 - weird graph when no data
 - be able to start otto on command line (java -jar otto.jar with main class in META-INF) (http://eclipsesource.com/blogs/2009/10/02/executable-wars-with-jetty/)
 -> create a new module for otto-launcher-x.x.x.jar
+- cloudbees config http://wiki.cloudbees.com/bin/view/RUN/CloudBeesWebXml
