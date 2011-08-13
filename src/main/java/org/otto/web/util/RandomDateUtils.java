@@ -28,11 +28,11 @@ import java.util.Random;
  */
 public class RandomDateUtils {
 	public static DateTime today() {
-		return in(new Interval(new DateMidnight(), new DateTime()));
+		return in(new Interval(new DateMidnight(), new DateMidnight().plusDays(1)));
 	}
 	
 	public static DateTime last7Days() {
-		return in(new Interval(new DateMidnight().minusDays(6), new DateTime()));
+		return in(new Interval(new DateMidnight().minusDays(6), new DateMidnight().plusDays(1)));
 	}
 	
 	public static DateTime in(Interval interval) {
