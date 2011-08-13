@@ -16,17 +16,14 @@
 
 package org.otto.logs;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
+import com.mongodb.*;
+import org.otto.util.Page;
 import org.otto.web.util.Constants;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>
@@ -34,6 +31,8 @@ import java.util.List;
  */
 @Component
 public class Logs {
+
+    private static final int PAGE_SIZE = 100;
 
 	@Inject
 	private DB mongoDb;
@@ -61,8 +60,8 @@ public class Logs {
 		logs().insert(log);
 	}
 
-	public List<DBObject> top() {
-		return logs().find().sort(new BasicDBObject("date", -1)).limit(100).toArray();
+	public Page<DBObject> page(Integer page) {
+        return Page.fromCursor(logs().find().sort(new BasicDBObject("date", -1)), page, PAGE_SIZE);
 	}
 
 	private DBCollection logs() {

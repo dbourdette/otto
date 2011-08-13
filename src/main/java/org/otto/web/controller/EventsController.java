@@ -26,6 +26,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -46,11 +47,11 @@ public class EventsController {
     private FlashScope flashScope;
 
     @RequestMapping
-    public String events(@PathVariable String name, Model model) {
+    public String events(@PathVariable String name, @RequestParam(required = false) Integer page, Model model) {
         DBSource source = sources.getSource(name);
 
         model.addAttribute("navItem", "logs");
-        model.addAttribute("events", source.findEvents(100));
+        model.addAttribute("events", source.findEvents(page));
 
         return "sources/events";
     }

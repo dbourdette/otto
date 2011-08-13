@@ -20,6 +20,7 @@ import org.otto.logs.Logs;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.inject.Inject;
 
@@ -32,9 +33,9 @@ public class LogsController {
 	@Inject
 	private Logs logs;
 	
-	@RequestMapping({"/logs"})
-    public String graph(Model model) {
-    	model.addAttribute("logs", logs.top());
+	@RequestMapping("/logs")
+    public String logs(@RequestParam(required = false) Integer page, Model model) {
+        model.addAttribute("logs", logs.page(page));
 
         return "logs";
     }

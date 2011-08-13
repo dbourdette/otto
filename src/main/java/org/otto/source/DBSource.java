@@ -23,6 +23,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import org.joda.time.Interval;
+import org.otto.util.Page;
 import org.otto.web.exception.SourceNotFound;
 import org.otto.web.form.CappingForm;
 import org.otto.web.util.Constants;
@@ -37,6 +38,8 @@ import java.util.Iterator;
  * @version \$Revision$
  */
 public class DBSource {
+    private static final int PAGE_SIZE = 100;
+
     private DB mongoDb;
 
     private String name;
@@ -102,8 +105,8 @@ public class DBSource {
         return events.find(query).sort(new BasicDBObject("date", -1)).iterator();
     }
 
-    public Iterator<DBObject> findEvents(int count) {
-        return events.find().sort(new BasicDBObject("date", -1)).limit(count).iterator();
+    public Page<DBObject> findEvents(Integer page) {
+        return Page.fromCursor(events.find().sort(new BasicDBObject("date", -1)), page, PAGE_SIZE);
     }
 
     public Frequency findEventsFrequency(Interval interval) {

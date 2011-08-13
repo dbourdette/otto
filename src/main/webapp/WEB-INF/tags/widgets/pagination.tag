@@ -1,11 +1,9 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ tag language="java" pageEncoding="UTF-8"%>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-
-<%@ taglib tagdir="/WEB-INF/tags/widgets" prefix="widget" %>
+<%@ attribute name="path" required="true" %>
+<%@ attribute name="page" required="true" type="org.otto.util.Page" %>
 
 <%--
   ~ Copyright 2011 Damien Bourdette
@@ -23,28 +21,10 @@
   ~ limitations under the License.
   --%>
 
-<!DOCTYPE html>
-<html lang="fr">
-
-<widget:head />
-
-<body>
-	<widget:header />
-	
-	<article>
-		<h2>Recent activity</h2>
-
-        <span>${logs.totalCount} log entries</span>
-
-		<ul>
-			<c:forEach var="log" items="${logs.items}">
-				<li>${log.message}</li>
-			</c:forEach>
-		</ul>
-
-        <widget:pagination path="/logs" page="${logs}" />
-	</article>
-	
-	<widget:footer />
-</body>
-</html>
+<div class="nav">
+    <a href="${path}?page=${page.index - 1}">&lt; prev</a>
+    <form action="${path}" method="get">
+        <input type="text" name="page" size="3" value="${page.index}" /> / ${page.pageCount}
+    </form>
+    <a href="${path}?page=${page.index + 1}">next &gt;</a>
+</div>

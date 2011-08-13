@@ -33,14 +33,18 @@
 	
 	<article>
 		<widget:nav />
+
+        <span>${events.totalCount} events</span>
 		
 		<div class="logs">
-			<c:forEach var="event" items="${events}">
+			<c:forEach var="event" items="${events.items}">
 				${event}<br/>
 			</c:forEach>
 		</div>
 		
 		<br/>
+
+        <widget:pagination path="/sources/${name}/events" page="${events}" />
 		
 		<a href="/sources/${name}/events/delete">Delete events</a>
 	</article>
