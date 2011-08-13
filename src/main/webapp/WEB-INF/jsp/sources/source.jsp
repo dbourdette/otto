@@ -34,44 +34,61 @@
 	
 	<article>
 		<widget:nav />
-		
-		Event count in db : ${source.count} <br/>
-		<br/>
-		Capping : ${source.capped ? 'yes' : 'no'}
-        <c:if test="${source.capped}">
-            (size : ${source.size}, max : <fmt:formatNumber value="${source.max}" type="number" />)
-        </c:if>
-        <c:if test="${not source.capped}">
-            (<a href="/sources/${name}/capping/form">add capping</a>)
-        </c:if>
-		<br/><br/>
-		<a href="/sources/${name}/aggregation/form">Aggregation</a> :
-		<c:if test="${aggregation.timeFrame eq 'MILLISECOND'}">none</c:if>
-        <c:if test="${not (aggregation.timeFrame eq 'MILLISECOND')}">${aggregation.timeFrame} on attribute ${aggregation.attributeName}</c:if>
-		<br/><br/>
-        <a href="/sources/${name}/default-graph-params/form">Default gragh parameters</a> :
-        Step ${defaultGraphParameters.stepInMinutes}
-        <c:if test="${not empty defaultGraphParameters.splitColumn}">, split on ${defaultGraphParameters.splitColumn}</c:if>
-        <c:if test="${not empty defaultGraphParameters.sumColumn}">, sum on ${defaultGraphParameters.sumColumn}</c:if>
-        <br/><br/>
-		Event frequency : <br/>
-		<ul>
-			<li>today : <fmt:formatNumber value="${todayFrequency.eventsPerMinute}" pattern="# ###.######"/> events per minute</li>
-			<li>yesterday : <fmt:formatNumber value="${yesterdayFrequency.eventsPerMinute}" pattern="# ###.######"/> events per minute</li>
-			<li>last week : <fmt:formatNumber value="${lastWeekFrequency.eventsPerMinute}" pattern="# ###.######"/> events per minute</li>
-		</ul>
 
-        <br/>
-        Collection name in mongodb : ${source.collectionName}
-        <br/>
-        Config Collection name in mongodb : ${source.configCollectionName}
-        <br/>
+        <div>
+            Event count in db : ${source.count} <br/>
+            <br/>
+            Capping : ${source.capped ? 'yes' : 'no'}
+            <c:if test="${source.capped}">
+                (size : ${source.size}, max : <fmt:formatNumber value="${source.max}" type="number" />)
+            </c:if>
+            <c:if test="${not source.capped}">
+                (<a href="/sources/${name}/capping/form">add capping</a>)
+            </c:if>
+            <br/><br/>
+            <a href="/sources/${name}/aggregation/form">Aggregation</a> :
+            <c:if test="${aggregation.timeFrame eq 'MILLISECOND'}">none</c:if>
+            <c:if test="${not (aggregation.timeFrame eq 'MILLISECOND')}">${aggregation.timeFrame} on attribute ${aggregation.attributeName}</c:if>
+            <br/><br/>
+            <a href="/sources/${name}/default-graph-params/form">Default gragh parameters</a> :
+            Step ${defaultGraphParameters.stepInMinutes}
+            <c:if test="${not empty defaultGraphParameters.splitColumn}">, split on ${defaultGraphParameters.splitColumn}</c:if>
+            <c:if test="${not empty defaultGraphParameters.sumColumn}">, sum on ${defaultGraphParameters.sumColumn}</c:if>
 
-		<br/>
-		Statistics : ${source.stats}
-        <br/><br/>
-		
-		<a href="/sources/${name}/delete">delete source</a>
+            <h3>Event frequency</h3>
+            <table>
+                <tr>
+                    <td>today</td>
+                    <td><fmt:formatNumber value="${todayFrequency.eventsPerMinute}" pattern="# ###.######"/> events per minute</td>
+                </tr>
+                <tr>
+                    <td>yesterday</td>
+                    <td><fmt:formatNumber value="${yesterdayFrequency.eventsPerMinute}" pattern="# ###.######"/> events per minute</td>
+                </tr>
+                <tr>
+                    <td>last week</td>
+                    <td><fmt:formatNumber value="${lastWeekFrequency.eventsPerMinute}" pattern="# ###.######"/> events per minute</td>
+                </tr>
+            </table>
+
+            <h3>Mongodb collections</h3>
+            <table>
+                <tr>
+                    <td>events</td>
+                    <td>${source.collectionName}</td>
+                </tr>
+                <tr>
+                    <td>configuration</td>
+                    <td>${source.configCollectionName}</td>
+                </tr>
+            </table>
+
+            <h3>Statistics</h3>
+            ${source.stats}
+            <br/><br/>
+
+            <a href="/sources/${name}/delete">delete source</a>
+        </div>
 	</article>
 	
 	<widget:footer />

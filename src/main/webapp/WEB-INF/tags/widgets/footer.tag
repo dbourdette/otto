@@ -17,5 +17,5 @@
   --%>
 
 <footer>
-	<div class="github">oTTo on GitHub</div>
+	<div class="github"><a href="https://github.com/dbourdette/otto" target="_blank">oTTo on GitHub</a></div>
 </footer>

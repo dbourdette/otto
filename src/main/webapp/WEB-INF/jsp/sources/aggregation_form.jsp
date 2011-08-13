@@ -34,19 +34,21 @@
 	<article>
 		<widget:nav />
 	
-		<h2>Source time frame</h2>
-	
-		<form:form action="/sources/${name}/aggregation" commandName="form" method="post">
-			<p>
-				time frame : <form:select path="timeFrame" items="${timeFrames}" />
-				<form:errors path="timeFrame" />
-			</p>
-            <p>
-				attribute name : <form:input path="attributeName" />
-				<form:errors path="attributeName" />
-			</p>
-			<input type="submit" value="Save" />
-		</form:form>
+		<h2>Aggregation configuration</h2>
+
+        <div>
+            <form:form action="/sources/${name}/aggregation" commandName="form" method="post">
+                <p>
+                    time frame : <form:select path="timeFrame" items="${timeFrames}" />
+                    <form:errors path="timeFrame" />
+                </p>
+                <p>
+                    attribute name : <form:input path="attributeName" />
+                    <form:errors path="attributeName" />
+                </p>
+                <input type="submit" value="Save" />
+            </form:form>
+        </div>
 	</article>
 	
 	<widget:footer />

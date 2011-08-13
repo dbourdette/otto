@@ -33,14 +33,16 @@
 	
 	<article>
 		<widget:nav />
-		
-		<p>You are about to delete ${name} source</p>
-		
-		<br/>
-		
-		<form:form action="/sources/${name}" commandName="form" method="delete">
-			<input type="submit" value="delete source" />
-		</form:form>
+
+        <div>
+            <p>You are about to delete ${name} source</p>
+
+            <br/>
+
+            <form:form action="/sources/${name}" commandName="form" method="delete">
+                <input type="submit" value="delete source" />
+            </form:form>
+        </div>
 	</article>
 	
 	<widget:footer />

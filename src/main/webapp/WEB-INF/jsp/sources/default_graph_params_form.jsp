@@ -35,22 +35,24 @@
 		<widget:nav />
 	
 		<h2>Default graph parameters</h2>
-	
-		<form:form action="/sources/${name}/default-graph-params" commandName="form" method="post">
-			<p>
-				Step <form:input path="stepInMinutes" size="5"/> minute(s)
-				<form:errors path="stepInMinutes" />
-			</p>
-            <p>
-                Split on <form:input path="splitColumn" />
-				<form:errors path="splitColumn" />
-			</p>
-            <p>
-                Sum on <form:input path="sumColumn" />
-				<form:errors path="sumColumn" />
-			</p>
-			<input type="submit" value="Save" />
-		</form:form>
+
+        <div>
+            <form:form action="/sources/${name}/default-graph-params" commandName="form" method="post">
+                <p>
+                    Step <form:input path="stepInMinutes" size="5"/> minute(s)
+                    <form:errors path="stepInMinutes" />
+                </p>
+                <p>
+                    Split on <form:input path="splitColumn" />
+                    <form:errors path="splitColumn" />
+                </p>
+                <p>
+                    Sum on <form:input path="sumColumn" />
+                    <form:errors path="sumColumn" />
+                </p>
+                <input type="submit" value="Save" />
+            </form:form>
+        </div>
 	</article>
 	
 	<widget:footer />

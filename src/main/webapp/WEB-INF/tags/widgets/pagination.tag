@@ -21,7 +21,7 @@
   ~ limitations under the License.
   --%>
 
-<div class="nav">
+<div class="pagination">
     <a href="${path}?page=${page.index - 1}">&lt; prev</a>
     <form action="${path}" method="get">
         <input type="text" name="page" size="3" value="${page.index}" /> / ${page.pageCount}

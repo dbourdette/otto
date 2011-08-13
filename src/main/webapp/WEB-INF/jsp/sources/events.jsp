@@ -34,19 +34,21 @@
 	<article>
 		<widget:nav />
 
-        <span>${events.totalCount} events</span>
-		
-		<div class="logs">
-			<c:forEach var="event" items="${events.items}">
-				${event}<br/>
-			</c:forEach>
-		</div>
-		
-		<br/>
+        <div>
+            <span>${events.totalCount} events</span>
 
-        <widget:pagination path="/sources/${name}/events" page="${events}" />
-		
-		<a href="/sources/${name}/events/delete">Delete events</a>
+            <widget:pagination path="/sources/${name}/events" page="${events}" />
+
+            <div class="logs">
+                <c:forEach var="event" items="${events.items}">
+                    ${event}<br/>
+                </c:forEach>
+            </div>
+
+            <widget:pagination path="/sources/${name}/events" page="${events}" />
+
+            <a href="/sources/${name}/events/delete">Delete events</a>
+        </div>
 	</article>
 	
 	<widget:footer />

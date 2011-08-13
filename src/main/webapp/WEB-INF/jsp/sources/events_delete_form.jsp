@@ -33,14 +33,16 @@
 	
 	<article>
 		<widget:nav />
-		
-		<p>You are about to delete all events for source ${name}</p>
-		
-		<br/>
-		
-		<form:form action="/sources/${name}/events" commandName="form" method="delete">
-			<input type="submit" value="delete events" />
-		</form:form>
+
+        <div>
+            <p>You are about to delete all events for source ${name}</p>
+
+            <br/>
+
+            <form:form action="/sources/${name}/events" commandName="form" method="delete">
+                <input type="submit" value="delete events" />
+            </form:form>
+        </div>
 	</article>
 	
 	<widget:footer />

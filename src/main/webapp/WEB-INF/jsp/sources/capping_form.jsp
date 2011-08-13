@@ -34,15 +34,17 @@
 	<article>
 		<widget:nav />
 
-		<h2>Source time frame</h2>
+		<h2>Source capping</h2>
 
-		<form:form action="/sources/${name}/capping" commandName="form" method="post">
-			<p>
-				size : <form:input path="size"/> (ex : 100M)
-				<form:errors path="size" />
-			</p>
-			<input type="submit" value="Apply" />
-		</form:form>
+        <div>
+            <form:form action="/sources/${name}/capping" commandName="form" method="post">
+                <p>
+                    size : <form:input path="size"/> (ex : 100M)
+                    <form:errors path="size" />
+                </p>
+                <input type="submit" value="Apply" />
+            </form:form>
+        </div>
 	</article>
 
 	<widget:footer />

@@ -33,16 +33,16 @@
 	
 	<article>
 		<h2>Existing event sources</h2>
-	
-		<ul>
-			<c:forEach var="source" items="${sources}">
-				<li><a href="/sources/${source}">${source}</a></li>
-			</c:forEach>
-		</ul>
-		
-		<br/>
-		
-		<a href="/sources/form">Create a new event source</a>
+
+        <div>
+            <ul>
+                <c:forEach var="source" items="${sources}">
+                    <li><a href="/sources/${source}">${source}</a></li>
+                </c:forEach>
+            </ul>
+
+            <a href="/sources/form">Create a new event source</a>
+        </div>
 	</article>
 	
 	<widget:footer />

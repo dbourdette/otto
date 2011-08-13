@@ -34,15 +34,19 @@
 	<article>
 		<h2>Recent activity</h2>
 
-        <span>${logs.totalCount} log entries</span>
+        <div>
+            <span>${logs.totalCount} log entries</span>
 
-		<ul>
-			<c:forEach var="log" items="${logs.items}">
-				<li>${log.message}</li>
-			</c:forEach>
-		</ul>
+            <widget:pagination path="/logs" page="${logs}" />
 
-        <widget:pagination path="/logs" page="${logs}" />
+            <ul>
+                <c:forEach var="log" items="${logs.items}">
+                    <li>${log.message}</li>
+                </c:forEach>
+            </ul>
+
+            <widget:pagination path="/logs" page="${logs}" />
+        </div>
 	</article>
 	
 	<widget:footer />

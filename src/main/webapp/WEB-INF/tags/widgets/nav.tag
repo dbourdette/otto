@@ -1,6 +1,7 @@
 <%@ tag language="java" pageEncoding="UTF-8"%>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 
 <%--
   ~ Copyright 2011 Damien Bourdette
@@ -18,8 +19,9 @@
   ~ limitations under the License.
   --%>
 
+<h1>Source ${fn:escapeXml(name)}</h1>
+
 <div class="nav">
-	<span class="source">${name}</span> :
 	<c:if test="${navItem eq 'index'}">
 		index
 	</c:if>

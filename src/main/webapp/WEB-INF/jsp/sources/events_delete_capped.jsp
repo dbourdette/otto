@@ -33,12 +33,14 @@
 	
 	<article>
 		<widget:nav />
-		
-		<p>You can not delete events from a capped source.</p>
-		
-		<br/>
 
-        <a href="/sources/${name}/events">go back to logs</a>
+        <div>
+            <p>You can not delete events from a capped source.</p>
+
+            <br/>
+
+            <a href="/sources/${name}/events">go back to logs</a>
+        </div>
 	</article>
 	
 	<widget:footer />

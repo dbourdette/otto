@@ -34,23 +34,25 @@
 	<article>
 		<widget:nav />
 	
-		<h2>New event type</h2>
-	
-		<form:form action="/sources" commandName="form" method="post">
-			<p>
-				name : <form:input path="name"/>
-				<form:errors path="name" />
-			</p>
-			<p>
-				size : <form:input path="size"/> (ex : 100M)
-				<form:errors path="size" />
-			</p>
-			<p>
-				max events : <form:input path="maxEvents"/> events
-				<form:errors path="maxEvents" />
-			</p>
-			<input type="submit" value="Create" />
-		</form:form>
+		<h2>New source</h2>
+
+        <div>
+            <form:form action="/sources" commandName="form" method="post">
+                <p>
+                    name : <form:input path="name"/>
+                    <form:errors path="name" />
+                </p>
+                <p>
+                    size : <form:input path="size"/> (ex : 100M)
+                    <form:errors path="size" />
+                </p>
+                <p>
+                    max events : <form:input path="maxEvents"/> events
+                    <form:errors path="maxEvents" />
+                </p>
+                <input type="submit" value="Create" />
+            </form:form>
+        </div>
 	</article>
 	
 	<widget:footer />
