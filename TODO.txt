@@ -53,6 +53,7 @@ x events pagination and event count
 x logs pagination and log count
 x tables (event frequency, collection names, stats...) + css for source index page
 - fix pagination (should start at 1)
+- stats table in source page
 - query form (key values or json) for logs (+ distinct, order, count ?)
 - config page with current mongo db config
 - jquery for date inputs (format yyyy-MM-dd so far)

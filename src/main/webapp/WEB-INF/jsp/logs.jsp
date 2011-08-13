@@ -32,7 +32,7 @@
 	<widget:header />
 	
 	<article>
-		<h2>Recent activity</h2>
+		<h1>Recent activity</h1>
 
         <div>
             <span>${logs.totalCount} log entries</span>

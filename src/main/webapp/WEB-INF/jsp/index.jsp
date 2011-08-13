@@ -32,7 +32,7 @@
 	<widget:header />
 	
 	<article>
-		<h2>Existing event sources</h2>
+		<h1>Existing event sources</h1>
 
         <div>
             <ul>
