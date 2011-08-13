@@ -54,7 +54,7 @@ x events pagination and event count
 x logs pagination and log count
 x tables (event frequency, collection names, stats...) + css for source index page
 x batch today -> whole day, not up to now
-- fix pagination (should start at 1)
+x fix pagination (should start at 1)
 - stats table in source page
 - config page with current mongo db config
 - allow spaces and some more chars in source name + create a valid db name + ensure that a name / db name is available when creating a source

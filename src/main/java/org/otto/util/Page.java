@@ -22,16 +22,16 @@ public class Page<T> {
 
     public static Page<DBObject> fromCursor(DBCursor cursor, Integer index, int pageSize) {
         if (index == null) {
-            index = 0;
+            index = 1;
         }
 
-        if (index < 0) {
-            index = 0;
+        if (index < 1) {
+            index = 1;
         }
 
         Page<DBObject> page = new Page<DBObject>();
 
-        cursor = cursor.skip(index * pageSize).limit(pageSize);
+        cursor = cursor.skip((index - 1) * pageSize).limit(pageSize);
 
         page.index = index;
         page.pageSize = pageSize;
