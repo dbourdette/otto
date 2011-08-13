@@ -47,7 +47,7 @@ x modify to capped collection
 x use spring mapping (http://www.springsource.org/spring-data/mongodb) ? -> nope
 x store a default value for stepInMinutes, sumColumn and splitColumn in source configuration
 x correct message when creating an already existing source
-- run@cloudbees config http://wiki.cloudbees.com/bin/view/RUN/CloudBeesWebXml + mongolab
+x run@cloudbees config http://wiki.cloudbees.com/bin/view/RUN/CloudBeesWebXml + mongolab
 - Using platform encoding (Cp1252 actually) to copy filtered resources, i.e. build is platform dependent!
 - jquery for date inputs (format yyyy-MM-dd so far)
 - query form (key values or json) for logs (+ distinct, order, count ?)

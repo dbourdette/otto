@@ -58,6 +58,7 @@
 
     <properties>
         <spring.version>3.1.0.M2</spring.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <build>
