@@ -40,7 +40,7 @@ public class RandomDateUtilsTest {
 			Assert.assertFalse("Same date generated twice", dates.contains(randomDate));
 			
 			Assert.assertTrue(randomDate.isAfter(new DateMidnight().minus(1)));
-			Assert.assertTrue(randomDate.isBefore(new DateTime().plus(1)));
+			Assert.assertTrue(randomDate.isBefore(new DateMidnight().plusDays(1).plus(1)));
 			
 			dates.add(randomDate);
 		}
