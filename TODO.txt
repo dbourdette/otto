@@ -58,7 +58,6 @@ x fix pagination (should start at 1)
 - set link on github homepage in README to run@cloudbees
 - stats table in source page
 - config page with current mongo db config
-- allow spaces and some more chars in source name + create a valid db name + ensure that a name / db name is available when creating a source
 - @Async post for remote api
 - iso pattern for dates (1977-04-22T06:00:00Z) (http://fr.wikipedia.org/wiki/ISO_8601)
 - configure log4j
@@ -80,6 +79,7 @@ v 0.2
 - write user name in logs
 - better format size parsing when creating a source (ex 100M 200K) - support for random spaces, lower case...
 - start documentation
+- allow spaces and some more chars in source name + create a valid db name + ensure that a name / db name is available when creating a source
 
 v 0.3
 - auth through ldap
