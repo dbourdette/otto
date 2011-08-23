@@ -16,10 +16,10 @@
 
 package org.otto.web.form;
 
+import java.util.Date;
+
 import org.joda.time.DateMidnight;
 import org.springframework.format.annotation.DateTimeFormat;
-
-import java.util.Date;
 
 /**
  * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>

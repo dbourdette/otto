@@ -19,11 +19,11 @@ package org.otto.web.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.Assert;
-
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 /**
  * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>

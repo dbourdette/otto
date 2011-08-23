@@ -16,9 +16,10 @@
 
 package org.otto.web.util;
 
-import com.mongodb.BasicDBObject;
 import org.joda.time.DateMidnight;
 import org.joda.time.Interval;
+
+import com.mongodb.BasicDBObject;
 
 /**
  * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>

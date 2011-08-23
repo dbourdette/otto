@@ -16,10 +16,10 @@
 
 package org.otto.web.form;
 
+import javax.validation.constraints.Pattern;
+
 import org.hibernate.validator.constraints.NotEmpty;
 import org.otto.web.util.SizeInBytes;
-
-import javax.validation.constraints.Pattern;
 
 /**
  * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>

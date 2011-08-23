@@ -16,7 +16,8 @@
 
 package org.otto.graph;
 
-import junit.framework.Assert;
+import java.io.IOException;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
@@ -25,7 +26,7 @@ import org.joda.time.Interval;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
+import junit.framework.Assert;
 
 /**
  * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>

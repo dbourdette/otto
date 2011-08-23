@@ -16,6 +16,11 @@
 
 package org.otto.web.controller;
 
+import java.io.IOException;
+
+import javax.inject.Inject;
+import javax.validation.Valid;
+
 import org.codehaus.jackson.JsonParseException;
 import org.otto.source.DBSource;
 import org.otto.source.Event;
@@ -30,10 +35,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
-import javax.inject.Inject;
-import javax.validation.Valid;
-import java.io.IOException;
 
 /**
  * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>

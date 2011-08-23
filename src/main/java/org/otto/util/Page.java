@@ -1,11 +1,11 @@
 package org.otto.util;
 
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
 
 /**
  * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>

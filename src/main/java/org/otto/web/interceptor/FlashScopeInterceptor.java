@@ -16,12 +16,13 @@
 
 package org.otto.web.interceptor;
 
-import org.otto.web.util.FlashScope;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Map;
+
+import org.otto.web.util.FlashScope;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 /**
  * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>

@@ -16,12 +16,12 @@
 
 package org.otto.web.controller;
 
+import javax.inject.Inject;
+
 import org.otto.source.Sources;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import javax.inject.Inject;
 
 /**
  * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>

@@ -16,8 +16,11 @@
 
 package org.otto.source;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
+
 import org.apache.commons.lang.StringUtils;
 import org.otto.web.exception.SourceAlreadyExists;
 import org.otto.web.form.SourceForm;
@@ -25,9 +28,8 @@ import org.otto.web.util.Constants;
 import org.otto.web.util.SizeInBytes;
 import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
 
 /**
  * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>

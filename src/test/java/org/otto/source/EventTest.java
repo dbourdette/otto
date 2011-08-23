@@ -16,13 +16,15 @@
 
 package org.otto.source;
 
-import com.mongodb.DBObject;
-import junit.framework.Assert;
+import java.io.IOException;
+
 import org.codehaus.jackson.JsonParseException;
 import org.joda.time.DateTime;
 import org.junit.Test;
 
-import java.io.IOException;
+import com.mongodb.DBObject;
+
+import junit.framework.Assert;
 
 
 /**

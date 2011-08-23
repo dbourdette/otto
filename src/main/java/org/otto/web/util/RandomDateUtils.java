@@ -16,11 +16,11 @@
 
 package org.otto.web.util;
 
+import java.util.Random;
+
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
-
-import java.util.Random;
 
 /**
  * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>

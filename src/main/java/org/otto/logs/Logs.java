@@ -16,14 +16,19 @@
 
 package org.otto.logs;
 
-import com.mongodb.*;
+import java.util.Date;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+
 import org.otto.util.Page;
 import org.otto.web.util.Constants;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import java.util.Date;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
 
 /**
  * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>

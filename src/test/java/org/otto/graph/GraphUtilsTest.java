@@ -16,11 +16,11 @@
 
 package org.otto.graph;
 
-import junit.framework.Assert;
-
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 /**
  * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>

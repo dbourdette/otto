@@ -16,16 +16,25 @@
 
 package org.otto.web.controller;
 
-import com.mongodb.DBObject;
+import java.io.IOException;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.Map;
+
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.joda.time.Interval;
+import org.otto.graph.Graph;
 import org.otto.source.DBSource;
 import org.otto.source.DefaultGraphParameters;
 import org.otto.source.Sources;
-import org.otto.graph.Graph;
 import org.otto.web.form.GraphForm;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,14 +42,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.io.IOException;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Map;
+import com.mongodb.DBObject;
 
 /**
  * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>

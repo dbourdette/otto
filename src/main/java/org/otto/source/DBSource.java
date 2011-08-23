@@ -16,12 +16,8 @@
 
 package org.otto.source;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.CommandResult;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
+import java.util.Iterator;
+
 import org.joda.time.Interval;
 import org.otto.util.Page;
 import org.otto.web.exception.SourceNotFound;
@@ -31,7 +27,12 @@ import org.otto.web.util.Frequency;
 import org.otto.web.util.IntervalUtils;
 import org.otto.web.util.SizeInBytes;
 
-import java.util.Iterator;
+import com.mongodb.BasicDBObject;
+import com.mongodb.CommandResult;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
 
 /**
  * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>
