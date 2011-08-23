@@ -31,7 +31,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 
 /**
- * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>
+ * @author damien bourdette
  * @version \$Revision$
  */
 @Component

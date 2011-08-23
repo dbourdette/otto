@@ -5,7 +5,7 @@ import org.junit.Test;
 import junit.framework.Assert;
 
 /**
- * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>
+ * @author damien bourdette
  * @version \$Revision$
  */
 public class PageUtilsTest {

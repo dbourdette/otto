@@ -28,7 +28,7 @@ import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 
 /**
- * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>
+ * @author damien bourdette
  * @version \$Revision$
  */
 @Component

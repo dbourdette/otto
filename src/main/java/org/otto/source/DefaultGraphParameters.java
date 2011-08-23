@@ -19,7 +19,7 @@ package org.otto.source;
 /**
  * Default values for graph form for a given source.
  *
- * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>
+ * @author damien bourdette
  * @version \$Revision$
  */
 public class DefaultGraphParameters {

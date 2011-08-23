@@ -25,7 +25,7 @@ import org.otto.web.util.FlashScope;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 /**
- * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>
+ * @author damien bourdette
  * @version \$Revision$
  */
 public class FlashScopeInterceptor extends HandlerInterceptorAdapter {

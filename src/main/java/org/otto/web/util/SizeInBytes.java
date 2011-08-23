@@ -19,7 +19,7 @@ package org.otto.web.util;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>
+ * @author damien bourdette
  * @version \$Revision$
  */
 public class SizeInBytes {

@@ -27,7 +27,7 @@ import org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolv
 import org.springframework.web.servlet.view.RedirectView;
 
 /**
- * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>
+ * @author damien bourdette
  * @version \$Revision$
  */
 @Component

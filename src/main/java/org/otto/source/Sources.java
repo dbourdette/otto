@@ -32,7 +32,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 
 /**
- * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>
+ * @author damien bourdette
  * @version \$Revision$
  */
 @Component

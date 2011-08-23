@@ -20,7 +20,7 @@ import org.joda.time.DateTime;
 import org.otto.web.util.RandomDateUtils;
 
 /**
- * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>
+ * @author damien bourdette
  * @version \$Revision$
  */
 public enum BatchDateType {

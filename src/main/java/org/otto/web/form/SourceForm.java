@@ -22,7 +22,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.otto.web.util.SizeInBytes;
 
 /**
- * @author damien bourdette <a href="https://github.com/dbourdette">dbourdette on github</a>
+ * @author damien bourdette
  * @version \$Revision$
  */
 public class SourceForm {
