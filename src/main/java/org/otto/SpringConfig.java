@@ -22,6 +22,7 @@ import java.util.Locale;
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
@@ -44,8 +45,13 @@ import com.mongodb.MongoException;
 @EnableWebMvc
 public class SpringConfig {
 
+    public static final String DEFAULT_DB_URL = "localhost";
+
+    public static final String DEFAULT_DB_NAME = "otto";
+
     @Inject
     private ServletContext servletContext;
+
 
     @Bean
     public FixedLocaleResolver fixedLocaleResolver() {
@@ -73,21 +79,17 @@ public class SpringConfig {
 
     @Bean
     public Mongo mongo() throws MongoException, UnknownHostException {
-        String url = servletContext.getInitParameter("mongo/url");
-
-        return new Mongo(url);
+        return new Mongo(getMongoUrl());
     }
 
     @Bean
     public DB mongoDb() throws MongoException, UnknownHostException {
-        String dbName = servletContext.getInitParameter("mongo/dbName");
-        String username = servletContext.getInitParameter("mongo/username");
-        String password = servletContext.getInitParameter("mongo/password");
+        String username = getMongoUsername();
 
-        DB db = mongo().getDB(dbName);
+        DB db = mongo().getDB(getMongoDbName());
 
-        if (org.apache.commons.lang.StringUtils.isNotEmpty(username)) {
-            db.authenticate(username, password.toCharArray());
+        if (StringUtils.isNotEmpty(username)) {
+            db.authenticate(username, getMongoPassword().toCharArray());
         }
 
         return db;
@@ -95,13 +97,38 @@ public class SpringConfig {
 
     @Bean
     public Datastore dataStore() throws MongoException, UnknownHostException {
-        String dbName = servletContext.getInitParameter("mongo/dbName");
-
-        return morphia().createDatastore(mongo(), dbName);
+        return morphia().createDatastore(mongo(), getMongoDbName());
     }
 
     @Bean
     public Morphia morphia() throws MongoException, UnknownHostException {
         return new Morphia();
     }
+
+    public String getMongoUrl() {
+        return getInitParameter("mongo/url", DEFAULT_DB_URL);
+    }
+
+    public String getMongoDbName() {
+        return getInitParameter("mongo/dbName", DEFAULT_DB_NAME);
+    }
+
+    public String getMongoUsername() {
+        return getInitParameter("mongo/username", "");
+    }
+
+    public String getMongoPassword() {
+        return getInitParameter("mongo/password", "");
+    }
+
+    public String getInitParameter(String name, String defaultValue) {
+        String value = servletContext.getInitParameter(name);
+
+        if (StringUtils.isEmpty(value)) {
+            return defaultValue;
+        } else {
+            return value;
+        }
+    }
+
 }

@@ -24,6 +24,7 @@
 	</div>
 	<div class="nav">
 		<a href="/logs">logs</a>
+        <a href="/configuration">configuration</a>
 	</div>
 </header>
 

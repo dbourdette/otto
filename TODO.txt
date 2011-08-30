@@ -57,7 +57,7 @@ x batch today -> whole day, not up to now
 x fix pagination (should start at 1)
 x set link on github homepage in README to run@cloudbees
 x stats table in source page
-- config page with current mongo db config
+x config page with current mongo db config
 - @Async post for remote api
 - iso pattern for dates (1977-04-22T06:00:00Z) (http://fr.wikipedia.org/wiki/ISO_8601)
 - configure log4j
