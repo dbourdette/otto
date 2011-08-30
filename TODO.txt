@@ -59,8 +59,7 @@ x set link on github homepage in README to run@cloudbees
 x stats table in source page
 x config page with current mongo db config
 x @Async post for remote api
-- iso pattern for dates (1977-04-22T06:00:00Z) (http://fr.wikipedia.org/wiki/ISO_8601)
-- configure log4j
+x configure log4j
 - weird graph when no data
 - org.otto -> com.github.dbourdette.otto
 - add javamelody
@@ -82,6 +81,7 @@ v 0.2
 - better format size parsing when creating a source (ex 100M 200K) - support for random spaces, lower case...
 - start documentation
 - allow spaces and some more chars in source name + create a valid db name + ensure that a name / db name is available when creating a source
+- iso pattern for dates (1977-04-22T06:00:00Z) (http://fr.wikipedia.org/wiki/ISO_8601)
 
 v 0.3
 - auth through ldap
