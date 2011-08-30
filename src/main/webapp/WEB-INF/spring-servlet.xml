@@ -28,12 +28,12 @@
 
     <context:annotation-config/>
 
-    <context:component-scan base-package="org.otto"/>
+    <context:component-scan base-package="com.github.dbourdette.otto"/>
 
     <mvc:default-servlet-handler/>
 
     <mvc:interceptors>
-        <bean class="org.otto.web.interceptor.FlashScopeInterceptor"/>
+        <bean class="com.github.dbourdette.otto.web.interceptor.FlashScopeInterceptor"/>
     </mvc:interceptors>
 
     <task:annotation-driven executor="asyncExecutor"/>

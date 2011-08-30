@@ -19,7 +19,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.otto</groupId>
+    <groupId>com.github.dbourdette.otto</groupId>
     <artifactId>otto</artifactId>
     <version>0.1.0-SNAPSHOT</version>
     <name>otto</name>
@@ -42,19 +42,6 @@
             <url>http://morphia.googlecode.com/svn/mavenrepo</url>
         </repository>
     </repositories>
-
-    <pluginRepositories>
-       <pluginRepository>
-         <id>bees-plugins-snapshots</id>
-         <url>http://repository-cloudbees.forge.cloudbees.com/public-snapshot/</url>
-         <releases>
-           <enabled>false</enabled>
-         </releases>
-         <snapshots>
-           <enabled>true</enabled>
-         </snapshots>
-        </pluginRepository>
-    </pluginRepositories>
 
     <properties>
         <spring.version>3.1.0.M2</spring.version>
