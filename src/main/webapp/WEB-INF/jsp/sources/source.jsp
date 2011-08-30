@@ -57,6 +57,10 @@
 
             <h3>Event frequency</h3>
             <table>
+                <colgroup>
+                    <col class="label">
+                    <col>
+                </colgroup>
                 <tr>
                     <td>today</td>
                     <td><fmt:formatNumber value="${todayFrequency.eventsPerMinute}" pattern="# ###.######"/> events per minute</td>
@@ -73,6 +77,10 @@
 
             <h3>Mongodb collections</h3>
             <table>
+                <colgroup>
+                    <col class="label">
+                    <col>
+                </colgroup>
                 <tr>
                     <td>events</td>
                     <td>${source.collectionName}</td>
@@ -84,7 +92,18 @@
             </table>
 
             <h3>Statistics</h3>
-            ${source.stats}
+            <table>
+                <colgroup>
+                    <col class="label">
+                    <col>
+                </colgroup>
+                <c:forEach var="stat" items="${source.stats}" >
+                    <tr>
+                        <td>${stat.key}</td>
+                        <td>${stat.value}</td>
+                    </tr>
+                </c:forEach>
+            </table>
             <br/><br/>
 
             <a href="/sources/${name}/delete">delete source</a>

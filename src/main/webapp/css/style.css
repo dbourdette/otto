@@ -138,6 +138,11 @@ article p {
 article table {
     border-collapse: collapse;
     border: 1px #DDD solid;
+    width: 100%;
+}
+
+article table .label {
+    width: 150px;
 }
 
 article table td {
