@@ -20,10 +20,9 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.joda.time.DateTime;
 import org.otto.source.DBSource;
-import org.otto.source.Event;
 import org.otto.source.Sources;
+import org.otto.web.service.RemoteEventsFacade;
 import org.otto.web.util.FlashScope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -45,6 +44,9 @@ public class EventsController {
 
     @Inject
     private FlashScope flashScope;
+
+    @Inject
+    private RemoteEventsFacade remoteEventsFacade;
 
     @RequestMapping
     public String events(@PathVariable String name, @RequestParam(required = false) Integer page, Model model) {
@@ -86,12 +88,7 @@ public class EventsController {
 
     @RequestMapping(method = RequestMethod.POST)
     public void post(@PathVariable String name, HttpServletRequest request, HttpServletResponse response) {
-        @SuppressWarnings("unchecked")
-        Event event = Event.fromMap(request.getParameterMap());
-
-        event.setDateIfNoneDefined(new DateTime());
-
-        sources.getSource(name).post(event);
+        remoteEventsFacade.post(name, request);
 
         response.setStatus(200);
     }
