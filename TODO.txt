@@ -60,7 +60,7 @@ x stats table in source page
 x config page with current mongo db config
 x @Async post for remote api
 x configure log4j
-- weird graph when no data
+x weird graph when no data
 - org.otto -> com.github.dbourdette.otto
 - add javamelody
 - publish war to cloudbees repo

@@ -130,6 +130,10 @@ public class GraphController {
             }
         }
 
+        if (graph.getColumnCount() == 0) {
+            graph.ensureColumnExists("no data");
+        }
+
         return graph;
     }
 }
