@@ -38,4 +38,12 @@ public class EventValue {
 	public EventValueType getType() {
 		return type;
 	}
+
+    @Override
+    public String toString() {
+        return "EventValue{" +
+                "type=" + type +
+                ", value=" + value +
+                '}';
+    }
 }

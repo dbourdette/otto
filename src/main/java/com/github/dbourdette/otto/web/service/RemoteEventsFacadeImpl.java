@@ -1,7 +1,8 @@
 package com.github.dbourdette.otto.web.service;
 
+import java.util.Map;
+
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
 
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -26,16 +27,21 @@ public class RemoteEventsFacadeImpl implements RemoteEventsFacade {
     private Sources sources;
 
     @Async
-    public void post(String sourceName, HttpServletRequest request) {
+    public void post(String sourceName, Map<String, String> params) {
         LOGGER.debug("Received event for source " + sourceName);
 
-        @SuppressWarnings("unchecked")
-        Event event = Event.fromMap(request.getParameterMap());
+        try {
+            @SuppressWarnings("unchecked")
+            Event event = Event.fromMap(params);
 
-        event.setDateIfNoneDefined(new DateTime());
+            event.setDateIfNoneDefined(new DateTime());
 
-        LOGGER.debug("Saving event " + event);
+            LOGGER.debug("Saving event " + event);
 
-        sources.getSource(sourceName).post(event);
+            sources.getSource(sourceName).post(event);
+        } catch (Exception e) {
+            LOGGER.error("Failed to handle event", e);
+        }
+
     }
 }

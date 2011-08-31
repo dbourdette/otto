@@ -1,6 +1,6 @@
 package com.github.dbourdette.otto.web.service;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 /**
  * Provides a facade for posting and retrieving events.
@@ -9,5 +9,5 @@ import javax.servlet.http.HttpServletRequest;
  * @author damien bourdette
  */
 public interface RemoteEventsFacade {
-    public void post(String sourceName, HttpServletRequest request);
+    public void post(String sourceName, Map<String, String> params);
 }

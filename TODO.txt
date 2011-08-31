@@ -67,23 +67,26 @@ v 0.1-beta2
 x read from slave ok
 x support replicat sets
 v 0.1-beta3
+x integration test for post event
+x /sources/{name}/events (application/json)
 - add javamelody
 - sum, avg, count... on a source with date ranges and criteria
 - iso pattern for dates (1977-04-22T06:00:00Z) (http://fr.wikipedia.org/wiki/ISO_8601)
 - http://www.asciiflow.com/
+- web page js api
+- security
+- authentication
+- write user name in logs
 
 v 0.2
-- web page js api
+- multivalued params in event POST
 - query form (key values or json) for logs (+ distinct, order, count ?)
 - jquery for date inputs (format yyyy-MM-dd so far)
 - mongo shell (textarea)
 - load sources config at startup and on change (for perf, not loading source when posting events), pre read aggregation conf...
 - filter out default context.xml
 - support for millis in event dates ?
-- security
-- authentication
 - authorizations : ROLE_ADMIN + ROLE_EVENTS_{name}
-- write user name in logs
 - better format size parsing when creating a source (ex 100M 200K) - support for random spaces, lower case...
 - start documentation
 - allow spaces and some more chars in source name + create a valid db name + ensure that a name / db name is available when creating a source
