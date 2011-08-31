@@ -78,7 +78,11 @@ public class SpringConfig {
 
     @Bean
     public Mongo mongo() throws MongoException, UnknownHostException {
-        return new Mongo(getMongoUrl());
+        Mongo mongo = new Mongo(getMongoUrl());
+
+        mongo.slaveOk();
+
+        return mongo;
     }
 
     @Bean
