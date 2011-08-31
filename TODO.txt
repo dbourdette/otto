@@ -1,4 +1,4 @@
-v 0.1
+v 0.1-beta1
 x StatSheet -> Graph
 x csv (application/csv ?)
 x index page for type (events per minutes in the last week, day, hour)
@@ -62,11 +62,13 @@ x @Async post for remote api
 x configure log4j
 x weird graph when no data
 x org.otto -> com.github.dbourdette.otto
-- add javamelody
 - publish war to cloudbees repo
+v 0.1-beta2
+- add javamelody
+- sum, avg, count... on a source with date ranges and criteria
+- iso pattern for dates (1977-04-22T06:00:00Z) (http://fr.wikipedia.org/wiki/ISO_8601)
 
 v 0.2
-- sum, avg, count... on a source with date ranges and criteria
 - web page js api
 - query form (key values or json) for logs (+ distinct, order, count ?)
 - jquery for date inputs (format yyyy-MM-dd so far)
@@ -81,7 +83,6 @@ v 0.2
 - better format size parsing when creating a source (ex 100M 200K) - support for random spaces, lower case...
 - start documentation
 - allow spaces and some more chars in source name + create a valid db name + ensure that a name / db name is available when creating a source
-- iso pattern for dates (1977-04-22T06:00:00Z) (http://fr.wikipedia.org/wiki/ISO_8601)
 
 v 0.3
 - auth through ldap
