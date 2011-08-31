@@ -21,7 +21,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.dbourdette.otto</groupId>
     <artifactId>otto</artifactId>
-    <version>0.1.0-beta1</version>
+    <version>0.1.0-beta3</version>
     <name>otto</name>
     <packaging>war</packaging>
     <inceptionYear>2011</inceptionYear>

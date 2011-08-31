@@ -166,5 +166,12 @@ public class Event {
 		if (value == null || value.getType() != EventValueType.DATE) {
 			setDate(date);
 		}
-	}	
+	}
+
+    @Override
+    public String toString() {
+        return "Event{" +
+                "values=" + values +
+                '}';
+    }
 }

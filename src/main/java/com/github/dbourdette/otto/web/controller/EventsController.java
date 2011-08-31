@@ -20,16 +20,17 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.github.dbourdette.otto.source.DBSource;
-import com.github.dbourdette.otto.source.Sources;
-import com.github.dbourdette.otto.web.service.RemoteEventsFacade;
-import com.github.dbourdette.otto.web.util.FlashScope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import com.github.dbourdette.otto.source.DBSource;
+import com.github.dbourdette.otto.source.Sources;
+import com.github.dbourdette.otto.web.service.RemoteEventsFacade;
+import com.github.dbourdette.otto.web.util.FlashScope;
 
 /**
  * @author damien bourdette

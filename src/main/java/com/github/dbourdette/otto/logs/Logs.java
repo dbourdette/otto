@@ -23,6 +23,9 @@ import javax.inject.Inject;
 
 import com.github.dbourdette.otto.util.Page;
 import com.github.dbourdette.otto.web.util.Constants;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.mongodb.BasicDBObject;
@@ -38,6 +41,8 @@ import com.mongodb.DBObject;
 public class Logs {
 
     private static final int PAGE_SIZE = 100;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(Logs.class);
 
 	@Inject
 	private DB mongoDb;
@@ -63,6 +68,8 @@ public class Logs {
 		log.put("message", message);
 
 		logs().insert(log);
+
+        LOGGER.info(message);
 	}
 
 	public Page<DBObject> page(Integer page) {
