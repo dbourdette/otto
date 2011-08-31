@@ -62,8 +62,10 @@ x @Async post for remote api
 x configure log4j
 x weird graph when no data
 x org.otto -> com.github.dbourdette.otto
-- publish war to cloudbees repo
+x publish war to cloudbees repo
 v 0.1-beta2
+x read from slave ok
+- support replicat sets
 - add javamelody
 - sum, avg, count... on a source with date ranges and criteria
 - iso pattern for dates (1977-04-22T06:00:00Z) (http://fr.wikipedia.org/wiki/ISO_8601)
