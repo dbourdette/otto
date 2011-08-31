@@ -17,6 +17,8 @@
 package com.github.dbourdette.otto;
 
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import javax.inject.Inject;
@@ -36,6 +38,7 @@ import com.google.code.morphia.Morphia;
 import com.mongodb.DB;
 import com.mongodb.Mongo;
 import com.mongodb.MongoException;
+import com.mongodb.ServerAddress;
 
 /**
  * @author damien bourdette
@@ -78,7 +81,7 @@ public class SpringConfig {
 
     @Bean
     public Mongo mongo() throws MongoException, UnknownHostException {
-        Mongo mongo = new Mongo(getMongoUrl());
+        Mongo mongo = new Mongo(getMongoServerAdresses());
 
         mongo.slaveOk();
 
@@ -106,6 +109,16 @@ public class SpringConfig {
     @Bean
     public Morphia morphia() throws MongoException, UnknownHostException {
         return new Morphia();
+    }
+
+    public List<ServerAddress> getMongoServerAdresses() throws UnknownHostException {
+        List<ServerAddress> addresses = new ArrayList<ServerAddress>();
+
+        for (String url : StringUtils.split(getMongoUrl(), ",")) {
+            addresses.add(new ServerAddress(url));
+        }
+
+        return addresses;
     }
 
     public String getMongoUrl() {
