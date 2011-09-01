@@ -69,6 +69,7 @@ x support replicat sets
 v 0.1-beta3
 x integration test for post event
 x /sources/{name}/events (application/json)
+- npe at GraphController.buildGraph(GraphController.java:117)
 - add javamelody
 - sum, avg, count... on a source with date ranges and criteria
 - iso pattern for dates (1977-04-22T06:00:00Z) (http://fr.wikipedia.org/wiki/ISO_8601)
