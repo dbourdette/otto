@@ -31,17 +31,17 @@ import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.joda.time.Interval;
-import com.github.dbourdette.otto.graph.Graph;
-import com.github.dbourdette.otto.source.DBSource;
-import com.github.dbourdette.otto.source.DefaultGraphParameters;
-import com.github.dbourdette.otto.source.Sources;
-import com.github.dbourdette.otto.web.form.GraphForm;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.github.dbourdette.otto.graph.Graph;
+import com.github.dbourdette.otto.source.DBSource;
+import com.github.dbourdette.otto.source.DefaultGraphParameters;
+import com.github.dbourdette.otto.source.Sources;
+import com.github.dbourdette.otto.web.form.GraphForm;
 import com.mongodb.DBObject;
 
 /**
@@ -111,11 +111,7 @@ public class GraphController {
         while (events.hasNext()) {
             DBObject event = events.next();
 
-            String columnName = name;
-
-            if (StringUtils.isNotEmpty(form.getSplitColumn())) {
-                columnName = event.get(form.getSplitColumn()).toString();
-            }
+            String columnName = getColumnName(name, form, event);
 
             graph.ensureColumnsExists(columnName);
 
@@ -135,5 +131,19 @@ public class GraphController {
         }
 
         return graph;
+    }
+
+    private String getColumnName(String name, GraphForm form, DBObject event) {
+        if (StringUtils.isEmpty(form.getSplitColumn())) {
+            return name;
+        }
+
+        Object value = event.get(form.getSplitColumn());
+
+        if (value == null) {
+            return name;
+        }
+
+        return value.toString();
     }
 }
