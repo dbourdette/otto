@@ -72,12 +72,12 @@ x /sources/{name}/events (application/json)
 x npe at GraphController.buildGraph(GraphController.java:117)
 - add javamelody
 - sum, avg, count... on a source with date ranges and criteria
-- iso pattern for dates (1977-04-22T06:00:00Z) (http://fr.wikipedia.org/wiki/ISO_8601)
 - http://www.asciiflow.com/
 - web page js api
 - security
 - authentication
 - write user name in logs
+- iso pattern for dates (1977-04-22T06:00:00Z) (http://fr.wikipedia.org/wiki/ISO_8601)
 
 v 0.2
 - multivalued params in event POST
