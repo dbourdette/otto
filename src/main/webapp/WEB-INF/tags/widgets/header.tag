@@ -25,6 +25,7 @@
 	<div class="nav">
 		<a href="/logs">logs</a>
         <a href="/configuration">configuration</a>
+        <a href="/javamelody">javamelody</a>
 	</div>
 </header>
 

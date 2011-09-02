@@ -425,6 +425,14 @@
             <scope>compile</scope>
         </dependency>
 
+        <!-- javamelody -->
+        <dependency>
+            <groupId>net.bull.javamelody</groupId>
+            <artifactId>javamelody-core</artifactId>
+            <version>1.23.0</version>
+            <scope>compile</scope>
+        </dependency>
+
         <!-- joda time -->
         <dependency>
             <groupId>joda-time</groupId>
