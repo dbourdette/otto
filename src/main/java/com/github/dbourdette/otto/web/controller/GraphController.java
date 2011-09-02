@@ -17,8 +17,10 @@
 package com.github.dbourdette.otto.web.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -75,7 +77,23 @@ public class GraphController {
 
         model.addAttribute("navItem", "graph");
         model.addAttribute("form", form);
-        model.addAttribute("graph", buildGraph(name, form).toGoogleHtml(1080, 750));
+
+        Long t1 = System.currentTimeMillis();
+
+        Graph graph = buildGraph(name, form);
+
+        Long t2 = System.currentTimeMillis();
+
+        String html =  graph.toGoogleHtml(1080, 750);
+
+        Long t3 = System.currentTimeMillis();
+
+        List<String> times = new ArrayList<String>();
+        times.add("Gathered graph data in " + (t2 -t1) + "ms");
+        times.add("Build html " + (t3 -t2) + "ms");
+
+        model.addAttribute("times", times);
+        model.addAttribute("graph", html);
 
         return "sources/graph";
     }

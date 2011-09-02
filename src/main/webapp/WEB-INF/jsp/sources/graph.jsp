@@ -51,7 +51,13 @@
         </div>
 	
 		${graph}
-		
+
+        <div>
+            <c:forEach var="time" items="${times}">
+                ${time}<br/>
+            </c:forEach>
+        </div>
+
 		<c:set var="start"><fmt:formatDate value="${form.start}" pattern="yyyy-MM-dd" /></c:set>
 		<c:set var="end"><fmt:formatDate value="${form.end}" pattern="yyyy-MM-dd" /></c:set>
 		
