@@ -168,7 +168,7 @@ public class GraphTest {
         graph.increaseValue("col3", now.minusMinutes(7), 2);
         graph.increaseValue("col1", now.minusMinutes(7), 7);
 
-        graph.top(2, "col1", "col2", "col3");
+        graph.top(2);
 
         Assert.assertEquals("There should be only 2 columns", 2, graph.getColumnCount());
         Assert.assertEquals("Cell should contains 4", (Integer) 4, graph.getValue("col1", 1));

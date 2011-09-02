@@ -81,6 +81,7 @@ public class GraphController {
         Long t1 = System.currentTimeMillis();
 
         Graph graph = buildGraph(name, form);
+        graph.top(20);
 
         Long t2 = System.currentTimeMillis();
 

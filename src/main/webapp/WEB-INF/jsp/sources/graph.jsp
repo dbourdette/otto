@@ -49,7 +49,9 @@
                 <p style="clear:both;"/>
             </form:form>
         </div>
-	
+
+        <div>Top 20 items</div>
+
 		${graph}
 
         <div>

@@ -289,16 +289,16 @@ public class Graph {
     }
 
     /**
-     * Keeps only count top columns from given columns.
+     * Keeps only count top columns from all current columns.
      */
-    public void top(int count, String... columnTitles) {
-        if (count >= columnTitles.length) {
+    public void top(int count) {
+        if (count >= columns.size()) {
             return;
         }
 
         List<ColumnSum> sums = new ArrayList<Graph.ColumnSum>();
 
-        for (GraphColumn column : getColumns(columnTitles)) {
+        for (GraphColumn column : columns) {
             ColumnSum sum = new ColumnSum(column);
 
             for (GraphRow row : rows) {
