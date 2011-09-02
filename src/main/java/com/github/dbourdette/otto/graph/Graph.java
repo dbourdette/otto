@@ -130,7 +130,7 @@ public class Graph {
     private static final int DEFAULT_HEIGHT = 500;
 
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
-    
+
     private final Duration FIVE_MINUTES = Duration.standardMinutes(5);
 
     private final List<GraphRow> rows = new ArrayList<GraphRow>();
@@ -178,18 +178,28 @@ public class Graph {
         return columns.size();
     }
 
-    public void setRows(Interval interval) {
-    	setRows(interval, FIVE_MINUTES);
+    public List<String> getColumnTitles() {
+        List<String> titles = new ArrayList<String>();
+
+        for (GraphColumn column : columns) {
+            titles.add(column.getTitle());
+        }
+
+        return titles;
     }
-    
+
+    public void setRows(Interval interval) {
+        setRows(interval, FIVE_MINUTES);
+    }
+
     public void setRows(Interval interval, Duration step) {
-    	rows.clear();
-    	
+        rows.clear();
+
         DateTime current = interval.getStart();
 
         while (current.isBefore(interval.getEnd())) {
             rows.add(new GraphRow(new Interval(current, step)));
-            
+
             current = current.plus(step);
         }
     }
@@ -356,9 +366,9 @@ public class Graph {
 
         for (GraphColumn column : columns) {
             builder.append("data.addColumn('number', '" + StringEscapeUtils.escapeJavaScript(column.getTitle())
-                           + "');\n");
+                    + "');\n");
         }
-        
+
         builder.append("data.addRows(" + rows.size() + ");\n");
 
         int rowIndex = 0;
@@ -368,7 +378,7 @@ public class Graph {
             columnIndex = 0;
 
             builder.append("data.setValue(" + rowIndex + ", " + columnIndex + ", new Date("
-                           + row.getStartDate().getMillis() + "));\n");
+                    + row.getStartDate().getMillis() + "));\n");
 
             for (GraphColumn column : columns) {
                 columnIndex++;
@@ -383,9 +393,9 @@ public class Graph {
         builder.append("formatter.format(data, 0);\n");
 
         builder.append("var chart = new google.visualization.LineChart(document.getElementById('" + elementId
-                       + "'));\n");
+                + "'));\n");
         builder.append("chart.draw(data, {width: " + (width == null ? DEFAULT_WIDTH : width) + ", height: "
-                       + (height == null ? DEFAULT_HEIGHT : height) + "});");
+                + (height == null ? DEFAULT_HEIGHT : height) + "});");
 
         return builder.toString();
     }
@@ -410,45 +420,45 @@ public class Graph {
 
         return builder.toString();
     }
-    
+
     public String toHtmlTable() {
-    	StringBuilder builder = new StringBuilder();
-    	
-    	builder.append("<table>");
-    	
-    	builder.append("<tr>");
-    	
-    	builder.append("<td>");
-    	builder.append("date");
-    	builder.append("</td>"); 
-    	
-    	for (GraphColumn column : columns) {
-    		builder.append("<td>");
-        	builder.append(column.getTitle());
-        	builder.append("</td>");   
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("<table>");
+
+        builder.append("<tr>");
+
+        builder.append("<td>");
+        builder.append("date");
+        builder.append("</td>");
+
+        for (GraphColumn column : columns) {
+            builder.append("<td>");
+            builder.append(column.getTitle());
+            builder.append("</td>");
         }
-    	
-    	builder.append("</tr>");
-    	
-    	for (GraphRow row : rows) {
-    		builder.append("<tr>");
-    		
-    		builder.append("<td>");
-        	builder.append(row.getStartDate());
-        	builder.append("</td>");
-    		
+
+        builder.append("</tr>");
+
+        for (GraphRow row : rows) {
+            builder.append("<tr>");
+
+            builder.append("<td>");
+            builder.append(row.getStartDate());
+            builder.append("</td>");
+
             for (GraphColumn column : columns) {
-            	builder.append("<td>");
-            	builder.append(getValue(row, column));
-            	builder.append("</td>");                
+                builder.append("<td>");
+                builder.append(getValue(row, column));
+                builder.append("</td>");
             }
 
             builder.append("</tr>");
         }
-    	
-    	builder.append("</table>");
-    	
-    	return builder.toString();
+
+        builder.append("</table>");
+
+        return builder.toString();
     }
 
     public String getDatePattern() {

@@ -17,9 +17,22 @@
 package com.github.dbourdette.otto.web.form;
 
 import java.util.Date;
+import java.util.Iterator;
+import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateMidnight;
+import org.joda.time.DateTime;
+import org.joda.time.Duration;
+import org.joda.time.Interval;
 import org.springframework.format.annotation.DateTimeFormat;
+
+import com.github.dbourdette.otto.graph.Graph;
+import com.github.dbourdette.otto.source.DBSource;
+import com.github.dbourdette.otto.source.DefaultGraphParameters;
+import com.mongodb.DBObject;
 
 /**
  * @author damien bourdette
@@ -46,6 +59,63 @@ public class GraphForm {
 		
 		stepInMinutes = 5;
 	}
+
+    public Interval getInterval() {
+        DateMidnight start = new DateMidnight(this.start);
+        DateMidnight end = new DateMidnight(this.end);
+
+        return new Interval(start, end);
+    }
+
+    public void fillWithDefault(DefaultGraphParameters defaultParameters, HttpServletRequest request) {
+        Map<String, String> map = request.getParameterMap();
+
+        if (!map.containsKey("stepInMinutes")) {
+            setStepInMinutes(defaultParameters.getStepInMinutes());
+        }
+
+        if (!map.containsKey("splitColumn")) {
+            setSplitColumn(defaultParameters.getSplitColumn());
+        }
+
+        if (!map.containsKey("sumColumn")) {
+            setSumColumn(defaultParameters.getSumColumn());
+        }
+    }
+
+    public Graph buildGraph(DBSource source) {
+        Graph graph = new Graph();
+
+        Interval interval = getInterval();
+
+        graph.setRows(interval, Duration.standardMinutes(getStepInMinutes()));
+
+        Iterator<DBObject> events = source.findEvents(interval);
+
+        while (events.hasNext()) {
+            DBObject event = events.next();
+
+            String columnName = getSplitColumnName(source, event);
+
+            graph.ensureColumnsExists(columnName);
+
+            Date date = (Date) event.get("date");
+
+            if (StringUtils.isEmpty(getSumColumn())) {
+                graph.increaseValue(columnName, new DateTime(date));
+            } else {
+                Integer value = (Integer) event.get(getSumColumn());
+
+                graph.increaseValue(columnName, new DateTime(date), value);
+            }
+        }
+
+        if (graph.getColumnCount() == 0) {
+            graph.ensureColumnExists("no data");
+        }
+
+        return graph;
+    }
 
 	public Date getStart() {
 		return start;
@@ -85,5 +155,19 @@ public class GraphForm {
 
     public void setSplitColumn(String splitColumn) {
         this.splitColumn = splitColumn;
+    }
+
+    private String getSplitColumnName(DBSource source, DBObject event) {
+        if (StringUtils.isEmpty(getSplitColumn())) {
+            return source.getName();
+        }
+
+        Object value = event.get(getSplitColumn());
+
+        if (value == null) {
+            return source.getName();
+        }
+
+        return value.toString();
     }
 }

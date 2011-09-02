@@ -16,15 +16,14 @@
 
 package com.github.dbourdette.otto.web.controller;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -41,52 +40,41 @@ import com.github.dbourdette.otto.web.form.GraphForm;
  * @version \$Revision$
  */
 @Controller
-public class GraphController {
+public class StatsController {
 
     @Inject
     private Sources sources;
 
-    @RequestMapping({"/sources/{name}/graph"})
+    @RequestMapping({"/sources/{name}/stats"})
     public String graph(@PathVariable String name, @Valid GraphForm form, BindingResult result, Model model, HttpServletRequest request) {
         DBSource source = sources.getSource(name);
 
         form.fillWithDefault(source.getDefaultGraphParameters(), request);
 
-        model.addAttribute("navItem", "graph");
+        form.setStepInMinutes((int) (form.getInterval().toDuration().getStandardSeconds() / 60));
+
+        model.addAttribute("navItem", "stats");
         model.addAttribute("form", form);
 
-        Long t1 = System.currentTimeMillis();
+        if (StringUtils.isNotEmpty(form.getSumColumn())) {
+            model.addAttribute("sums", getValues(source, form));
+        }
 
+        form.setSumColumn(null);
+        model.addAttribute("counts", getValues(source, form));
+
+        return "sources/stats";
+    }
+
+    public List<String> getValues(DBSource source, GraphForm form) {
         Graph graph = form.buildGraph(source);
-        graph.top(20);
 
-        Long t2 = System.currentTimeMillis();
+        List<String> values = new ArrayList<String>();
 
-        String html =  graph.toGoogleHtml(1080, 750);
+        for (String column : graph.getColumnTitles()) {
+            values.add(column + " : " + graph.getValue(column, 0));
+        }
 
-        Long t3 = System.currentTimeMillis();
-
-        List<String> times = new ArrayList<String>();
-        times.add("Gathered graph data in " + (t2 -t1) + "ms");
-        times.add("Build html " + (t3 -t2) + "ms");
-
-        model.addAttribute("times", times);
-        model.addAttribute("graph", html);
-
-        return "sources/graph";
-    }
-
-    @RequestMapping({"/sources/{name}/graph.csv"})
-    public void csv(@PathVariable String name, GraphForm form, HttpServletResponse response) throws IOException {
-        response.setContentType("application/csv");
-
-        response.getWriter().write(form.buildGraph(sources.getSource(name)).toCsv());
-    }
-
-    @RequestMapping({"/sources/{name}/graph/table"})
-    public String table(@PathVariable String name, GraphForm form, Model model) throws IOException {
-        model.addAttribute("table", form.buildGraph(sources.getSource(name)).toHtmlTable());
-
-        return "sources/graph_table";
+        return values;
     }
 }

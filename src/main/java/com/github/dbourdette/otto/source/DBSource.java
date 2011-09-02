@@ -215,6 +215,10 @@ public class DBSource {
         config.drop();
     }
 
+    public String getName() {
+        return name;
+    }
+
     private DBObject findConfigItem(String name) {
         DBCursor cursor = config.find(new BasicDBObject("name", name));
 
