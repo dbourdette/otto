@@ -63,7 +63,7 @@
 		<c:set var="start"><fmt:formatDate value="${form.start}" pattern="yyyy-MM-dd" /></c:set>
 		<c:set var="end"><fmt:formatDate value="${form.end}" pattern="yyyy-MM-dd" /></c:set>
 		
-		<c:set var="query">start=${start}&end=${end}&stepInMinutes=${form.stepInMinutes}&sumColumn=${form.sumColumn}</c:set>
+		<c:set var="query">start=${start}&amp;end=${end}&amp;stepInMinutes=${form.stepInMinutes}&amp;splitColumn=${form.splitColumn}&amp;sumColumn=${form.sumColumn}</c:set>
 
         <div>
             <a href="/sources/${name}/graph.csv?${query}">csv</a>
