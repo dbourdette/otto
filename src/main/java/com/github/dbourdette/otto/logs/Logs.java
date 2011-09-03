@@ -21,13 +21,14 @@ import java.util.Date;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
-import com.github.dbourdette.otto.util.Page;
-import com.github.dbourdette.otto.web.util.Constants;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import com.github.dbourdette.otto.util.Page;
+import com.github.dbourdette.otto.web.util.Constants;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -64,6 +65,9 @@ public class Logs {
 	public void trace(String message) {
 		BasicDBObject log = new BasicDBObject();
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        log.put("user", authentication.getPrincipal());
 		log.put("date", new Date());
 		log.put("message", message);
 

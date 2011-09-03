@@ -2,6 +2,7 @@
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 
@@ -41,7 +42,7 @@
 
             <ul>
                 <c:forEach var="log" items="${logs.items}">
-                    <li>${log.message}</li>
+                    <li><fmt:formatDate value="${log.date}" pattern="yyyy-MM-dd HH:mm:ss" /> <b>${log.user}</b> - ${log.message}</li>
                 </c:forEach>
             </ul>
 
