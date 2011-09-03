@@ -11,7 +11,8 @@
         <intercept-url pattern="/configuration" access="isAuthenticated()"/>
         <intercept-url pattern="/sources/**" access="isAuthenticated()"/>
         <intercept-url pattern="/" access="isAuthenticated()"/>
-        <http-basic/>
+        <form-login />
+        <logout logout-url="/logout" logout-success-url="/" invalidate-session="true" delete-cookies="true" />
     </http>
 
     <authentication-manager>

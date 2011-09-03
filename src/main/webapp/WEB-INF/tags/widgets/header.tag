@@ -1,5 +1,7 @@
 <%@ tag language="java" pageEncoding="UTF-8"%>
 
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+
 <%@ taglib tagdir="/WEB-INF/tags/widgets" prefix="widget" %>
 
 <%--
@@ -22,6 +24,12 @@
 	<div class="logo"><a href="/">
 		<span class="o">o</span><span class="t">T</span><span class="t">T</span><span class="o">o</span></a>
 	</div>
+    <sec:authorize access="isAuthenticated()">
+        <div class="logout">
+            <sec:authentication property="principal" />
+            <a href="/logout">logout</a>
+        </div>
+    </sec:authorize>
 	<div class="nav">
 		<a href="/logs">logs</a>
         <a href="/configuration">configuration</a>

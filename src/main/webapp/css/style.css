@@ -53,6 +53,12 @@ header .nav {
     bottom: 5px;
 }
 
+header .logout {
+    position: absolute;
+    right: 10px;
+    top: 1px;
+}
+
 footer {
     position: relative;
     border: 1px #CCC solid;
