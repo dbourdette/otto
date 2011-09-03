@@ -52,6 +52,10 @@ public class SpringConfig {
 
     public static final String DEFAULT_DB_NAME = "otto";
 
+    public static final String DEFAULT_SECURITY_USERNAME = "letme";
+
+    public static final String DEFAULT_SECURITY_PASSWORD = "in";
+
     @Inject
     private ServletContext servletContext;
 
@@ -135,6 +139,14 @@ public class SpringConfig {
 
     public String getMongoPassword() {
         return getInitParameter("mongo/password", "");
+    }
+
+    public String getSecurityUsername() {
+        return getInitParameter("security/username", DEFAULT_SECURITY_USERNAME);
+    }
+
+    public String getSecurityPassword() {
+        return getInitParameter("security/password", DEFAULT_SECURITY_PASSWORD);
     }
 
     public String getInitParameter(String name, String defaultValue) {
