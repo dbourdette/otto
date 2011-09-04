@@ -18,11 +18,12 @@ package com.github.dbourdette.otto.web.controller;
 
 import javax.inject.Inject;
 
-import com.github.dbourdette.otto.SpringConfig;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import com.github.dbourdette.otto.SpringConfig;
 
 /**
  * @author damien bourdette
@@ -35,8 +36,9 @@ public class ConfigurationController {
 	
 	@RequestMapping("/configuration")
     public String logs(@RequestParam(required = false) Integer page, Model model) {
+        model.addAttribute("navItem", "configuration");
         model.addAttribute("config", config);
 
-        return "configuration";
+        return "admin/configuration";
     }
 }

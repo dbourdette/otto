@@ -32,28 +32,19 @@
 	<widget:header />
 
 	<article>
-		<h1>Current configuration</h1>
+        <widget:admin_nav />
 
         <div>
-            <h2>mongo db</h2>
-            <table>
-                <colgroup>
-                    <col class="label">
-                    <col>
-                </colgroup>
-                <tr>
-                    <td>url</td>
-                    <td>${config.mongoUrl}</td>
-                </tr>
-                <tr>
-                    <td>db name</td>
-                    <td>${config.mongoDbName}</td>
-                </tr>
-                <tr>
-                    <td>username</td>
-                    <td>${config.mongoUsername}</td>
-                </tr>
-            </table>
+            <c:forEach var="user" items="${users}">
+                <a href="/users/form?id=${user.id}">${fn:escapeXml(user.username)}</a>
+                <c:if test="${user.admin}">(admin)</c:if>
+                sources : ${user.sources}
+                <br/>
+            </c:forEach>
+
+            <br/>
+
+            <a href="/users/form">Add user</a>
         </div>
 	</article>
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.dbourdette.otto.logs;
+package com.github.dbourdette.otto.service.logs;
 
 import java.util.Date;
 
@@ -25,7 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.github.dbourdette.otto.util.Page;
 import com.github.dbourdette.otto.web.util.Constants;
@@ -38,7 +38,7 @@ import com.mongodb.DBObject;
  * @author damien bourdette
  * @version \$Revision$
  */
-@Component
+@Service
 public class Logs {
 
     private static final int PAGE_SIZE = 100;

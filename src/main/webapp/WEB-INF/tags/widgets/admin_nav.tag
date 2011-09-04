@@ -1,4 +1,9 @@
-<!--
+<%@ tag language="java" pageEncoding="UTF-8"%>
+
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+
+<%--
   ~ Copyright 2011 Damien Bourdette
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,11 +17,14 @@
   ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
-  -->
+  --%>
 
-<Context>
-    <Parameter name="mongo/url" value="localhost"/>
-    <Parameter name="mongo/dbName" value="otto"/>
-    <Parameter name="security/default.username" value="admin"/>
-    <Parameter name="security/default.password" value="tomlechat"/>
-</Context>
+<h1>Configuration</h1>
+
+<div class="nav">
+	<c:if test="${navItem eq 'configuration'}">configuration</c:if>
+	<c:if test="${not (navItem eq 'configuration')}"><a href="/configuration">configuration</a></c:if>
+
+	<c:if test="${navItem eq 'users'}">- users</c:if>
+	<c:if test="${not (navItem eq 'users')}">- <a href="/users">users</a></c:if>
+</div>

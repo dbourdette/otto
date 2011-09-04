@@ -30,4 +30,6 @@ public class Constants {
 	public static final String SOURCES = OTTO + "sources.";
 	
 	public static final String LOGS = OTTO + "logs";
+
+    public static final String USERS = OTTO + "users";
 }

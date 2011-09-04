@@ -22,7 +22,7 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
-import com.github.dbourdette.otto.logs.Logs;
+import com.github.dbourdette.otto.service.logs.Logs;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;

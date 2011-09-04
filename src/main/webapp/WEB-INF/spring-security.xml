@@ -6,11 +6,9 @@
                         http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 
     <http auto-config='false' use-expressions="true">
-        <intercept-url pattern="/javamelody" access="isAuthenticated()"/>
-        <intercept-url pattern="/logs" access="isAuthenticated()"/>
-        <intercept-url pattern="/configuration" access="isAuthenticated()"/>
-        <intercept-url pattern="/sources/**" access="isAuthenticated()"/>
-        <intercept-url pattern="/" access="isAuthenticated()"/>
+        <intercept-url pattern="/favicon.ico" access="permitAll" />
+        <intercept-url pattern="/css/**" access="permitAll" />
+        <intercept-url pattern="/**" access="isAuthenticated()"/>
         <form-login />
         <logout logout-url="/logout" logout-success-url="/" invalidate-session="true" delete-cookies="true" />
     </http>

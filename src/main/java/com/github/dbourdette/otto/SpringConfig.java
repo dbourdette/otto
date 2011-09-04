@@ -33,6 +33,7 @@ import org.springframework.web.servlet.i18n.FixedLocaleResolver;
 import org.springframework.web.servlet.view.JstlView;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
+import com.github.dbourdette.otto.service.user.User;
 import com.google.code.morphia.Datastore;
 import com.google.code.morphia.Morphia;
 import com.mongodb.DB;
@@ -112,7 +113,11 @@ public class SpringConfig {
 
     @Bean
     public Morphia morphia() throws MongoException, UnknownHostException {
-        return new Morphia();
+        Morphia morphia = new Morphia();
+
+        morphia.map(User.class);
+
+        return morphia;
     }
 
     public List<ServerAddress> getMongoServerAdresses() throws UnknownHostException {
@@ -141,12 +146,12 @@ public class SpringConfig {
         return getInitParameter("mongo/password", "");
     }
 
-    public String getSecurityUsername() {
-        return getInitParameter("security/username", DEFAULT_SECURITY_USERNAME);
+    public String getSecurityDefaultUsername() {
+        return getInitParameter("security/default.username", DEFAULT_SECURITY_USERNAME);
     }
 
-    public String getSecurityPassword() {
-        return getInitParameter("security/password", DEFAULT_SECURITY_PASSWORD);
+    public String getSecurityDefaultPassword() {
+        return getInitParameter("security/default.password", DEFAULT_SECURITY_PASSWORD);
     }
 
     public String getInitParameter(String name, String defaultValue) {
