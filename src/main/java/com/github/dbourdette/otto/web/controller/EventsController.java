@@ -16,13 +16,8 @@
 
 package com.github.dbourdette.otto.web.controller;
 
-import java.io.IOException;
-
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletResponse;
 
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.node.ObjectNode;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,9 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.github.dbourdette.otto.source.DBSource;
 import com.github.dbourdette.otto.source.Sources;
-import com.github.dbourdette.otto.util.Page;
 import com.github.dbourdette.otto.web.util.FlashScope;
-import com.mongodb.DBObject;
 
 /**
  * @author damien bourdette
@@ -58,21 +51,6 @@ public class EventsController {
         model.addAttribute("events", source.findEvents(page));
 
         return "sources/events";
-    }
-
-    @RequestMapping(method = RequestMethod.GET, headers = "Accept=application/json")
-    public void eventsJson(@PathVariable String name, @RequestParam(required = false) Integer page, HttpServletResponse response) throws IOException {
-        DBSource source = sources.getSource(name);
-        Page<DBObject> events = source.findEvents(page);
-
-        ObjectMapper mapper = new ObjectMapper();
-
-        ObjectNode root = mapper.createObjectNode();
-
-        root.put("count", events.getTotalCount());
-
-        response.setContentType("application/json");
-        mapper.writeValue(response.getOutputStream(), root);
     }
 
     @RequestMapping("/delete")

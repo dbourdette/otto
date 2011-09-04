@@ -16,6 +16,7 @@
 
 package com.github.dbourdette.otto.web.controller.api;
 
+import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,24 +25,50 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.node.ObjectNode;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.github.dbourdette.otto.source.DBSource;
+import com.github.dbourdette.otto.source.Sources;
+import com.github.dbourdette.otto.util.Page;
 import com.github.dbourdette.otto.web.service.RemoteEventsFacade;
+import com.mongodb.DBObject;
 
 /**
  * @author damien bourdette
  * @version \$Revision$
  */
 @Controller
+@RequestMapping("/api/sources/{name}/events")
 public class ApiController {
 
     @Inject
     private RemoteEventsFacade remoteEventsFacade;
 
-    @RequestMapping(value = "/api/sources/{name}/events", method = RequestMethod.POST)
+    @Inject
+    private Sources sources;
+
+    @RequestMapping(method = RequestMethod.GET, headers = "Accept=application/json")
+    public void eventsJson(@PathVariable String name, @RequestParam(required = false) Integer page, HttpServletResponse response) throws IOException {
+        DBSource source = sources.getSource(name);
+        Page<DBObject> events = source.findEvents(page);
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        ObjectNode root = mapper.createObjectNode();
+
+        root.put("count", events.getTotalCount());
+
+        response.setContentType("application/json");
+        mapper.writeValue(response.getOutputStream(), root);
+    }
+
+    @RequestMapping(method = RequestMethod.POST)
     public void post(@PathVariable String name, HttpServletRequest request, HttpServletResponse response) {
         remoteEventsFacade.post(name, copyParams(request));
 

@@ -395,7 +395,7 @@ public class Graph {
         builder.append("var chart = new google.visualization.LineChart(document.getElementById('" + elementId
                 + "'));\n");
         builder.append("chart.draw(data, {width: " + (width == null ? DEFAULT_WIDTH : width) + ", height: "
-                + (height == null ? DEFAULT_HEIGHT : height) + "});");
+                + (height == null ? DEFAULT_HEIGHT : height) + ", backgroundColor:'#FAFAFA'});");
 
         return builder.toString();
     }

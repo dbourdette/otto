@@ -20,17 +20,19 @@ public class PostEventTest {
 
     //private String url = "http://otto.dbourdette.cloudbees.net/sources/test/events";
 
-    private String url = "http://localhost:8080/sources/test/events";
+    private String url = "http://localhost:8080/api/sources/test/events";
 
     private RestTemplate template = new RestTemplate();
 
     @Test
-    public void post() throws IOException {
+    public void post() throws IOException, InterruptedException {
         int count = getEventCount();
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
         params.add("name", "toto");
         template.postForLocation(url, params);
+
+        Thread.sleep(1000);
 
         Assert.assertEquals("There should one more event", count + 1, getEventCount());
     }
