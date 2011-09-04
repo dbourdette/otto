@@ -39,7 +39,14 @@ public class OttoAuthenticationProvider implements AuthenticationProvider {
         }
 
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-        authorities.add(new SimpleGrantedAuthority("user"));
+
+        if (user.isAdmin()) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        }
+
+        for (String source : user.getSourcesAsList()) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_SOURCE_" + source.toUpperCase() + "_USER"));
+        }
 
         return new UsernamePasswordAuthenticationToken(username, password, authorities);
     }

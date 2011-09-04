@@ -33,7 +33,7 @@ import com.github.dbourdette.otto.service.logs.Logs;
 public class LogsController {
 	@Inject
 	private Logs logs;
-	
+
 	@RequestMapping("/logs")
     public String logs(@RequestParam(required = false) Integer page, Model model) {
         model.addAttribute("logs", logs.page(page));

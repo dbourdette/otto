@@ -1,9 +1,10 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 
 <%@ taglib tagdir="/WEB-INF/tags/widgets" prefix="widget" %>
 
@@ -26,25 +27,29 @@
 <!DOCTYPE html>
 <html lang="fr">
 
-<widget:head />
+<widget:head/>
 
 <body>
-	<widget:header />
-	
-	<article>
-		<h1>Existing event sources</h1>
+<widget:header/>
 
-        <div>
-            <ul>
-                <c:forEach var="source" items="${sources}">
+<article>
+    <h1>Existing event sources</h1>
+
+    <div>
+        <ul>
+            <c:forEach var="source" items="${sources}">
+                <sec:authorize access="T(com.github.dbourdette.otto.security.Security).hasSource('${source}')">
                     <li><a href="/sources/${source}">${source}</a></li>
-                </c:forEach>
-            </ul>
+                </sec:authorize>
+            </c:forEach>
+        </ul>
 
+        <sec:authorize access="hasRole('ROLE_ADMIN')">
             <a href="/sources/form">Create a new event source</a>
-        </div>
-	</article>
-	
-	<widget:footer />
+        </sec:authorize>
+    </div>
+</article>
+
+<widget:footer/>
 </body>
 </html>

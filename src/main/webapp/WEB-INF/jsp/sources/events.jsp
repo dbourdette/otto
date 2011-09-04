@@ -1,9 +1,10 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 
 <%@ taglib tagdir="/WEB-INF/tags/widgets" prefix="widget" %>
 
@@ -26,31 +27,33 @@
 <!DOCTYPE html>
 <html lang="fr">
 
-<widget:head />
+<widget:head/>
 
 <body>
-	<widget:header />
-	
-	<article>
-		<widget:nav />
+<widget:header/>
 
-        <div>
-            <span>${events.totalCount} events</span>
+<article>
+    <widget:nav/>
 
-            <widget:pagination path="/sources/${name}/events" page="${events}" />
+    <div>
+        <span>${events.totalCount} events</span>
 
-            <div class="logs">
-                <c:forEach var="event" items="${events.items}">
-                    ${event}<br/>
-                </c:forEach>
-            </div>
+        <widget:pagination path="/sources/${name}/events" page="${events}"/>
 
-            <widget:pagination path="/sources/${name}/events" page="${events}" />
-
-            <a href="/sources/${name}/events/delete">Delete events</a>
+        <div class="logs">
+            <c:forEach var="event" items="${events.items}">
+                ${event}<br/>
+            </c:forEach>
         </div>
-	</article>
-	
-	<widget:footer />
+
+        <widget:pagination path="/sources/${name}/events" page="${events}"/>
+
+        <sec:authorize access="hasRole('ROLE_ADMIN')">
+            <a href="/sources/${name}/events/delete">Delete events</a>
+        </sec:authorize>
+    </div>
+</article>
+
+<widget:footer/>
 </body>
 </html>

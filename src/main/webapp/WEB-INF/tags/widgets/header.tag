@@ -1,6 +1,6 @@
-<%@ tag language="java" pageEncoding="UTF-8"%>
+<%@ tag language="java" pageEncoding="UTF-8" %>
 
-<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 
 <%@ taglib tagdir="/WEB-INF/tags/widgets" prefix="widget" %>
 
@@ -21,20 +21,22 @@
   --%>
 
 <header>
-	<div class="logo"><a href="/">
-		<span class="o">o</span><span class="t">T</span><span class="t">T</span><span class="o">o</span></a>
-	</div>
+    <div class="logo"><a href="/">
+        <span class="o">o</span><span class="t">T</span><span class="t">T</span><span class="o">o</span></a>
+    </div>
     <sec:authorize access="isAuthenticated()">
         <div class="logout">
-            <sec:authentication property="principal" />
+            <sec:authentication property="principal"/>
             <a href="/logout">logout</a>
         </div>
     </sec:authorize>
-	<div class="nav">
-		<a href="/logs">logs</a>
-        <a href="/configuration">configuration</a>
-        <a href="/javamelody">javamelody</a>
-	</div>
+    <sec:authorize access="hasRole('ROLE_ADMIN')">
+        <div class="nav">
+            <a href="/logs">logs</a>
+            <a href="/configuration">configuration</a>
+            <a href="/javamelody">javamelody</a>
+        </div>
+    </sec:authorize>
 </header>
 
-<widget:message />
+<widget:message/>

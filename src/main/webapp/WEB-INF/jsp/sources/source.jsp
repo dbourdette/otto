@@ -1,10 +1,11 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 
 <%@ taglib tagdir="/WEB-INF/tags/widgets" prefix="widget" %>
 
@@ -27,20 +28,22 @@
 <!DOCTYPE html>
 <html lang="fr">
 
-<widget:head />
+<widget:head/>
 
 <body>
-	<widget:header />
-	
-	<article>
-		<widget:nav />
+<widget:header/>
 
-        <div>
-            Event count in db : ${source.count} <br/>
+<article>
+    <widget:nav/>
+
+    <div>
+        Event count in db : ${source.count} <br/>
+
+        <sec:authorize access="hasRole('ROLE_ADMIN')">
             <br/>
             Capping : ${source.capped ? 'yes' : 'no'}
             <c:if test="${source.capped}">
-                (size : ${source.size}, max : <fmt:formatNumber value="${source.max}" type="number" />)
+                (size : ${source.size}, max : <fmt:formatNumber value="${source.max}" type="number"/>)
             </c:if>
             <c:if test="${not source.capped}">
                 (<a href="/sources/${name}/capping/form">add capping</a>)
@@ -54,27 +57,29 @@
             Step ${defaultGraphParameters.stepInMinutes}
             <c:if test="${not empty defaultGraphParameters.splitColumn}">, split on ${defaultGraphParameters.splitColumn}</c:if>
             <c:if test="${not empty defaultGraphParameters.sumColumn}">, sum on ${defaultGraphParameters.sumColumn}</c:if>
+        </sec:authorize>
 
-            <h3>Event frequency</h3>
-            <table>
-                <colgroup>
-                    <col class="label">
-                    <col>
-                </colgroup>
-                <tr>
-                    <td>today</td>
-                    <td><fmt:formatNumber value="${todayFrequency.eventsPerMinute}" pattern="# ###.######"/> events per minute</td>
-                </tr>
-                <tr>
-                    <td>yesterday</td>
-                    <td><fmt:formatNumber value="${yesterdayFrequency.eventsPerMinute}" pattern="# ###.######"/> events per minute</td>
-                </tr>
-                <tr>
-                    <td>last week</td>
-                    <td><fmt:formatNumber value="${lastWeekFrequency.eventsPerMinute}" pattern="# ###.######"/> events per minute</td>
-                </tr>
-            </table>
+        <h3>Event frequency</h3>
+        <table>
+            <colgroup>
+                <col class="label">
+                <col>
+            </colgroup>
+            <tr>
+                <td>today</td>
+                <td><fmt:formatNumber value="${todayFrequency.eventsPerMinute}" pattern="# ###.######"/> events per minute</td>
+            </tr>
+            <tr>
+                <td>yesterday</td>
+                <td><fmt:formatNumber value="${yesterdayFrequency.eventsPerMinute}" pattern="# ###.######"/> events per minute</td>
+            </tr>
+            <tr>
+                <td>last week</td>
+                <td><fmt:formatNumber value="${lastWeekFrequency.eventsPerMinute}" pattern="# ###.######"/> events per minute</td>
+            </tr>
+        </table>
 
+        <sec:authorize access="hasRole('ROLE_ADMIN')">
             <h3>Mongodb collections</h3>
             <table>
                 <colgroup>
@@ -97,7 +102,7 @@
                     <col class="label">
                     <col>
                 </colgroup>
-                <c:forEach var="stat" items="${source.stats}" >
+                <c:forEach var="stat" items="${source.stats}">
                     <tr>
                         <td>${stat.key}</td>
                         <td>${stat.value}</td>
@@ -107,9 +112,10 @@
             <br/><br/>
 
             <a href="/sources/${name}/delete">delete source</a>
-        </div>
-	</article>
-	
-	<widget:footer />
+        </sec:authorize>
+    </div>
+</article>
+
+<widget:footer/>
 </body>
 </html>

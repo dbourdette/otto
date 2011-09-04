@@ -1,5 +1,9 @@
 package com.github.dbourdette.otto.service.user;
 
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
 import org.bson.types.ObjectId;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -28,6 +32,10 @@ public class User {
 
     @Property
     private String sources;
+
+    public List<String> getSourcesAsList() {
+        return Arrays.asList(StringUtils.split(sources, ","));
+    }
 
     public boolean isAdmin() {
         return admin;
