@@ -17,12 +17,8 @@
 package com.github.dbourdette.otto.web.controller;
 
 import java.io.IOException;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.codehaus.jackson.map.ObjectMapper;
@@ -37,7 +33,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.github.dbourdette.otto.source.DBSource;
 import com.github.dbourdette.otto.source.Sources;
 import com.github.dbourdette.otto.util.Page;
-import com.github.dbourdette.otto.web.service.RemoteEventsFacade;
 import com.github.dbourdette.otto.web.util.FlashScope;
 import com.mongodb.DBObject;
 
@@ -54,9 +49,6 @@ public class EventsController {
 
     @Inject
     private FlashScope flashScope;
-
-    @Inject
-    private RemoteEventsFacade remoteEventsFacade;
 
     @RequestMapping(method = RequestMethod.GET, headers = "Accept=text/html")
     public String events(@PathVariable String name, @RequestParam(required = false) Integer page, Model model) {
@@ -109,31 +101,6 @@ public class EventsController {
         flashScope.message("Events have been cleared for source " + name);
 
         return "redirect:/sources/{name}/events";
-    }
-
-    @RequestMapping(method = RequestMethod.POST)
-    public void post(@PathVariable String name, HttpServletRequest request, HttpServletResponse response) {
-        remoteEventsFacade.post(name, copyParams(request));
-
-        response.setStatus(200);
-    }
-
-    /**
-     * Since we are using @Async in our RemoteEventsFacade we need to deep copy map of parameters from request.
-     * At least tomcat reuse request objects and map would be empty when @Async code is invoked.
-     */
-    private Map<String, String> copyParams(HttpServletRequest request) {
-        Map<String, String> params = new HashMap<String, String>();
-
-        Enumeration<String> names = request.getParameterNames();
-
-        while (names.hasMoreElements()) {
-            String name = names.nextElement();
-
-            params.put(name, request.getParameter(name));
-        }
-
-        return params;
     }
 
 }

@@ -8,6 +8,7 @@
     <http auto-config='false' use-expressions="true">
         <intercept-url pattern="/favicon.ico" access="permitAll" />
         <intercept-url pattern="/css/**" access="permitAll" />
+        <intercept-url pattern="/api/**" access="permitAll" />
         <intercept-url pattern="/**" access="isAuthenticated()"/>
         <form-login />
         <logout logout-url="/logout" logout-success-url="/" invalidate-session="true" delete-cookies="true" />
