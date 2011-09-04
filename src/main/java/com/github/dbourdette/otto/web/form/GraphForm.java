@@ -104,9 +104,13 @@ public class GraphForm {
             if (StringUtils.isEmpty(getSumColumn())) {
                 graph.increaseValue(columnName, new DateTime(date));
             } else {
-                Integer value = (Integer) event.get(getSumColumn());
+                Object value = event.get(getSumColumn());
 
-                graph.increaseValue(columnName, new DateTime(date), value);
+                if (value instanceof Integer) {
+                    graph.increaseValue(columnName, new DateTime(date), (Integer) value);
+                } else {
+                    graph.increaseValue(columnName, new DateTime(date));
+                }
             }
         }
 
