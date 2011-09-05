@@ -20,4 +20,13 @@
         <param-value>ieatevents</param-value>
     </context-param>
 
+    <context-param>
+        <param-name>security/default.username</param-name>
+        <param-value>admin</param-value>
+    </context-param>
+    <context-param>
+        <param-name>security/default.password</param-name>
+        <param-value>tomlechat</param-value>
+    </context-param>
+
 </cloudbees-web-app>

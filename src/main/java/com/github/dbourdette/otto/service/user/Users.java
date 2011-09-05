@@ -52,10 +52,9 @@ public class Users {
         datastore.delete(user);
     }
 
-    public User findUserByUsernameAndPassword(String username, String password) {
+    public User findUserByUsername(String username) {
         return datastore.find(User.class)
                 .field("username").equal(username)
-                .field("password").equal(password)
                 .get();
     }
 }

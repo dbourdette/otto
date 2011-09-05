@@ -154,6 +154,26 @@ public class SpringConfig {
         return getInitParameter("security/default.password", DEFAULT_SECURITY_PASSWORD);
     }
 
+    public String getSecurityLdapProviderUrl() {
+        return getInitParameter("security/ldap.providerUrl", "");
+    }
+
+    public String getSecurityLdapUserDn() {
+        return getInitParameter("security/ldap.userDn", "");
+    }
+
+    public String getSecurityLdapPassword() {
+        return getInitParameter("security/ldap.password", "");
+    }
+
+    public String getSecurityLdapSearchBase() {
+        return getInitParameter("security/ldap.searchBase", "");
+    }
+
+    public String getSecurityLdapSearchFilter() {
+        return getInitParameter("security/ldap.searchFilter", "");
+    }
+
     public String getInitParameter(String name, String defaultValue) {
         String value = servletContext.getInitParameter(name);
 
