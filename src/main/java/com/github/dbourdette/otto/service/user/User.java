@@ -1,11 +1,14 @@
 package com.github.dbourdette.otto.service.user;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.bson.types.ObjectId;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import com.github.dbourdette.otto.web.util.Constants;
 import com.google.code.morphia.annotations.Entity;
@@ -34,7 +37,27 @@ public class User {
     private String sources;
 
     public List<String> getSourcesAsList() {
-        return Arrays.asList(StringUtils.split(sources, ","));
+        String[] array = StringUtils.split(sources, ",");
+
+        if (array == null) {
+            return new ArrayList<String>();
+        }
+
+        return Arrays.asList(array);
+    }
+
+    public List<GrantedAuthority> getAuthorities() {
+        List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+
+        if (isAdmin()) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        }
+
+        for (String source : getSourcesAsList()) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_SOURCE_" + source.toUpperCase() + "_USER"));
+        }
+
+        return authorities;
     }
 
     public boolean isAdmin() {

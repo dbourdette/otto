@@ -26,7 +26,7 @@
     </div>
     <sec:authorize access="isAuthenticated()">
         <div class="logout">
-            <sec:authentication property="principal"/>
+            <sec:authentication property="principal.username"/>
             <a href="/logout">logout</a>
         </div>
     </sec:authorize>
