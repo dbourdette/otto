@@ -21,6 +21,7 @@ import java.util.Collection;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -58,6 +59,10 @@ public class LdapAndMongoAuthenticationProvider implements AuthenticationProvide
         String providerUrl = springConfig.getSecurityLdapProviderUrl();
         String userDn = springConfig.getSecurityLdapUserDn();
         String password = springConfig.getSecurityLdapPassword();
+
+        if (StringUtils.isEmpty(providerUrl)) {
+            return;
+        }
 
         DefaultSpringSecurityContextSource defaultSpringSecurityContextSource = new DefaultSpringSecurityContextSource(providerUrl);
         defaultSpringSecurityContextSource.setUserDn(userDn);

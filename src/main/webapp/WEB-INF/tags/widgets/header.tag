@@ -25,10 +25,7 @@
         <span class="o">o</span><span class="t">T</span><span class="t">T</span><span class="o">o</span></a>
     </div>
     <sec:authorize access="isAuthenticated()">
-        <div class="logout">
-            <sec:authentication property="principal.username"/>
-            <a href="/logout">logout</a>
-        </div>
+        <div class="logout"><sec:authentication property="principal.username"/> <a href="/logout">logout</a></div>
     </sec:authorize>
     <sec:authorize access="hasRole('ROLE_ADMIN')">
         <div class="nav">
