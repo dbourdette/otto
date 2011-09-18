@@ -27,6 +27,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.github.dbourdette.otto.service.user.User;
 import com.github.dbourdette.otto.util.Page;
 import com.github.dbourdette.otto.web.util.Constants;
 import com.mongodb.BasicDBObject;
@@ -67,7 +68,14 @@ public class Logs {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        log.put("user", authentication.getPrincipal());
+        Object principal = authentication.getPrincipal();
+
+        if (principal instanceof User) {
+            log.put("user", ((User) principal).getUsername());
+        } else {
+            log.put("user", authentication.getName());
+        }
+
 		log.put("date", new Date());
 		log.put("message", message);
 

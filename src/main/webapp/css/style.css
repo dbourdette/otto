@@ -173,3 +173,27 @@ article div.logs {
 .pagination form {
     display: inline;
 }
+
+.legend {
+    float:right;
+    width:340px;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+}
+
+.legend div {
+    margin: 3px 10px;
+}
+
+.legend .color {
+    width: 10px;
+    height: 10px;
+    border: 1px #111 solid;
+    display: inline-block;
+}
+
+.legend .name {
+   font-size: 10px;
+}
+

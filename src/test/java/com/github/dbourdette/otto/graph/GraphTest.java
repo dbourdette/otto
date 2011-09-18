@@ -17,6 +17,7 @@
 package com.github.dbourdette.otto.graph;
 
 import java.io.IOException;
+import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -39,6 +40,8 @@ public class GraphTest {
     private final DateTime now = new DateTime();
 
     private static final String USER_LOGIN = "user login";
+
+    private static final String USER_LOGOUT = "user logout";
 
     @Before
     public void init() {
@@ -176,6 +179,26 @@ public class GraphTest {
     }
 
     @Test
+    public void sortBySum() throws IOException {
+        graph.ensureColumnExists(USER_LOGOUT);
+
+        DateTime dateTime = new DateTime(2010, 10, 10, 0, 0, 0, 0, DateTimeZone.forID("+02:00"));
+
+        graph.setDefaultValue(0);
+        graph.setRows(new Interval(dateTime.minusMinutes(15), dateTime));
+
+        graph.setValue(USER_LOGIN, dateTime.minusMinutes(6), 2);
+        graph.setValue(USER_LOGIN, dateTime.minusMinutes(2), 2);
+        graph.setValue(USER_LOGOUT, dateTime.minusMinutes(2), 5);
+
+        Assert.assertEquals(USER_LOGIN, graph.getColumnTitles().get(0));
+
+        graph.sortBySum();
+
+        Assert.assertEquals(USER_LOGOUT, graph.getColumnTitles().get(0));
+    }
+
+    @Test
     public void toCsv() throws IOException {
         DateTime dateTime = new DateTime(2010, 10, 10, 0, 0, 0, 0);
 
@@ -208,5 +231,23 @@ public class GraphTest {
         expected = StringUtils.replace(expected, "\r\n", "\n");
 
         Assert.assertEquals("toGoogleJs is incorrect", expected, graph.toGoogleJs("chart_div", null, null));
+    }
+
+    @Test
+    public void toGoogleImageParams() throws IOException {
+        graph.ensureColumnExists(USER_LOGOUT);
+
+        DateTime dateTime = new DateTime(2010, 10, 10, 0, 0, 0, 0, DateTimeZone.forID("+02:00"));
+
+        graph.setDefaultValue(0);
+        graph.setRows(new Interval(dateTime.minusMinutes(15), dateTime));
+
+        graph.setValue(USER_LOGIN, dateTime.minusMinutes(6), 2);
+        graph.setValue(USER_LOGIN, dateTime.minusMinutes(2), 10);
+        graph.setValue(USER_LOGOUT, dateTime.minusMinutes(2), 5);
+
+        Map<String, String> params = graph.toGoogleImageParams(800, 400);
+
+        Assert.assertEquals("t:0,2,10|0,0,5", params.get("chd"));
     }
 }

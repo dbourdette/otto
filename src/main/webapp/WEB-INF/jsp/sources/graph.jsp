@@ -31,7 +31,7 @@
 
 <body>
 	<widget:header />
-	
+
 	<article>
 		<widget:nav />
 
@@ -50,9 +50,23 @@
             </form:form>
         </div>
 
+        <c:set var="start"><fmt:formatDate value="${form.start}" pattern="yyyy-MM-dd" /></c:set>
+		<c:set var="end"><fmt:formatDate value="${form.end}" pattern="yyyy-MM-dd" /></c:set>
+
+		<c:set var="query">start=${start}&amp;end=${end}&amp;stepInMinutes=${form.stepInMinutes}&amp;splitColumn=${form.splitColumn}&amp;sumColumn=${form.sumColumn}</c:set>
+
         <div>Top 20 items</div>
 
-		${graph}
+		<img src="/sources/${name}/graph.png?${query}">
+
+        <div class="legend">
+            <c:forEach var="curve" items="${graph.googleImageCurves}">
+                <div>
+                    <span class="color" style="background-color: #${curve.color}"></span>
+                    <span class="name">${curve.name}</span>
+                </div>
+            </c:forEach>
+        </div>
 
         <div>
             <c:forEach var="time" items="${times}">
@@ -60,17 +74,12 @@
             </c:forEach>
         </div>
 
-		<c:set var="start"><fmt:formatDate value="${form.start}" pattern="yyyy-MM-dd" /></c:set>
-		<c:set var="end"><fmt:formatDate value="${form.end}" pattern="yyyy-MM-dd" /></c:set>
-		
-		<c:set var="query">start=${start}&amp;end=${end}&amp;stepInMinutes=${form.stepInMinutes}&amp;splitColumn=${form.splitColumn}&amp;sumColumn=${form.sumColumn}</c:set>
-
         <div>
             <a href="/sources/${name}/graph.csv?${query}">csv</a>
             - <a href="/sources/${name}/graph/table?${query}" target="_blank">table</a>
         </div>
 	</article>
-	
+
 	<widget:footer />
 </body>
 </html>

@@ -40,102 +40,21 @@ import com.google.common.base.Objects;
  * @version \$Revision$
  */
 public class Graph {
-
-    private class CellKey {
-
-        private final GraphRow row;
-
-        private final GraphColumn column;
-
-        public CellKey(GraphRow row, GraphColumn column) {
-            super();
-            this.row = row;
-            this.column = column;
-        }
-
-        @Override
-        public int hashCode() {
-            final int prime = 31;
-            int result = 1;
-            result = prime * result + getOuterType().hashCode();
-            result = prime * result + ((column == null) ? 0 : column.hashCode());
-            result = prime * result + ((row == null) ? 0 : row.hashCode());
-            return result;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj)
-                return true;
-            if (obj == null)
-                return false;
-            if (getClass() != obj.getClass())
-                return false;
-            CellKey other = (CellKey) obj;
-            if (!getOuterType().equals(other.getOuterType()))
-                return false;
-            if (column == null) {
-                if (other.column != null)
-                    return false;
-            } else if (!column.equals(other.column))
-                return false;
-            if (row == null) {
-                if (other.row != null)
-                    return false;
-            } else if (!row.equals(other.row))
-                return false;
-            return true;
-        }
-
-        private Graph getOuterType() {
-            return Graph.this;
-        }
-    }
-
-    private class ColumnSum implements Comparable<ColumnSum> {
-
-        private int sum;
-
-        private final GraphColumn column;
-
-        public ColumnSum(GraphColumn column) {
-            this.column = column;
-        }
-
-        public void add(Integer value) {
-            if (value == null) {
-                return;
-            }
-
-            sum += value;
-        }
-
-        public GraphColumn getColumn() {
-            return column;
-        }
-
-        @Override
-        public int compareTo(ColumnSum o) {
-            return sum - o.sum;
-        }
-
-        @Override
-        public String toString() {
-            return "ColumnSum [column=" + column + ", sum=" + sum + "]";
-        }
-    }
-
     private static final int DEFAULT_WIDTH = 1200;
 
     private static final int DEFAULT_HEIGHT = 500;
 
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
 
+    private static final String[] GOOGLE_COLORS = {"99B3FF", "FF4242", "BBDDBB", "B399FF", "E699FF", "6AB4B4", "FF99E6", "DDCCBB", "99E6FF",
+                "DDDDBB", "CCFF99", "FF99B3", "FF80FF", "99FFE6", "DDBBBB", "DDBBDD", "FFD65C",
+                "FFB399", "99FFB3", "FFFF99", "CC99FF", "B3FF99", "E6FF99", "FFE699", "FF66A3"};
+
     private final Duration FIVE_MINUTES = Duration.standardMinutes(5);
 
     private final List<GraphRow> rows = new ArrayList<GraphRow>();
 
-    private final List<GraphColumn> columns = new ArrayList<GraphColumn>();
+    private List<GraphColumn> columns = new ArrayList<GraphColumn>();
 
     private final Map<CellKey, Integer> cells = new HashMap<CellKey, Integer>();
 
@@ -306,24 +225,23 @@ public class Graph {
             return;
         }
 
-        List<ColumnSum> sums = new ArrayList<Graph.ColumnSum>();
-
-        for (GraphColumn column : columns) {
-            ColumnSum sum = new ColumnSum(column);
-
-            for (GraphRow row : rows) {
-                sum.add(getValue(row, column));
-            }
-
-            sums.add(sum);
-        }
-
-        Collections.sort(sums);
+        List<ColumnSum> sums = sortedSums();
 
         List<ColumnSum> columnsToDrop = sums.subList(0, sums.size() - count);
 
         for (ColumnSum sum : columnsToDrop) {
             dropColumn(sum.getColumn());
+        }
+    }
+
+    public void sortBySum() {
+        List<ColumnSum> sums = sortedSums();
+        Collections.reverse(sums);
+
+        columns.clear();
+
+        for (ColumnSum sum : sums) {
+            columns.add(sum.getColumn());
         }
     }
 
@@ -419,6 +337,90 @@ public class Graph {
         builder.append("</script>");
 
         return builder.toString();
+    }
+
+    /**
+     * Produces google image call.
+     */
+    public Map<String, String> toGoogleImageParams(Integer width, Integer height) {
+        Map<String, String> params = new HashMap<String, String>();
+
+        int maxValue = getMaxValue();
+
+        params.put("cht", "lc");
+        params.put("chxt", "x,y");
+        params.put("chxr", "1,0," + maxValue);
+        params.put("chds", "0," + maxValue);
+        params.put("chs", width + "x" + height);
+        params.put("chf", "bg,s,FAFAFA");
+
+        int columnIndex = 0;
+        String colors = "";
+        for (GraphColumn column : columns) {
+            colors += GOOGLE_COLORS[columnIndex % GOOGLE_COLORS.length];
+
+            if (columnIndex != columns.size() - 1) {
+                colors += ",";
+            }
+
+            columnIndex++;
+        }
+        params.put("chco", colors);
+
+        DateTimeFormatter dayFormatter = DateTimeFormat.forPattern("yyyy MM dd");
+        String labels = "0:|";
+        for (GraphRow row : rows) {
+            DateTime startDate = row.getStartDate();
+
+            if (startDate.getSecondOfDay() == 0) {
+                labels += dayFormatter.print(startDate);
+                labels += "|";
+            }
+        }
+        params.put("chxl", labels);
+
+        columnIndex = 0;
+        String data = "t:";
+        for (GraphColumn column : columns) {
+            int rowIndex = 0;
+
+            for (GraphRow row : rows) {
+                data += getValue(row, column);
+
+                if (rowIndex != rows.size() - 1) {
+                    data += ",";
+                }
+
+                rowIndex++;
+            }
+
+            if (columnIndex != columns.size() - 1) {
+                data += "|";
+            }
+
+            columnIndex++;
+        }
+        params.put("chd", data);
+
+        return params;
+    }
+
+    /**
+     * Gets info about curves displayed in google image
+     */
+    public List<Map<String, String>> getGoogleImageCurves() {
+        List<Map<String, String>> curves = new ArrayList<Map<String, String>>();
+
+        for (GraphColumn column : columns) {
+            Map<String, String> curve = new HashMap<String, String>();
+
+            curve.put("color", GOOGLE_COLORS[curves.size() % GOOGLE_COLORS.length]);
+            curve.put("name", column.getTitle());
+
+            curves.add(curve);
+        }
+
+        return curves;
     }
 
     public String toHtmlTable() {
@@ -530,6 +532,120 @@ public class Graph {
 
         for (GraphRow row : rows) {
             cells.remove(new CellKey(row, column));
+        }
+    }
+
+    private Integer getMaxValue() {
+        Integer maxValue = 0;
+
+        for (GraphColumn column : columns) {
+            for (GraphRow row : rows) {
+                maxValue = Math.max(maxValue, getValue(row, column));
+            }
+        }
+
+        return maxValue;
+    }
+
+    private List<ColumnSum> sortedSums() {
+        List<ColumnSum> sums = new ArrayList<ColumnSum>();
+
+        for (GraphColumn column : columns) {
+            ColumnSum sum = new ColumnSum(column);
+
+            for (GraphRow row : rows) {
+                sum.add(getValue(row, column));
+            }
+
+            sums.add(sum);
+        }
+
+        Collections.sort(sums);
+
+        return sums;
+    }
+
+    private class CellKey {
+
+        private final GraphRow row;
+
+        private final GraphColumn column;
+
+        public CellKey(GraphRow row, GraphColumn column) {
+            super();
+            this.row = row;
+            this.column = column;
+        }
+
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + getOuterType().hashCode();
+            result = prime * result + ((column == null) ? 0 : column.hashCode());
+            result = prime * result + ((row == null) ? 0 : row.hashCode());
+            return result;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj)
+                return true;
+            if (obj == null)
+                return false;
+            if (getClass() != obj.getClass())
+                return false;
+            CellKey other = (CellKey) obj;
+            if (!getOuterType().equals(other.getOuterType()))
+                return false;
+            if (column == null) {
+                if (other.column != null)
+                    return false;
+            } else if (!column.equals(other.column))
+                return false;
+            if (row == null) {
+                if (other.row != null)
+                    return false;
+            } else if (!row.equals(other.row))
+                return false;
+            return true;
+        }
+
+        private Graph getOuterType() {
+            return Graph.this;
+        }
+    }
+
+    private class ColumnSum implements Comparable<ColumnSum> {
+
+        private int sum;
+
+        private final GraphColumn column;
+
+        public ColumnSum(GraphColumn column) {
+            this.column = column;
+        }
+
+        public void add(Integer value) {
+            if (value == null) {
+                return;
+            }
+
+            sum += value;
+        }
+
+        public GraphColumn getColumn() {
+            return column;
+        }
+
+        @Override
+        public int compareTo(ColumnSum o) {
+            return sum - o.sum;
+        }
+
+        @Override
+        public String toString() {
+            return "ColumnSum [column=" + column + ", sum=" + sum + "]";
         }
     }
 }
