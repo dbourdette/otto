@@ -66,15 +66,34 @@ public class StatsController {
         return "sources/stats";
     }
 
-    public List<String> getValues(DBSource source, GraphForm form) {
+    public List<Value> getValues(DBSource source, GraphForm form) {
         Graph graph = form.buildGraph(source);
 
-        List<String> values = new ArrayList<String>();
+        List<Value> values = new ArrayList<Value>();
 
         for (String column : graph.getColumnTitles()) {
-            values.add(column + " : " + graph.getValue(column, 0));
+            values.add(new Value(column, graph.getValue(column, 0)));
         }
 
         return values;
+    }
+
+    public class Value {
+        private String name;
+
+        private Integer value;
+
+        public Value(String name, Integer value) {
+            this.name = name;
+            this.value = value;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public Integer getValue() {
+            return value;
+        }
     }
 }

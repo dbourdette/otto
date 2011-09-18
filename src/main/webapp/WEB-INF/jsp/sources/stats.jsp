@@ -53,17 +53,23 @@
         <c:if test="${not empty sums}">
             <div>
                 <span>Item sums</span><br/>
-                <c:forEach var="sum" items="${sums}">
-                    ${sum}<br/>
+                <c:set var="sum" value="0" />
+                <c:forEach var="value" items="${sums}">
+                    ${value.name} : ${value.value}<br/>
+                    <c:set var="sum" value="${value.value + sum}" />
                 </c:forEach>
+                total sum : ${sum}
             </div>
         </c:if>
 
         <div>
             <span>Item count</span><br/>
-            <c:forEach var="count" items="${counts}">
-                ${count}<br/>
+            <c:set var="count" value="0" />
+            <c:forEach var="value" items="${counts}">
+               ${value.name} : ${value.value}<br/>
+                <c:set var="count" value="${value.value + count}" />
             </c:forEach>
+            total count : ${count}
         </div>
 
 	</article>
