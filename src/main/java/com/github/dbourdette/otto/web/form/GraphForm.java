@@ -21,13 +21,12 @@ import java.util.Iterator;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.joda.time.Interval;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import com.github.dbourdette.otto.graph.Graph;
 import com.github.dbourdette.otto.source.DBSource;
@@ -39,40 +38,23 @@ import com.mongodb.DBObject;
  * @version \$Revision$
  */
 public class GraphForm {
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-	public Date start;
-
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-	public Date end;
-	
-	public int stepInMinutes;
+    @NotNull
+    private GraphPeriod period;
 	
 	public String sumColumn;
 
     public String splitColumn;
 	
 	public GraphForm() {
-		DateMidnight today = new DateMidnight();
-		
-		start = today.minusDays(1).toDate();
-		end = today.plusDays(1).toDate();
-		
-		stepInMinutes = 5;
+		period = GraphPeriod.RECENT;
 	}
 
     public Interval getInterval() {
-        DateMidnight start = new DateMidnight(this.start);
-        DateMidnight end = new DateMidnight(this.end);
-
-        return new Interval(start, end);
+        return period.getInterval();
     }
 
     public void fillWithDefault(DefaultGraphParameters defaultParameters, HttpServletRequest request) {
         Map<String, String> map = request.getParameterMap();
-
-        if (!map.containsKey("stepInMinutes")) {
-            setStepInMinutes(defaultParameters.getStepInMinutes());
-        }
 
         if (!map.containsKey("splitColumn")) {
             setSplitColumn(defaultParameters.getSplitColumn());
@@ -121,28 +103,8 @@ public class GraphForm {
         return graph;
     }
 
-	public Date getStart() {
-		return start;
-	}
-
-	public void setStart(Date start) {
-		this.start = start;
-	}
-
-	public Date getEnd() {
-		return end;
-	}
-
-	public void setEnd(Date end) {
-		this.end = end;
-	}
-
 	public int getStepInMinutes() {
-		return stepInMinutes;
-	}
-
-	public void setStepInMinutes(int stepInMinutes) {
-		this.stepInMinutes = stepInMinutes;
+		return period.getStepInMinutes();
 	}
 
 	public String getSumColumn() {
@@ -159,6 +121,18 @@ public class GraphForm {
 
     public void setSplitColumn(String splitColumn) {
         this.splitColumn = splitColumn;
+    }
+
+    public GraphPeriod[] getPeriods() {
+        return GraphPeriod.values();
+    }
+
+    public GraphPeriod getPeriod() {
+        return period;
+    }
+
+    public void setPeriod(GraphPeriod period) {
+        this.period = period;
     }
 
     private String getSplitColumnName(DBSource source, DBObject event) {

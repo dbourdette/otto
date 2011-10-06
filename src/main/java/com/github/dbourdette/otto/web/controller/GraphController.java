@@ -74,11 +74,16 @@ public class GraphController {
 
         Long t2 = System.currentTimeMillis();
 
+        String html =  graph.toGoogleHtml(1080, 750);
+
+        Long t3 = System.currentTimeMillis();
+
         List<String> times = new ArrayList<String>();
-        times.add("Gathered graph data in " + (t2 - t1) + "ms");
+        times.add("Gathered graph data in " + (t2 -t1) + "ms");
+        times.add("Build html " + (t3 -t2) + "ms");
 
         model.addAttribute("times", times);
-        model.addAttribute("graph", graph);
+        model.addAttribute("graph", html);
 
         return "sources/graph";
     }

@@ -39,10 +39,6 @@
         <div>
             <form:form action="/sources/${name}/default-graph-params" commandName="form" method="post">
                 <p>
-                    Step <form:input path="stepInMinutes" size="5"/> minute(s)
-                    <form:errors path="stepInMinutes" />
-                </p>
-                <p>
                     Split on <form:input path="splitColumn" />
                     <form:errors path="splitColumn" />
                 </p>

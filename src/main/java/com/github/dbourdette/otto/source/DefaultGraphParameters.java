@@ -23,19 +23,9 @@ package com.github.dbourdette.otto.source;
  * @version \$Revision$
  */
 public class DefaultGraphParameters {
-    public int stepInMinutes = 5;
-
 	public String sumColumn;
 
     public String splitColumn;
-
-    public int getStepInMinutes() {
-        return stepInMinutes;
-    }
-
-    public void setStepInMinutes(int stepInMinutes) {
-        this.stepInMinutes = stepInMinutes;
-    }
 
     public String getSumColumn() {
         return sumColumn;

@@ -174,7 +174,6 @@ public class DBSource {
         DefaultGraphParameters parameters = new DefaultGraphParameters();
 
         if (dbObject != null) {
-            parameters.setStepInMinutes((Integer) dbObject.get("stepInMinutes"));
             parameters.setSplitColumn((String) dbObject.get("splitColumn"));
             parameters.setSumColumn((String) dbObject.get("sumColumn"));
         }
@@ -187,7 +186,6 @@ public class DBSource {
 
         BasicDBObject values = new BasicDBObject("name", "defaultGraphParameters");
 
-        values.put("stepInMinutes", params.getStepInMinutes());
         values.put("splitColumn", params.getSplitColumn());
         values.put("sumColumn", params.getSumColumn());
 
