@@ -54,9 +54,8 @@
             <c:if test="${not (aggregation.timeFrame eq 'MILLISECOND')}">${aggregation.timeFrame} on attribute ${aggregation.attributeName}</c:if>
             <br/><br/>
             <a href="/sources/${name}/default-graph-params/form">Default gragh parameters</a> :
-            Step ${defaultGraphParameters.stepInMinutes}
-            <c:if test="${not empty defaultGraphParameters.splitColumn}">, split on ${defaultGraphParameters.splitColumn}</c:if>
-            <c:if test="${not empty defaultGraphParameters.sumColumn}">, sum on ${defaultGraphParameters.sumColumn}</c:if>
+            <c:if test="${not empty defaultGraphParameters.splitColumn}"><br>split on ${defaultGraphParameters.splitColumn}</c:if>
+            <c:if test="${not empty defaultGraphParameters.sumColumn}"><br>sum on ${defaultGraphParameters.sumColumn}</c:if>
         </sec:authorize>
 
         <h3>Event frequency</h3>
