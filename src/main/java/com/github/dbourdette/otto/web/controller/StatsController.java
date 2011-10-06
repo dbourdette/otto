@@ -51,8 +51,6 @@ public class StatsController {
 
         form.fillWithDefault(source.getDefaultGraphParameters(), request);
 
-        form.setStepInMinutes((int) (form.getInterval().toDuration().getStandardSeconds() / 60));
-
         model.addAttribute("navItem", "stats");
         model.addAttribute("form", form);
 
@@ -60,8 +58,12 @@ public class StatsController {
             model.addAttribute("sums", getValues(source, form));
         }
 
+        String sumColumn = form.getSumColumn();
+
         form.setSumColumn(null);
         model.addAttribute("counts", getValues(source, form));
+
+        form.setSumColumn(sumColumn);
 
         return "sources/stats";
     }
@@ -72,7 +74,7 @@ public class StatsController {
         List<Value> values = new ArrayList<Value>();
 
         for (String column : graph.getColumnTitles()) {
-            values.add(new Value(column, graph.getValue(column, 0)));
+            values.add(new Value(column, graph.getSum(column)));
         }
 
         return values;

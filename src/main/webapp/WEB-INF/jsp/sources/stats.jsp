@@ -38,7 +38,7 @@
         <div>
             <form:form action="/sources/${name}/stats" commandName="form" method="GET">
                 <p style="float: left">
-                    From <form:input path="start" size="10" tabindex="1" /> to <form:input path="end" size="10" tabindex="2" />
+                    Period <form:select path="period" items="${form.periods}"></form:select>
                 </p>
                 <p style="float: right">
                     <input type="submit" value="display" tabindex="6" />

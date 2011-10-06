@@ -47,8 +47,8 @@ public class Graph {
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
 
     private static final String[] GOOGLE_COLORS = {"99B3FF", "FF4242", "BBDDBB", "B399FF", "E699FF", "6AB4B4", "FF99E6", "DDCCBB", "99E6FF",
-                "DDDDBB", "CCFF99", "FF99B3", "FF80FF", "99FFE6", "DDBBBB", "DDBBDD", "FFD65C",
-                "FFB399", "99FFB3", "FFFF99", "CC99FF", "B3FF99", "E6FF99", "FFE699", "FF66A3"};
+            "DDDDBB", "CCFF99", "FF99B3", "FF80FF", "99FFE6", "DDBBBB", "DDBBDD", "FFD65C",
+            "FFB399", "99FFB3", "FFFF99", "CC99FF", "B3FF99", "E6FF99", "FFE699", "FF66A3"};
 
     private final Duration FIVE_MINUTES = Duration.standardMinutes(5);
 
@@ -215,6 +215,18 @@ public class Graph {
 
             setValue(row, column, sum);
         }
+    }
+
+    public int getSum(String columnTitle) {
+        GraphColumn column = getColumn(columnTitle);
+
+        int sum = 0;
+
+        for (GraphRow row : rows) {
+            sum += getValue(row, column);
+        }
+
+        return sum;
     }
 
     /**
