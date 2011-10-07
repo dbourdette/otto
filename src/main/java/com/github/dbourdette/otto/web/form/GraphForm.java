@@ -16,8 +16,10 @@
 
 package com.github.dbourdette.otto.web.form;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +33,7 @@ import org.joda.time.Interval;
 import com.github.dbourdette.otto.graph.Graph;
 import com.github.dbourdette.otto.source.DBSource;
 import com.github.dbourdette.otto.source.DefaultGraphParameters;
+import com.github.dbourdette.otto.web.util.Pair;
 import com.mongodb.DBObject;
 
 /**
@@ -40,14 +43,14 @@ import com.mongodb.DBObject;
 public class GraphForm {
     @NotNull
     private GraphPeriod period;
-	
-	public String sumColumn;
+
+    public String sumColumn;
 
     public String splitColumn;
-	
-	public GraphForm() {
-		period = GraphPeriod.RECENT;
-	}
+
+    public GraphForm() {
+        period = GraphPeriod.RECENT;
+    }
 
     public Interval getInterval() {
         return period.getInterval();
@@ -63,6 +66,30 @@ public class GraphForm {
         if (!map.containsKey("sumColumn")) {
             setSumColumn(defaultParameters.getSumColumn());
         }
+    }
+
+    public List<Pair> getValues(DBSource source) {
+        Graph graph = buildGraph(source);
+
+        List<Pair> values = new ArrayList<Pair>();
+
+        for (String column : graph.getColumnTitles()) {
+            values.add(new Pair(column, graph.getSum(column)));
+        }
+
+        return values;
+    }
+
+    public List<Pair> getCounts(DBSource source) {
+        String temp = sumColumn;
+
+        sumColumn = null;
+
+        List<Pair> pairs = getValues(source);
+
+        sumColumn = temp;
+
+        return pairs;
     }
 
     public Graph buildGraph(DBSource source) {
@@ -103,17 +130,17 @@ public class GraphForm {
         return graph;
     }
 
-	public int getStepInMinutes() {
-		return period.getStepInMinutes();
-	}
+    public int getStepInMinutes() {
+        return period.getStepInMinutes();
+    }
 
-	public String getSumColumn() {
-		return sumColumn;
-	}
+    public String getSumColumn() {
+        return sumColumn;
+    }
 
-	public void setSumColumn(String sumColumn) {
-		this.sumColumn = sumColumn;
-	}
+    public void setSumColumn(String sumColumn) {
+        this.sumColumn = sumColumn;
+    }
 
     public String getSplitColumn() {
         return splitColumn;

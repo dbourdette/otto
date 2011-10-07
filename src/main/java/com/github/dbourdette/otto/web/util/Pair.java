@@ -17,21 +17,30 @@
 package com.github.dbourdette.otto.web.util;
 
 /**
+ * A key value pair
+ *
  * @author damien bourdette
- * @version \$Revision$
  */
-public class Constants {
-	public static final String EVENTS = ".events";
-	
-	public static final String CONFIG = ".config";
+public class Pair {
+    private String name;
 
-	public static final String OTTO = "otto.";
-	
-	public static final String SOURCES = OTTO + "sources.";
-	
-	public static final String LOGS = OTTO + "logs";
+    private Integer value;
 
-    public static final String USERS = OTTO + "users";
+    public Pair(String name, Integer value) {
+        this.name = name;
+        this.value = value;
+    }
 
-    public static final String MAIL_CONFIG = "config.mail";
+    public String getName() {
+        return name;
+    }
+
+    public Integer getValue() {
+        return value;
+    }
+
+    @Override
+    public String toString() {
+        return name + " : " + value;
+    }
 }

@@ -14,24 +14,44 @@
  * limitations under the License.
  */
 
-package com.github.dbourdette.otto.web.util;
+package com.github.dbourdette.otto.service.mail;
+
+import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  * @author damien bourdette
- * @version \$Revision$
  */
-public class Constants {
-	public static final String EVENTS = ".events";
-	
-	public static final String CONFIG = ".config";
+public class Mail {
+    @NotEmpty
+    public String to;
 
-	public static final String OTTO = "otto.";
-	
-	public static final String SOURCES = OTTO + "sources.";
-	
-	public static final String LOGS = OTTO + "logs";
+    @NotEmpty
+    public String subject;
 
-    public static final String USERS = OTTO + "users";
+    @NotEmpty
+    public String html;
 
-    public static final String MAIL_CONFIG = "config.mail";
+    public String getTo() {
+        return to;
+    }
+
+    public void setTo(String to) {
+        this.to = to;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    public String getHtml() {
+        return html;
+    }
+
+    public void setHtml(String html) {
+        this.html = html;
+    }
 }

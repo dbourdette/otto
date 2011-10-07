@@ -16,9 +16,6 @@
 
 package com.github.dbourdette.otto.web.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -30,7 +27,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.github.dbourdette.otto.graph.Graph;
 import com.github.dbourdette.otto.source.DBSource;
 import com.github.dbourdette.otto.source.Sources;
 import com.github.dbourdette.otto.web.form.GraphForm;
@@ -55,47 +51,11 @@ public class StatsController {
         model.addAttribute("form", form);
 
         if (StringUtils.isNotEmpty(form.getSumColumn())) {
-            model.addAttribute("sums", getValues(source, form));
+            model.addAttribute("sums", form.getValues(source));
         }
 
-        String sumColumn = form.getSumColumn();
-
-        form.setSumColumn(null);
-        model.addAttribute("counts", getValues(source, form));
-
-        form.setSumColumn(sumColumn);
+        model.addAttribute("counts", form.getCounts(source));
 
         return "sources/stats";
-    }
-
-    public List<Value> getValues(DBSource source, GraphForm form) {
-        Graph graph = form.buildGraph(source);
-
-        List<Value> values = new ArrayList<Value>();
-
-        for (String column : graph.getColumnTitles()) {
-            values.add(new Value(column, graph.getSum(column)));
-        }
-
-        return values;
-    }
-
-    public class Value {
-        private String name;
-
-        private Integer value;
-
-        public Value(String name, Integer value) {
-            this.name = name;
-            this.value = value;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public Integer getValue() {
-            return value;
-        }
     }
 }

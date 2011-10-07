@@ -16,17 +16,22 @@
 
 package com.github.dbourdette.otto.source;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+import org.bson.types.ObjectId;
 import org.joda.time.Interval;
+
 import com.github.dbourdette.otto.util.Page;
 import com.github.dbourdette.otto.web.exception.SourceNotFound;
 import com.github.dbourdette.otto.web.form.CappingForm;
+import com.github.dbourdette.otto.web.form.GraphPeriod;
 import com.github.dbourdette.otto.web.util.Constants;
 import com.github.dbourdette.otto.web.util.Frequency;
 import com.github.dbourdette.otto.web.util.IntervalUtils;
 import com.github.dbourdette.otto.web.util.SizeInBytes;
-
 import com.mongodb.BasicDBObject;
 import com.mongodb.CommandResult;
 import com.mongodb.DB;
@@ -49,6 +54,8 @@ public class DBSource {
 
     private DBCollection config;
 
+    private DBCollection mailReports;
+
     public static DBSource fromDb(DB mongoDb, String name) {
         if (!mongoDb.collectionExists(qualifiedName(name))) {
             throw new SourceNotFound();
@@ -60,6 +67,7 @@ public class DBSource {
         source.name = name;
         source.events = mongoDb.getCollection(qualifiedName(name));
         source.config = mongoDb.getCollection(qualifiedConfigName(name));
+        source.mailReports = mongoDb.getCollection(qualifiedMailReportsName(name));
 
         return source;
     }
@@ -70,6 +78,10 @@ public class DBSource {
 
     public static String qualifiedConfigName(String name) {
         return Constants.SOURCES + name + Constants.CONFIG;
+    }
+
+    public static String qualifiedMailReportsName(String name) {
+        return Constants.SOURCES + name + "." + Constants.MAIL_CONFIG;
     }
 
     public long getCount() {
@@ -94,6 +106,10 @@ public class DBSource {
 
     public String getConfigCollectionName() {
         return config.getName();
+    }
+
+    public String getMailReportsCollectionName() {
+        return mailReports.getName();
     }
 
     public CommandResult getStats() {
@@ -217,6 +233,49 @@ public class DBSource {
         return name;
     }
 
+    public List<MailReportConfig> getMailReports() {
+        List<DBObject> objects = mailReports.find().toArray();
+
+        List<MailReportConfig> mailReports = new ArrayList<MailReportConfig>();
+
+        for (DBObject object : objects) {
+            mailReports.add(toMailReportConfig(object));
+        }
+
+        return mailReports;
+    }
+
+    public void saveMailReport(MailReportConfig mailReport) {
+        BasicDBObject object = new BasicDBObject();
+
+        if (StringUtils.isNotEmpty(mailReport.getId())) {
+            object.put("_id", new ObjectId(mailReport.getId()));
+        }
+
+        object.put("cronExpression", mailReport.getCronExpression());
+        object.put("to", mailReport.getTo());
+        object.put("title", mailReport.getTitle());
+        object.put("period", mailReport.getPeriod().name());
+        object.put("splitColumn", mailReport.getSplitColumn());
+        object.put("sumColumn", mailReport.getSumColumn());
+
+        mailReports.save(object);
+    }
+
+    public MailReportConfig getMailReport(String id) {
+        DBObject object = mailReports.findOne(new BasicDBObject("_id", new ObjectId(id)));
+
+        if (object == null) {
+            return null;
+        }
+
+        return toMailReportConfig(object);
+    }
+
+    public void deleteMailReport(String id) {
+        mailReports.remove((new BasicDBObject("_id", new ObjectId(id))));
+    }
+
     private DBObject findConfigItem(String name) {
         DBCursor cursor = config.find(new BasicDBObject("name", name));
 
@@ -225,6 +284,20 @@ public class DBSource {
         }
 
         return cursor.next();
+    }
+
+    private MailReportConfig toMailReportConfig(DBObject object) {
+        MailReportConfig mailReport = new MailReportConfig();
+
+        mailReport.setId(((ObjectId) object.get("_id")).toString());
+        mailReport.setCronExpression((String) object.get("cronExpression"));
+        mailReport.setTo((String) object.get("to"));
+        mailReport.setTitle((String) object.get("title"));
+        mailReport.setPeriod(GraphPeriod.valueOf((String) object.get("period")));
+        mailReport.setSplitColumn((String) object.get("splitColumn"));
+        mailReport.setSumColumn((String) object.get("sumColumn"));
+
+        return mailReport;
     }
 }
 

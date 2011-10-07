@@ -21,8 +21,10 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.github.dbourdette.otto.web.util.FlashScope;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+
+import com.github.dbourdette.otto.web.util.FlashScope;
 
 /**
  * @author damien bourdette
@@ -32,8 +34,12 @@ public class FlashScopeInterceptor extends HandlerInterceptorAdapter {
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        if (StringUtils.endsWith(request.getRequestURI(), ".ico") || StringUtils.endsWith(request.getRequestURI(), ".txt")) {
+            return super.preHandle(request, response, handler);
+        }
+
 		Object value = request.getSession().getAttribute(FlashScope.FLASH_SCOPE_IN_SESSION);
-		
+
 		if (value != null) {
 			@SuppressWarnings("unchecked")
 			Map<String, Object> map = (Map<String, Object>) value;
@@ -47,7 +53,5 @@ public class FlashScopeInterceptor extends HandlerInterceptorAdapter {
 		
 		return super.preHandle(request, response, handler);
 	}
-
-	
 
 }

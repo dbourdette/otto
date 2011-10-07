@@ -16,19 +16,13 @@
 
 package com.github.dbourdette.otto.web.controller;
 
+import java.io.UnsupportedEncodingException;
+
 import javax.inject.Inject;
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 
 import org.apache.commons.lang.StringUtils;
-import com.github.dbourdette.otto.source.AggregationConfig;
-import com.github.dbourdette.otto.source.DBSource;
-import com.github.dbourdette.otto.source.DefaultGraphParameters;
-import com.github.dbourdette.otto.source.Sources;
-import com.github.dbourdette.otto.source.TimeFrame;
-import com.github.dbourdette.otto.web.form.CappingForm;
-import com.github.dbourdette.otto.web.form.SourceForm;
-import com.github.dbourdette.otto.web.util.FlashScope;
-import com.github.dbourdette.otto.web.util.IntervalUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -36,6 +30,22 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.github.dbourdette.otto.graph.Graph;
+import com.github.dbourdette.otto.service.mail.Mail;
+import com.github.dbourdette.otto.service.mail.Mailer;
+import com.github.dbourdette.otto.source.AggregationConfig;
+import com.github.dbourdette.otto.source.DBSource;
+import com.github.dbourdette.otto.source.DefaultGraphParameters;
+import com.github.dbourdette.otto.source.MailReportConfig;
+import com.github.dbourdette.otto.source.Sources;
+import com.github.dbourdette.otto.source.TimeFrame;
+import com.github.dbourdette.otto.web.form.CappingForm;
+import com.github.dbourdette.otto.web.form.GraphForm;
+import com.github.dbourdette.otto.web.form.SourceForm;
+import com.github.dbourdette.otto.web.util.FlashScope;
+import com.github.dbourdette.otto.web.util.IntervalUtils;
+import com.github.dbourdette.otto.web.util.Pair;
 
 /**
  * @author damien bourdette
@@ -50,6 +60,9 @@ public class SourcesController {
     @Inject
     private FlashScope flashScope;
 
+    @Inject
+    private Mailer mailer;
+
     @RequestMapping({"/sources/{name}"})
     public String source(@PathVariable String name, Model model) {
         model.addAttribute("navItem", "index");
@@ -62,6 +75,7 @@ public class SourcesController {
         model.addAttribute("yesterdayFrequency", source.findEventsFrequency(IntervalUtils.yesterday()));
         model.addAttribute("todayFrequency", source.findEventsFrequency(IntervalUtils.today()));
         model.addAttribute("defaultGraphParameters", source.getDefaultGraphParameters());
+        model.addAttribute("mailReports", source.getMailReports());
 
         return "sources/source";
     }
@@ -173,5 +187,79 @@ public class SourcesController {
         sources.getSource(name).cap(form);
 
         return "redirect:/sources/{name}";
+    }
+
+    @RequestMapping("/sources/{name}/report")
+    public String report(@PathVariable String name, Model model) {
+        model.addAttribute("form", new MailReportConfig());
+
+        return "sources/report_form";
+    }
+
+    @RequestMapping(value = "/sources/{name}/report", method = RequestMethod.POST)
+    public String report(@PathVariable String name, @Valid @ModelAttribute("form") MailReportConfig form, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            return "sources/report_form";
+        }
+
+        sources.getSource(name).saveMailReport(form);
+
+        return "redirect:/sources/{name}";
+    }
+
+    @RequestMapping("/sources/{name}/report/{id}")
+    public String report(@PathVariable String name, @PathVariable String id, Model model) {
+        model.addAttribute("form", sources.getSource(name).getMailReport(id));
+
+        return "sources/report_form";
+    }
+
+    @RequestMapping("/sources/{name}/report/{id}/delete")
+    public String delete(@PathVariable String name, @PathVariable String id, Model model) {
+        sources.getSource(name).deleteMailReport(id);
+
+        return "redirect:/sources/{name}";
+    }
+
+    @RequestMapping("/sources/{name}/report/{id}/send")
+    public String sendReport(@PathVariable String name, @PathVariable String id, Model model) throws MessagingException, UnsupportedEncodingException {
+        DBSource source = sources.getSource(name);
+
+        MailReportConfig mailReport = source.getMailReport(id);
+
+        Mail mail = new Mail();
+        mail.setTo(mailReport.getTo());
+        mail.setSubject(mailReport.getTitle());
+        mail.setHtml(buildHtml(source, mailReport));
+
+        mailer.send(mail);
+
+        flashScope.message("your email report has been sent");
+
+        return "redirect:/sources/{name}";
+    }
+
+    private String buildHtml(DBSource source, MailReportConfig mailReport) {
+        String html = "";
+
+        if (StringUtils.isNotEmpty(form.getSumColumn())) {
+            html += "Sums :<br>";
+
+            for (Pair pair : form.getValues(source)) {
+                html += pair;
+                html += "<br>";
+            }
+
+            html += "<br>";
+        }
+
+        html += "Counts :<br>";
+
+        for (Pair pair : form.getCounts(source)) {
+            html += pair;
+            html += "<br>";
+        }
+
+        return html;
     }
 }

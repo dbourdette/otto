@@ -1,7 +1,11 @@
-<%@ tag language="java" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+
+<%@ taglib tagdir="/WEB-INF/tags/widgets" prefix="widget" %>
 
 <%--
   ~ Copyright 2011 Damien Bourdette
@@ -19,15 +23,27 @@
   ~ limitations under the License.
   --%>
 
-<h1>Configuration</h1>
+<!DOCTYPE html>
+<html lang="fr">
 
-<div class="nav">
-	<c:if test="${navItem eq 'configuration'}">configuration</c:if>
-	<c:if test="${not (navItem eq 'configuration')}"><a href="/configuration">configuration</a></c:if>
+<widget:head />
 
-	<c:if test="${navItem eq 'users'}">- users</c:if>
-	<c:if test="${not (navItem eq 'users')}">- <a href="/users">users</a></c:if>
+<body>
+	<widget:header />
 
-	<c:if test="${navItem eq 'mail'}">- mail</c:if>
-	<c:if test="${not (navItem eq 'mail')}">- <a href="/mail">mail</a></c:if>
-</div>
+    <article>
+        <widget:admin_nav />
+
+        <div>
+            <h2>your mail has been sent</h2>
+
+            <br/>
+
+            <a href="/mail">Back to configuration</a>
+        </div>
+	</article>
+
+	<widget:footer />
+</body>
+</html>
+
