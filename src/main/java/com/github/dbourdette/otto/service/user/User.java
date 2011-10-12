@@ -1,5 +1,6 @@
 package com.github.dbourdette.otto.service.user;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -19,7 +20,7 @@ import com.google.code.morphia.annotations.Property;
  * @author damien bourdette
  */
 @Entity(Constants.USERS)
-public class User {
+public class User implements Serializable {
     @Id
     private ObjectId id;
 

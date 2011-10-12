@@ -20,19 +20,26 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Properties;
 
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
 
 import org.apache.commons.lang.StringUtils;
+import org.quartz.Scheduler;
+import org.quartz.simpl.RAMJobStore;
+import org.quartz.simpl.SimpleThreadPool;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.i18n.FixedLocaleResolver;
 import org.springframework.web.servlet.view.JstlView;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
+import com.github.dbourdette.otto.quartz.OttoJobFactory;
 import com.github.dbourdette.otto.service.user.User;
 import com.google.code.morphia.Datastore;
 import com.google.code.morphia.Morphia;
@@ -56,6 +63,8 @@ public class SpringConfig {
     public static final String DEFAULT_SECURITY_USERNAME = "letme";
 
     public static final String DEFAULT_SECURITY_PASSWORD = "in";
+
+    public static final String APPLICATION_CONTEXT_KEY = "applicationContext";
 
     @Inject
     private ServletContext servletContext;
@@ -82,6 +91,33 @@ public class SpringConfig {
         messageSource.setBasename("classpath:messages");
         messageSource.setDefaultEncoding("UTF-8");
         return messageSource;
+    }
+
+    @Bean
+    public Scheduler quartzScheduler(ApplicationContext context) throws Exception {
+        SchedulerFactoryBean factory = new SchedulerFactoryBean();
+
+        factory.setApplicationContext(context);
+        factory.setExposeSchedulerInRepository(true);
+        factory.setApplicationContextSchedulerContextKey(APPLICATION_CONTEXT_KEY);
+        factory.setJobFactory(new OttoJobFactory());
+
+        Properties properties = new Properties();
+        properties.setProperty("org.quartz.threadPool.class", SimpleThreadPool.class.getName());
+        properties.setProperty("org.quartz.threadPool.threadCount", "5");
+        properties.setProperty("org.quartz.threadPool.threadPriority", "4");
+
+        properties.setProperty("org.quartz.jobStore.class", RAMJobStore.class.getName());
+
+        factory.setQuartzProperties(properties);
+
+        factory.afterPropertiesSet();
+
+        Scheduler scheduler = factory.getObject();
+
+        scheduler.start();
+
+        return scheduler;
     }
 
     @Bean

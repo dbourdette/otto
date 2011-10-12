@@ -250,8 +250,17 @@ public class DBSource {
 
         if (StringUtils.isNotEmpty(mailReport.getId())) {
             object.put("_id", new ObjectId(mailReport.getId()));
+        } else {
+            ObjectId objectId = new ObjectId();
+
+            object.put("_id", objectId);
+
+            mailReport.setId(objectId.toString());
         }
 
+        mailReport.setSourceName(name);
+
+        object.put("sourceName", name);
         object.put("cronExpression", mailReport.getCronExpression());
         object.put("to", mailReport.getTo());
         object.put("title", mailReport.getTitle());
@@ -272,8 +281,16 @@ public class DBSource {
         return toMailReportConfig(object);
     }
 
-    public void deleteMailReport(String id) {
+    public MailReportConfig deleteMailReport(String id) {
+        MailReportConfig config = getMailReport(id);
+
+        if (config == null) {
+            return null;
+        }
+
         mailReports.remove((new BasicDBObject("_id", new ObjectId(id))));
+
+        return config;
     }
 
     private DBObject findConfigItem(String name) {
@@ -290,6 +307,7 @@ public class DBSource {
         MailReportConfig mailReport = new MailReportConfig();
 
         mailReport.setId(((ObjectId) object.get("_id")).toString());
+        mailReport.setSourceName((String) object.get("sourceName"));
         mailReport.setCronExpression((String) object.get("cronExpression"));
         mailReport.setTo((String) object.get("to"));
         mailReport.setTitle((String) object.get("title"));

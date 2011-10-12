@@ -29,6 +29,8 @@ import com.github.dbourdette.otto.web.form.GraphPeriod;
 public class MailReportConfig {
     private String id;
 
+    private String sourceName;
+
     private String cronExpression;
 
     @NotEmpty
@@ -112,5 +114,27 @@ public class MailReportConfig {
 
     public void setSplitColumn(String splitColumn) {
         this.splitColumn = splitColumn;
+    }
+
+    public String getSourceName() {
+        return sourceName;
+    }
+
+    public void setSourceName(String sourceName) {
+        this.sourceName = sourceName;
+    }
+
+    @Override
+    public String toString() {
+        return "MailReportConfig{" +
+                "id='" + id + '\'' +
+                ", sourceName='" + sourceName + '\'' +
+                ", cronExpression='" + cronExpression + '\'' +
+                ", to='" + to + '\'' +
+                ", title='" + title + '\'' +
+                ", period=" + period +
+                ", sumColumn='" + sumColumn + '\'' +
+                ", splitColumn='" + splitColumn + '\'' +
+                '}';
     }
 }

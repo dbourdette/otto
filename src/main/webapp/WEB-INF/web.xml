@@ -31,12 +31,8 @@
     </listener>
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>classpath:net/bull/javamelody/monitoring-spring.xml, /WEB-INF/spring-context.xml, /WEB-INF/spring-security.xml</param-value>
+        <param-value>/WEB-INF/spring-context.xml, /WEB-INF/spring-security.xml</param-value>
     </context-param>
-
-    <listener>
-        <listener-class>net.bull.javamelody.SessionListener</listener-class>
-    </listener>
 
     <!-- UTF-8 filter -->
     <filter>
@@ -69,32 +65,6 @@
     </filter>
     <filter-mapping>
         <filter-name>springSecurityFilterChain</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
-
-    <!-- javamelody -->
-    <filter>
-        <filter-name>javamelody</filter-name>
-        <filter-class>net.bull.javamelody.MonitoringFilter</filter-class>
-        <init-param>
-            <param-name>system-actions-enabled</param-name>
-            <param-value>true</param-value>
-        </init-param>
-        <init-param>
-            <param-name>log</param-name>
-            <param-value>true</param-value>
-        </init-param>
-        <init-param>
-            <param-name>displayed-counters</param-name>
-            <param-value>http,error,log,spring,jsp</param-value>
-        </init-param>
-        <init-param>
-            <param-name>monitoring-path</param-name>
-            <param-value>/javamelody</param-value>
-        </init-param>
-    </filter>
-    <filter-mapping>
-        <filter-name>javamelody</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
