@@ -7,6 +7,8 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 
+<%@ taglib uri="http://github.com/dbourdette/otto/quartz" prefix="quartz" %>
+
 <%@ taglib tagdir="/WEB-INF/tags/widgets" prefix="widget" %>
 
 <%--
@@ -78,27 +80,38 @@
             </tr>
         </table>
 
-        <h3>Mail reports</h3>
-        <table>
-            <colgroup>
-                <col class="label">
-                <col>
-            </colgroup>
-            <c:forEach var="mailReport" items="${mailReports}">
-                <tr>
-                    <td>${mailReport.cronExpression}</td>
-                    <td>${mailReport.title}
-                        <a href="/sources/${name}/report/${mailReport.id}">edit</a>
-                        - <a href="/sources/${name}/report/${mailReport.id}/send">send now</a>
-                        - <a href="/sources/${name}/report/${mailReport.id}/delete">delete</a>
-                    </td>
-                </tr>
-            </c:forEach>
-        </table>
-
-        <a href="/sources/${name}/report">add a mail report</a>
-
         <sec:authorize access="hasRole('ROLE_ADMIN')">
+            <h3>Mail reports</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>title</th>
+                        <th>planification</th>
+                        <th>previous firetime</th>
+                        <th>next firetime</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <c:forEach var="mailReport" items="${mailReports}">
+                        <tr>
+                            <td>${mailReport.title}</td>
+                            <td>${mailReport.cronExpression}</td>
+                            <td>${quartz:previousFiretime(mailReport)}</td>
+                            <td>${quartz:nextFiretime(mailReport)}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <a href="/sources/${name}/report/${mailReport.id}">edit</a>
+                                - <a href="/sources/${name}/report/${mailReport.id}/send">send now</a>
+                                - <a href="/sources/${name}/report/${mailReport.id}/delete">delete</a>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                </tbody>
+            </table>
+
+            <a href="/sources/${name}/report">add a mail report</a>
+
             <h3>Mongodb collections</h3>
             <table>
                 <colgroup>

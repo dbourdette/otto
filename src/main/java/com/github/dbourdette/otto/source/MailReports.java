@@ -71,9 +71,9 @@ public class MailReports {
     @PostConstruct
     public void initScheduler() throws SchedulerException, ParseException {
         JobDetail jobDetail = JobBuilder.newJob(SendReportJob.class)
-                         .withIdentity(new JobKey(JOB_NAME, JOB_GROUP))
-                         .storeDurably()
-                         .build();
+                .withIdentity(new JobKey(JOB_NAME, JOB_GROUP))
+                .storeDurably()
+                .build();
 
         quartzScheduler.addJob(jobDetail, false);
 
@@ -99,10 +99,30 @@ public class MailReports {
 
         Mail mail = new Mail();
         mail.setTo(mailReport.getTo());
-        mail.setSubject(mailReport.getTitle() + " sent at " + new Date()  + " for period " + mailReport.getPeriod());
+        mail.setSubject(mailReport.getTitle() + " sent at " + new Date() + " for period " + mailReport.getPeriod());
         mail.setHtml(buildHtml(source, mailReport));
 
         mailer.send(mail);
+    }
+
+    public Date previousFiretime(MailReportConfig mailReportConfig) throws SchedulerException {
+        Trigger trigger = quartzScheduler.getTrigger(buildTriggerKey(mailReportConfig));
+
+        if (trigger == null) {
+            return null;
+        }
+
+        return trigger.getPreviousFireTime();
+    }
+
+    public Date nextFiretime(MailReportConfig mailReportConfig) throws SchedulerException {
+        Trigger trigger = quartzScheduler.getTrigger(buildTriggerKey(mailReportConfig));
+
+        if (trigger == null) {
+            return null;
+        }
+
+        return trigger.getNextFireTime();
     }
 
     private boolean isScheduled(MailReportConfig mailReportConfig) throws SchedulerException {
@@ -122,7 +142,7 @@ public class MailReports {
             quartzScheduler.rescheduleJob(buildTriggerKey(mailReportConfig), buildTrigger(mailReportConfig));
         } else if (isScheduled(mailReportConfig)) {
             unschedule(mailReportConfig);
-        } else {
+        } else if (StringUtils.isNotEmpty(mailReportConfig.getCronExpression())) {
             quartzScheduler.scheduleJob(buildTrigger(mailReportConfig));
         }
     }

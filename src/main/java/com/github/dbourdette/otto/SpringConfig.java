@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
 
@@ -66,8 +67,21 @@ public class SpringConfig {
 
     public static final String APPLICATION_CONTEXT_KEY = "applicationContext";
 
+    /**
+     * Static reference to spring context used by jsp functions.
+     */
+    public static ApplicationContext staticContext;
+
     @Inject
     private ServletContext servletContext;
+
+    @Inject
+    private ApplicationContext context;
+
+    @PostConstruct
+    public void init() {
+        SpringConfig.staticContext = context;
+    }
 
     @Bean
     public FixedLocaleResolver fixedLocaleResolver() {
