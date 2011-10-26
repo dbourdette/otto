@@ -163,16 +163,26 @@ public class GraphForm {
     }
 
     private String getSplitColumnName(DBSource source, DBObject event) {
-        if (StringUtils.isEmpty(getSplitColumn())) {
+        if (StringUtils.isEmpty(splitColumn)) {
             return source.getName();
         }
 
-        Object value = event.get(getSplitColumn());
+        StringBuilder result = new StringBuilder();
 
-        if (value == null) {
-            return source.getName();
+        String[] columns = StringUtils.split(splitColumn, ",");
+
+        for (String column : columns) {
+            Object value = event.get(column);
+
+            if (value != null) {
+                if (result.length() != 0) {
+                    result.append(" - ");
+                }
+
+                result.append(value.toString());
+            }
         }
 
-        return value.toString();
+        return result.toString();
     }
 }
