@@ -171,20 +171,60 @@ public class MailReports {
         if (StringUtils.isNotEmpty(form.getSumColumn())) {
             html += "Sums :<br>";
 
+            html += "<table>";
+
+            int sum = 0;
+
             for (Pair pair : form.getValues(source)) {
-                html += pair;
-                html += "<br>";
+                html += "<tr>";
+                html += "<td>";
+                html += pair.getName();
+                html += "</td>";
+                html += "<td>";
+                html += pair.getValue();
+                html += "</td>";
+                html += "</tr>";
+
+                sum += pair.getValue();
             }
+
+            html += "<tr>";
+            html += "<td>total sum</td>";
+            html += "<td>";
+            html += sum;
+            html += "</td>";
+            html += "</tr>";
+
+            html += "</table>";
 
             html += "<br>";
         }
 
         html += "Counts :<br>";
 
+        html += "<table>";
+
+        int count = 0;
+
         for (Pair pair : form.getCounts(source)) {
-            html += pair;
-            html += "<br>";
+            html += "<tr>";
+            html += "<td>";
+            html += pair.getName();
+            html += "</td>";
+            html += "<td>";
+            html += pair.getValue();
+            html += "</td>";
+            html += "</tr>";
         }
+
+        html += "<tr>";
+        html += "<td>total count</td>";
+        html += "<td>";
+        html += count;
+        html += "</td>";
+        html += "</tr>";
+
+        html += "</table>";
 
         return html;
     }

@@ -50,26 +50,40 @@
             </form:form>
         </div>
 
-        <c:if test="${not empty sums}">
-            <div>
-                <span>Item sums</span><br/>
-                <c:set var="sum" value="0" />
-                <c:forEach var="value" items="${sums}">
-                    ${value.name} : ${value.value}<br/>
-                    <c:set var="sum" value="${value.value + sum}" />
-                </c:forEach>
-                total sum : ${sum}
-            </div>
-        </c:if>
-
         <div>
-            <span>Item count</span><br/>
-            <c:set var="count" value="0" />
-            <c:forEach var="value" items="${counts}">
-               ${value.name} : ${value.value}<br/>
-                <c:set var="count" value="${value.value + count}" />
-            </c:forEach>
-            total count : ${count}
+            <c:if test="${not empty sums}">
+                <table>
+                    <span>Item sums</span><br/>
+                    <c:set var="sum" value="0" />
+                    <c:forEach var="value" items="${sums}">
+                        <tr>
+                            <td class="label">${value.name}</td>
+                            <td>${value.value}</td>
+                        </tr>
+                        <c:set var="sum" value="${value.value + sum}" />
+                    </c:forEach>
+                    <tr>
+                        <td><b>total sum</b></td>
+                        <td><b>${sum}</b></td>
+                    </tr>
+                </table>
+            </c:if>
+
+            <table>
+                <span>Item count</span><br/>
+                <c:set var="count" value="0" />
+                <c:forEach var="value" items="${counts}">
+                    <tr>
+                        <td class="label">${value.name}</td>
+                        <td>${value.value}</td>
+                    </tr>
+                    <c:set var="count" value="${value.value + count}" />
+                </c:forEach>
+                <tr>
+                    <td><b>total count</b></td>
+                    <td><b>${count}</b></td>
+                </tr>
+            </table>
         </div>
 
 	</article>

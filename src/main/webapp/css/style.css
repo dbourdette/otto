@@ -91,7 +91,7 @@ article {
 }
 
 article div {
-    margin: 10px;
+    margin: 7px;
 }
 
 article .type {
@@ -102,7 +102,7 @@ article .type {
 
 article div.nav {
     margin: 0;
-    margin-bottom: 14px;
+    margin-bottom: 0px;
     padding: 5px;
     border-bottom: 1px #DDD solid;
 }
