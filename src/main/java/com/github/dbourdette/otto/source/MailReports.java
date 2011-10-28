@@ -215,6 +215,8 @@ public class MailReports {
             html += pair.getValue();
             html += "</td>";
             html += "</tr>";
+            
+            count += pair.getValue();
         }
 
         html += "<tr>";
