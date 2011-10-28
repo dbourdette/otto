@@ -20,8 +20,8 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import com.github.dbourdette.otto.graph.GraphPeriod;
 import com.github.dbourdette.otto.web.form.GraphForm;
-import com.github.dbourdette.otto.web.form.GraphPeriod;
 
 /**
  * @author damien bourdette

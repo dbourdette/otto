@@ -30,14 +30,18 @@
 
 <body>
 	<widget:header />
-	
+
 	<article>
 		<widget:nav />
-	
+
 		<h2>Default graph parameters</h2>
 
         <div>
             <form:form action="/sources/${name}/default-graph-params" commandName="form" method="post">
+                <p>
+                    Period <form:select path="period" items="${periods}" />
+                    <form:errors path="period" />
+                </p>
                 <p>
                     Split on <form:input path="splitColumn" />
                     <form:errors path="splitColumn" />
@@ -50,7 +54,7 @@
             </form:form>
         </div>
 	</article>
-	
+
 	<widget:footer />
 </body>
 </html>

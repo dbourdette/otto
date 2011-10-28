@@ -24,10 +24,10 @@ import org.apache.commons.lang.StringUtils;
 import org.bson.types.ObjectId;
 import org.joda.time.Interval;
 
+import com.github.dbourdette.otto.graph.GraphPeriod;
 import com.github.dbourdette.otto.util.Page;
 import com.github.dbourdette.otto.web.exception.SourceNotFound;
 import com.github.dbourdette.otto.web.form.CappingForm;
-import com.github.dbourdette.otto.web.form.GraphPeriod;
 import com.github.dbourdette.otto.web.util.Constants;
 import com.github.dbourdette.otto.web.util.Frequency;
 import com.github.dbourdette.otto.web.util.IntervalUtils;
@@ -190,6 +190,12 @@ public class DBSource {
         DefaultGraphParameters parameters = new DefaultGraphParameters();
 
         if (dbObject != null) {
+            try {
+              parameters.setPeriod(GraphPeriod.valueOf((String) dbObject.get("period")));
+            } catch (Exception e) {
+                // well, value was not correct in db
+            }
+
             parameters.setSplitColumn((String) dbObject.get("splitColumn"));
             parameters.setSumColumn((String) dbObject.get("sumColumn"));
         }
@@ -202,6 +208,7 @@ public class DBSource {
 
         BasicDBObject values = new BasicDBObject("name", "defaultGraphParameters");
 
+        values.put("period", params.getPeriod().name());
         values.put("splitColumn", params.getSplitColumn());
         values.put("sumColumn", params.getSumColumn());
 

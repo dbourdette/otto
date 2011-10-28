@@ -56,6 +56,7 @@
             <c:if test="${not (aggregation.timeFrame eq 'MILLISECOND')}">${aggregation.timeFrame} on attribute ${aggregation.attributeName}</c:if>
             <br/><br/>
             <a href="/sources/${name}/default-graph-params/form">Default gragh parameters</a> :
+            <c:if test="${not empty defaultGraphParameters.period}">period <b>${defaultGraphParameters.period}</b></c:if>
             <c:if test="${not empty defaultGraphParameters.splitColumn}">split on <b>${defaultGraphParameters.splitColumn}</b></c:if>
             <c:if test="${not empty defaultGraphParameters.sumColumn}">sum on <b>${defaultGraphParameters.sumColumn}</b></c:if>
         </sec:authorize>

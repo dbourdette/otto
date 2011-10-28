@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.github.dbourdette.otto.graph.GraphPeriod;
 import com.github.dbourdette.otto.source.AggregationConfig;
 import com.github.dbourdette.otto.source.DBSource;
 import com.github.dbourdette.otto.source.DefaultGraphParameters;
@@ -146,6 +147,7 @@ public class SourcesController {
     @RequestMapping("/sources/{name}/default-graph-params/form")
     public String defaultGraphParameters(@PathVariable String name, Model model) {
         model.addAttribute("form", sources.getSource(name).getDefaultGraphParameters());
+        model.addAttribute("periods", GraphPeriod.values());
 
         return "sources/default_graph_params_form";
     }
@@ -153,6 +155,8 @@ public class SourcesController {
     @RequestMapping(value = "/sources/{name}/default-graph-params", method = RequestMethod.POST)
     public String saveDefaultGraphParameters(@PathVariable String name, @Valid @ModelAttribute("form") DefaultGraphParameters form, BindingResult result, Model model) {
         if (result.hasErrors()) {
+            model.addAttribute("periods", GraphPeriod.values());
+
             return "sources/default_graph_params_form";
         }
 

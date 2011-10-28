@@ -1,4 +1,4 @@
-package com.github.dbourdette.otto.web.form;
+package com.github.dbourdette.otto.graph;
 
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;

@@ -31,6 +31,7 @@ import org.joda.time.Duration;
 import org.joda.time.Interval;
 
 import com.github.dbourdette.otto.graph.Graph;
+import com.github.dbourdette.otto.graph.GraphPeriod;
 import com.github.dbourdette.otto.source.DBSource;
 import com.github.dbourdette.otto.source.DefaultGraphParameters;
 import com.github.dbourdette.otto.web.util.Pair;
@@ -58,6 +59,10 @@ public class GraphForm {
 
     public void fillWithDefault(DefaultGraphParameters defaultParameters, HttpServletRequest request) {
         Map<String, String> map = request.getParameterMap();
+
+        if (!map.containsKey("period")) {
+            setPeriod(defaultParameters.getPeriod());
+        }
 
         if (!map.containsKey("splitColumn")) {
             setSplitColumn(defaultParameters.getSplitColumn());
