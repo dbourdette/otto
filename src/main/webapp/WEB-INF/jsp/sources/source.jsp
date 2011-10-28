@@ -133,6 +133,14 @@
                 </tr>
             </table>
 
+            <h3>Indexes</h3>
+            <table>
+                <colgroup>
+                    <col>
+                </colgroup>
+            </table>
+            <a href="/sources/${name}/indexes/form">add index</a>
+
             <h3>Statistics</h3>
             <table>
                 <colgroup>
@@ -146,6 +154,7 @@
                     </tr>
                 </c:forEach>
             </table>
+
             <br/><br/>
 
             <a href="/sources/${name}/delete">delete source</a>

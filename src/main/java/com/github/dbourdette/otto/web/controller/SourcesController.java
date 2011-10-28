@@ -42,6 +42,7 @@ import com.github.dbourdette.otto.source.MailReports;
 import com.github.dbourdette.otto.source.Sources;
 import com.github.dbourdette.otto.source.TimeFrame;
 import com.github.dbourdette.otto.web.form.CappingForm;
+import com.github.dbourdette.otto.web.form.IndexForm;
 import com.github.dbourdette.otto.web.form.SourceForm;
 import com.github.dbourdette.otto.web.util.FlashScope;
 import com.github.dbourdette.otto.web.util.IntervalUtils;
@@ -205,7 +206,7 @@ public class SourcesController {
         }
 
         sources.getSource(name).saveMailReport(form);
-        System.out.println(form);
+
         mailReports.onReportChange(form);
 
         return "redirect:/sources/{name}";
@@ -238,6 +239,24 @@ public class SourcesController {
         mailReports.sendReport(mailReport);
 
         flashScope.message("your email report has been sent");
+
+        return "redirect:/sources/{name}";
+    }
+
+    @RequestMapping("/sources/{name}/indexes/form")
+    public String indexes(@PathVariable String name, Model model) {
+        model.addAttribute("form", new IndexForm());
+
+        return "sources/index_form";
+    }
+
+    @RequestMapping(value = "/sources/{name}/indexes", method = RequestMethod.POST)
+    public String indexes(@PathVariable String name, @Valid @ModelAttribute("form") IndexForm form, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            return "sources/index_form";
+        }
+
+        DBSource source = sources.getSource(name);
 
         return "redirect:/sources/{name}";
     }
