@@ -18,9 +18,14 @@ package com.github.dbourdette.otto.web.controller;
 
 import javax.inject.Inject;
 
+import com.github.dbourdette.otto.service.config.Config;
+import com.github.dbourdette.otto.web.form.ConfigForm;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.github.dbourdette.otto.SpringConfig;
@@ -31,14 +36,25 @@ import com.github.dbourdette.otto.SpringConfig;
  */
 @Controller
 public class ConfigurationController {
-	@Inject
-	private SpringConfig config;
-	
-	@RequestMapping("/configuration")
-    public String logs(@RequestParam(required = false) Integer page, Model model) {
+    @Inject
+    private SpringConfig springConfig;
+
+    @Inject
+    private Config config;
+
+    @RequestMapping("/configuration")
+    public String configuration(@RequestParam(required = false) Integer page, Model model) {
         model.addAttribute("navItem", "configuration");
-        model.addAttribute("config", config);
+        model.addAttribute("config", springConfig);
+        model.addAttribute("form", ConfigForm.read(config));
 
         return "admin/configuration";
+    }
+
+    @RequestMapping(value = "/configuration", method = RequestMethod.POST)
+    public String update(@ModelAttribute("form") ConfigForm form, BindingResult result, Model model) {
+        config.set(Config.MONITORING_SOURCE, form.getMonitoringSource());
+
+        return "redirect:/configuration";
     }
 }

@@ -21,6 +21,7 @@ import java.io.IOException;
 import javax.inject.Inject;
 import javax.validation.Valid;
 
+import com.github.dbourdette.otto.web.service.RemoteEventsFacade;
 import org.codehaus.jackson.JsonParseException;
 import com.github.dbourdette.otto.source.DBSource;
 import com.github.dbourdette.otto.source.Event;
@@ -47,6 +48,9 @@ public class BatchController {
 
 	@Inject
 	private FlashScope flashScope;
+
+    @Inject
+    private RemoteEventsFacade remoteEventsFacade;
 
 	@RequestMapping("/sources/{name}/events/batch")
 	public String form(@PathVariable String name, Model model) {
@@ -77,6 +81,8 @@ public class BatchController {
 			event.setDateIfNoneDefined(form.getDateType().instanciateDate());
 
 			source.post(event);
+
+            remoteEventsFacade.onEvent(name);
 		}
 
 		flashScope.message(form.getCount() + " events inserted for source " + name);

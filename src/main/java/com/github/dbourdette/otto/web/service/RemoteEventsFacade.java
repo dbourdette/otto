@@ -10,4 +10,6 @@ import java.util.Map;
  */
 public interface RemoteEventsFacade {
     public void post(String sourceName, Map<String, String> params);
+
+    public void onEvent(String sourceName);
 }

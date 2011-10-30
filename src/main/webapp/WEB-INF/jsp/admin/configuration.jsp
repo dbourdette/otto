@@ -69,6 +69,14 @@
                     <td>*****</td>
                 </tr>
             </table>
+            <h2>config</h2>
+            <form:form action="/configuration" commandName="form" method="post">
+                <p>
+                    monitoring source : <form:input path="monitoringSource"/>
+                    <form:errors path="monitoringSource" />
+                </p>
+                <input type="submit" value="Save" />
+            </form:form>
         </div>
 	</article>
 

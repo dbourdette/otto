@@ -60,7 +60,7 @@ public class GraphForm {
     public void fillWithDefault(DefaultGraphParameters defaultParameters, HttpServletRequest request) {
         Map<String, String> map = request.getParameterMap();
 
-        if (!map.containsKey("period")) {
+        if (!map.containsKey("period") && defaultParameters.getPeriod() != null) {
             setPeriod(defaultParameters.getPeriod());
         }
 

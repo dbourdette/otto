@@ -4,6 +4,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import com.github.dbourdette.otto.service.config.Config;
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +28,9 @@ public class RemoteEventsFacadeImpl implements RemoteEventsFacade {
     @Inject
     private Sources sources;
 
+    @Inject
+    private Config config;
+
     @Async
     public void post(String sourceName, Map<String, String> params) {
         LOGGER.debug("Received event for source " + sourceName);
@@ -39,9 +44,22 @@ public class RemoteEventsFacadeImpl implements RemoteEventsFacade {
             LOGGER.debug("Saving event " + event);
 
             sources.getSource(sourceName).post(event);
+
+            onEvent(sourceName);
         } catch (Exception e) {
             LOGGER.error("Failed to handle event", e);
         }
+    }
 
+    public void onEvent(String sourceName) {
+        String monitoringSource = config.get(Config.MONITORING_SOURCE);
+
+        if (StringUtils.isNotEmpty(monitoringSource)) {
+            Event event = new Event().putValue("source", sourceName);
+
+            event.setDate(new DateTime());
+
+            sources.getSource(monitoringSource).post(event);
+        }
     }
 }
