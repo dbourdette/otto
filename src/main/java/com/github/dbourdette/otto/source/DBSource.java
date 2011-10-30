@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.github.dbourdette.otto.web.form.IndexForm;
 import org.apache.commons.lang.StringUtils;
 import org.bson.types.ObjectId;
 import org.joda.time.Interval;
@@ -191,7 +192,7 @@ public class DBSource {
 
         if (dbObject != null) {
             try {
-              parameters.setPeriod(GraphPeriod.valueOf((String) dbObject.get("period")));
+                parameters.setPeriod(GraphPeriod.valueOf((String) dbObject.get("period")));
             } catch (Exception e) {
                 // well, value was not correct in db
             }
@@ -298,6 +299,25 @@ public class DBSource {
         mailReports.remove((new BasicDBObject("_id", new ObjectId(id))));
 
         return config;
+    }
+
+    public List<DBObject> getIndexes() {
+        return events.getIndexInfo();
+    }
+
+    public void createIndex(IndexForm form) {
+        BasicDBObject keys = new BasicDBObject("date", form.isAscending() ? 1 : -1);
+        BasicDBObject options = new BasicDBObject("name", form.getIndexName());
+
+        if (form.isBackground()) {
+             options.put("background", "1");
+        }
+
+        events.ensureIndex(keys, options);
+    }
+
+    public void dropIndex(String index) {
+        events.dropIndex(index);
     }
 
     private DBObject findConfigItem(String name) {

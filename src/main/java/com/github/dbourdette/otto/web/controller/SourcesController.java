@@ -76,6 +76,7 @@ public class SourcesController {
         model.addAttribute("todayFrequency", source.findEventsFrequency(IntervalUtils.today()));
         model.addAttribute("defaultGraphParameters", source.getDefaultGraphParameters());
         model.addAttribute("mailReports", source.getMailReports());
+        model.addAttribute("indexes", source.getIndexes());
 
         return "sources/source";
     }
@@ -257,6 +258,17 @@ public class SourcesController {
         }
 
         DBSource source = sources.getSource(name);
+
+        source.createIndex(form);
+
+        return "redirect:/sources/{name}";
+    }
+
+    @RequestMapping("/sources/{name}/indexes/{index}/drop")
+    public String dropIndex(@PathVariable String name, @PathVariable String index) {
+        DBSource source = sources.getSource(name);
+
+        source.dropIndex(index);
 
         return "redirect:/sources/{name}";
     }

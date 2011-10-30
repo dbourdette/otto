@@ -138,6 +138,18 @@
                 <colgroup>
                     <col>
                 </colgroup>
+                <c:forEach var="index" items="${indexes}">
+                    <tr>
+                        <td>${index}</td>
+                    </tr>
+                    <c:if test="${not (index.name eq '_id_')}">
+                        <tr>
+                            <td>
+                                <a href="/sources/${name}/indexes/${index.name}/drop">drop</a>
+                            </td>
+                        </tr>
+                    </c:if>
+                </c:forEach>
             </table>
             <a href="/sources/${name}/indexes/form">add index</a>
 

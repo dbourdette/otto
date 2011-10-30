@@ -43,6 +43,14 @@
                     <form:errors path="key" />
                 </p>
                 <p>
+                    name : <form:input path="indexName"/> (defaulted to key)
+                    <form:errors path="indexName" />
+                </p>
+                <p>
+                    ascending : <form:checkbox path="ascending"/> (should be descending for date key)
+                    <form:errors path="ascending" />
+                </p>
+                <p>
                     background : <form:checkbox path="background"/> (build index without blocking database)
                     <form:errors path="background" />
                 </p>
