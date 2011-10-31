@@ -18,7 +18,8 @@ package com.github.dbourdette.otto.web.form;
 
 import javax.validation.constraints.Pattern;
 
-import org.hibernate.validator.constraints.NotEmpty;
+import org.apache.commons.lang.StringUtils;
+
 import com.github.dbourdette.otto.web.util.SizeInBytes;
 
 /**
@@ -27,8 +28,7 @@ import com.github.dbourdette.otto.web.util.SizeInBytes;
  */
 public class SourceForm {
 
-    @NotEmpty
-    @Pattern(regexp = "^[A-Za-z0-9]+$")
+    @Pattern(regexp = "^[A-Za-z0-9 \\-_]+$")
     private String name;
 
     private String size;
@@ -44,7 +44,7 @@ public class SourceForm {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = StringUtils.trim(name);
     }
 
     public Integer getMaxEvents() {
