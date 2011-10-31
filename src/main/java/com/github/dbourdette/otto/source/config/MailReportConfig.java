@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.dbourdette.otto.source;
+package com.github.dbourdette.otto.source.config;
 
 import javax.validation.constraints.NotNull;
 

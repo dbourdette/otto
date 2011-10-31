@@ -34,10 +34,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.github.dbourdette.otto.graph.GraphPeriod;
-import com.github.dbourdette.otto.source.AggregationConfig;
+import com.github.dbourdette.otto.source.config.AggregationConfig;
 import com.github.dbourdette.otto.source.DBSource;
-import com.github.dbourdette.otto.source.DefaultGraphParameters;
-import com.github.dbourdette.otto.source.MailReportConfig;
+import com.github.dbourdette.otto.source.config.DefaultGraphParameters;
+import com.github.dbourdette.otto.source.config.MailReportConfig;
 import com.github.dbourdette.otto.source.MailReports;
 import com.github.dbourdette.otto.source.Sources;
 import com.github.dbourdette.otto.source.TimeFrame;
@@ -70,7 +70,7 @@ public class SourcesController {
         DBSource source = sources.getSource(name);
 
         model.addAttribute("source", source);
-        model.addAttribute("aggregation", source.getAggregation());
+        model.addAttribute("aggregation", source.getAggregationConfig());
         model.addAttribute("lastWeekFrequency", source.findEventsFrequency(IntervalUtils.lastWeek()));
         model.addAttribute("yesterdayFrequency", source.findEventsFrequency(IntervalUtils.yesterday()));
         model.addAttribute("todayFrequency", source.findEventsFrequency(IntervalUtils.today()));
@@ -118,7 +118,7 @@ public class SourcesController {
 
     @RequestMapping(value = "/sources/{name}", method = RequestMethod.DELETE)
     public String dropSource(@PathVariable String name) {
-        sources.getSource(name).drop();
+        sources.dropSource(name);
 
         flashScope.message("source " + name + " has just been deleted");
 
@@ -127,7 +127,7 @@ public class SourcesController {
 
     @RequestMapping("/sources/{name}/aggregation/form")
     public String aggregation(@PathVariable String name, Model model) {
-        model.addAttribute("form", sources.getSource(name).getAggregation());
+        model.addAttribute("form", sources.getSource(name).getAggregationConfig());
         model.addAttribute("timeFrames", TimeFrame.values());
 
         return "sources/aggregation_form";

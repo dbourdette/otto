@@ -20,15 +20,18 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.github.dbourdette.otto.web.form.IndexForm;
 import org.apache.commons.lang.StringUtils;
 import org.bson.types.ObjectId;
 import org.joda.time.Interval;
 
 import com.github.dbourdette.otto.graph.GraphPeriod;
+import com.github.dbourdette.otto.source.config.AggregationConfig;
+import com.github.dbourdette.otto.source.config.DefaultGraphParameters;
+import com.github.dbourdette.otto.source.config.MailReportConfig;
 import com.github.dbourdette.otto.util.Page;
 import com.github.dbourdette.otto.web.exception.SourceNotFound;
 import com.github.dbourdette.otto.web.form.CappingForm;
+import com.github.dbourdette.otto.web.form.IndexForm;
 import com.github.dbourdette.otto.web.util.Constants;
 import com.github.dbourdette.otto.web.util.Frequency;
 import com.github.dbourdette.otto.web.util.IntervalUtils;
@@ -57,6 +60,8 @@ public class DBSource {
 
     private DBCollection mailReports;
 
+    private volatile AggregationConfig aggregationConfig;
+
     public static DBSource fromDb(DB mongoDb, String name) {
         if (!mongoDb.collectionExists(qualifiedName(name))) {
             throw new SourceNotFound();
@@ -69,6 +74,8 @@ public class DBSource {
         source.events = mongoDb.getCollection(qualifiedName(name));
         source.config = mongoDb.getCollection(qualifiedConfigName(name));
         source.mailReports = mongoDb.getCollection(qualifiedMailReportsName(name));
+
+        source.loadAggregation();
 
         return source;
     }
@@ -117,6 +124,14 @@ public class DBSource {
         return events.getStats();
     }
 
+    public AggregationConfig getAggregationConfig() {
+        return aggregationConfig;
+    }
+
+    public String getName() {
+        return name;
+    }
+
     public Iterator<DBObject> findEvents(Interval interval) {
         BasicDBObject query = IntervalUtils.query(interval);
 
@@ -136,7 +151,7 @@ public class DBSource {
     }
 
     public void post(Event event) {
-        AggregationConfig config = getAggregation();
+        AggregationConfig config = aggregationConfig;
 
         if (config.getTimeFrame() == null || config.getTimeFrame() == TimeFrame.MILLISECOND) {
             events.insert(event.toDBObject());
@@ -168,21 +183,8 @@ public class DBSource {
         values.put("attributeName", form.getAttributeName());
 
         config.update(filter, values, true, false);
-    }
 
-    public AggregationConfig getAggregation() {
-        DBObject dbObject = findConfigItem("aggregation");
-
-        AggregationConfig aggregationConfig = new AggregationConfig();
-
-        if (dbObject != null) {
-            String timeFrame = (String) dbObject.get("timeFrame");
-
-            aggregationConfig.setTimeFrame(TimeFrame.safeValueOf(timeFrame, TimeFrame.MILLISECOND));
-            aggregationConfig.setAttributeName((String) dbObject.get("attributeName"));
-        }
-
-        return aggregationConfig;
+        loadAggregation();
     }
 
     public DefaultGraphParameters getDefaultGraphParameters() {
@@ -235,10 +237,7 @@ public class DBSource {
     public void drop() {
         events.drop();
         config.drop();
-    }
-
-    public String getName() {
-        return name;
+        mailReports.drop();
     }
 
     public List<MailReportConfig> getMailReports() {
@@ -343,6 +342,21 @@ public class DBSource {
         mailReport.setSumColumn((String) object.get("sumColumn"));
 
         return mailReport;
+    }
+
+    public void loadAggregation() {
+        DBObject dbObject = findConfigItem("aggregation");
+
+        AggregationConfig temp = new AggregationConfig();
+
+        if (dbObject != null) {
+            String timeFrame = (String) dbObject.get("timeFrame");
+
+            temp.setTimeFrame(TimeFrame.safeValueOf(timeFrame, TimeFrame.MILLISECOND));
+            temp.setAttributeName((String) dbObject.get("attributeName"));
+        }
+
+        aggregationConfig = temp;
     }
 }
 

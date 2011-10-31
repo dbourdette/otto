@@ -17,8 +17,11 @@
 package com.github.dbourdette.otto.source;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.apache.commons.lang.StringUtils;
@@ -26,6 +29,8 @@ import com.github.dbourdette.otto.web.exception.SourceAlreadyExists;
 import com.github.dbourdette.otto.web.form.SourceForm;
 import com.github.dbourdette.otto.web.util.Constants;
 import com.github.dbourdette.otto.web.util.SizeInBytes;
+
+import org.omg.CosNaming.NamingContextExtPackage.StringNameHelper;
 import org.springframework.stereotype.Component;
 
 import com.mongodb.BasicDBObject;
@@ -41,8 +46,21 @@ public class Sources {
     @Inject
     private DB mongoDb;
 
+    private volatile Map<String, DBSource> cache = new HashMap<String, DBSource>();
+
+    @PostConstruct
+    public void loadSources() {
+        Map<String, DBSource> newCache = new HashMap<String, DBSource>();
+
+        for (String name : getNames()) {
+            newCache.put(name, loadSource(name));
+        }
+
+        cache = newCache;
+    }
+
     public DBSource getSource(String name) {
-       return DBSource.fromDb(mongoDb, name);
+       return cache.get(name);
     }
 
     public DBSource createSource(SourceForm form) {
@@ -69,7 +87,17 @@ public class Sources {
 
         mongoDb.createCollection(collectionName, capping);
 
-        return DBSource.fromDb(mongoDb, form.getName());
+        loadSources();
+
+        return getSource(form.getName());
+    }
+
+    public void dropSource(String name) {
+        DBSource source = getSource(name);
+
+        source.drop();
+
+        cache.remove(name);
     }
 
     public List<String> getNames() {
@@ -82,5 +110,9 @@ public class Sources {
         }
 
         return sources;
+    }
+
+    private DBSource loadSource(String name) {
+       return DBSource.fromDb(mongoDb, name);
     }
 }

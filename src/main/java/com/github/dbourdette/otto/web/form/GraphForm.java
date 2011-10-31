@@ -33,7 +33,7 @@ import org.joda.time.Interval;
 import com.github.dbourdette.otto.graph.Graph;
 import com.github.dbourdette.otto.graph.GraphPeriod;
 import com.github.dbourdette.otto.source.DBSource;
-import com.github.dbourdette.otto.source.DefaultGraphParameters;
+import com.github.dbourdette.otto.source.config.DefaultGraphParameters;
 import com.github.dbourdette.otto.web.util.Pair;
 import com.mongodb.DBObject;
 

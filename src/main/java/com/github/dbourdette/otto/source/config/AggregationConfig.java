@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-package com.github.dbourdette.otto.source;
+package com.github.dbourdette.otto.source.config;
 
 import org.apache.commons.lang.StringUtils;
+
+import com.github.dbourdette.otto.source.TimeFrame;
 
 /**
  * @author damien bourdette

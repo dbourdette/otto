@@ -21,6 +21,7 @@ import java.util.Date;
 import org.quartz.SchedulerException;
 
 import com.github.dbourdette.otto.SpringConfig;
+import com.github.dbourdette.otto.source.config.MailReportConfig;
 
 /**
  * @author damien bourdette

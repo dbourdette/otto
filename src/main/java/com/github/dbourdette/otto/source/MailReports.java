@@ -41,6 +41,7 @@ import org.springframework.stereotype.Component;
 import com.github.dbourdette.otto.quartz.SendReportJob;
 import com.github.dbourdette.otto.service.mail.Mail;
 import com.github.dbourdette.otto.service.mail.Mailer;
+import com.github.dbourdette.otto.source.config.MailReportConfig;
 import com.github.dbourdette.otto.web.form.GraphForm;
 import com.github.dbourdette.otto.web.util.Pair;
 

@@ -25,7 +25,7 @@ import org.springframework.context.ApplicationContext;
 
 import com.github.dbourdette.otto.SpringConfig;
 import com.github.dbourdette.otto.source.DBSource;
-import com.github.dbourdette.otto.source.MailReportConfig;
+import com.github.dbourdette.otto.source.config.MailReportConfig;
 import com.github.dbourdette.otto.source.MailReports;
 import com.github.dbourdette.otto.source.Sources;
 import com.github.dbourdette.otto.web.exception.SourceNotFound;

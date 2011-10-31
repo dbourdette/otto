@@ -28,13 +28,13 @@
     <function>
         <name>previousFiretime</name>
         <function-class>com.github.dbourdette.otto.source.MailReportsFunctions</function-class>
-        <function-signature>java.util.Date previousFiretime(com.github.dbourdette.otto.source.MailReportConfig)</function-signature>
+        <function-signature>java.util.Date previousFiretime(com.github.dbourdette.otto.source.config.MailReportConfig)</function-signature>
     </function>
 
     <function>
         <name>nextFiretime</name>
         <function-class>com.github.dbourdette.otto.source.MailReportsFunctions</function-class>
-        <function-signature>java.util.Date nextFiretime(com.github.dbourdette.otto.source.MailReportConfig)</function-signature>
+        <function-signature>java.util.Date nextFiretime(com.github.dbourdette.otto.source.config.MailReportConfig)</function-signature>
     </function>
 
 
