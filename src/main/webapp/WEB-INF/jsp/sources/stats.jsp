@@ -57,7 +57,7 @@
                     <c:set var="sum" value="0" />
                     <c:forEach var="value" items="${sums}">
                         <tr>
-                            <td class="label">${value.name}</td>
+                            <td>${value.name}</td>
                             <td>${value.value}</td>
                         </tr>
                         <c:set var="sum" value="${value.value + sum}" />
@@ -74,7 +74,7 @@
                 <c:set var="count" value="0" />
                 <c:forEach var="value" items="${counts}">
                     <tr>
-                        <td class="label">${value.name}</td>
+                        <td>${value.name}</td>
                         <td>${value.value}</td>
                     </tr>
                     <c:set var="count" value="${value.value + count}" />
