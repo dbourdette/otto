@@ -30,8 +30,4 @@
 
     <mvc:annotation-driven/>
 
-    <mvc:interceptors>
-        <bean class="com.github.dbourdette.otto.web.interceptor.FlashScopeInterceptor"/>
-    </mvc:interceptors>
-
 </beans>
