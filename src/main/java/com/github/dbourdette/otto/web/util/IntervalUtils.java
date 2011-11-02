@@ -43,8 +43,8 @@ public class IntervalUtils {
 	public static BasicDBObject query(Interval interval) {
 		BasicDBObject criteria = new BasicDBObject();
 
-		criteria.append("$gt", interval.getStart().toDate());
-		criteria.append("$lte", interval.getEnd().toDate());
+		criteria.append("$gte", interval.getStart().toDate());
+		criteria.append("$lt", interval.getEnd().toDate());
 
 		return new BasicDBObject("date", criteria);
 	}
