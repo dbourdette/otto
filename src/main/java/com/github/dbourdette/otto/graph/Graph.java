@@ -18,6 +18,7 @@ package com.github.dbourdette.otto.graph;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -244,6 +245,15 @@ public class Graph {
         for (ColumnSum sum : columnsToDrop) {
             dropColumn(sum.getColumn());
         }
+    }
+
+    public void sortAlphabetically() {
+        Collections.sort(columns, new Comparator<GraphColumn>() {
+            @Override
+            public int compare(GraphColumn o1, GraphColumn o2) {
+                return o1.getTitle().compareTo(o2.getTitle());
+            }
+        });
     }
 
     public void sortBySum() {

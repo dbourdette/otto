@@ -32,6 +32,7 @@ import com.github.dbourdette.otto.util.Page;
 import com.github.dbourdette.otto.web.exception.SourceNotFound;
 import com.github.dbourdette.otto.web.form.CappingForm;
 import com.github.dbourdette.otto.web.form.IndexForm;
+import com.github.dbourdette.otto.web.form.Sort;
 import com.github.dbourdette.otto.web.util.Constants;
 import com.github.dbourdette.otto.web.util.Frequency;
 import com.github.dbourdette.otto.web.util.IntervalUtils;
@@ -275,6 +276,10 @@ public class DBSource {
         object.put("splitColumn", mailReport.getSplitColumn());
         object.put("sumColumn", mailReport.getSumColumn());
 
+        if (mailReport.getSort() != null) {
+            object.put("sort", mailReport.getSort().name());
+        }
+
         mailReports.save(object);
     }
 
@@ -340,6 +345,10 @@ public class DBSource {
         mailReport.setPeriod(GraphPeriod.valueOf((String) object.get("period")));
         mailReport.setSplitColumn((String) object.get("splitColumn"));
         mailReport.setSumColumn((String) object.get("sumColumn"));
+
+        if (object.containsField("sort")) {
+            mailReport.setSort(Sort.valueOf((String) object.get("sort")));
+        }
 
         return mailReport;
     }

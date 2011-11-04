@@ -41,10 +41,15 @@
                     Period <form:select path="period" items="${form.periods}"></form:select>
                 </p>
                 <p style="float: right">
-                    <input type="submit" value="display" tabindex="6" />
+                    <input type="submit" value="display" tabindex="7" />
                 </p>
                 <p style="float: right;margin-right: 20px;">
-                    Split on <form:input path="splitColumn" tabindex="4" /> Sum on <form:input path="sumColumn" tabindex="5" />
+                    Split on <form:input path="splitColumn" tabindex="4" />
+                    Sum on <form:input path="sumColumn" tabindex="5" />
+                    Sort by <form:select path="sort" tabindex="6">
+                                <form:option value="" />
+                                <form:options items="${form.sorts}" />
+                            </form:select>
                 </p>
                 <p style="clear:both;"/>
             </form:form>

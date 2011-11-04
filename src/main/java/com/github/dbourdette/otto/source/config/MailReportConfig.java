@@ -22,6 +22,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import com.github.dbourdette.otto.graph.GraphPeriod;
 import com.github.dbourdette.otto.web.form.GraphForm;
+import com.github.dbourdette.otto.web.form.Sort;
 
 /**
  * @author damien bourdette
@@ -42,9 +43,11 @@ public class MailReportConfig {
     @NotNull
     private GraphPeriod period;
 
-    public String sumColumn;
+    private String sumColumn;
 
-    public String splitColumn;
+    private String splitColumn;
+
+    private Sort sort;
 
     public GraphForm toGraphForm() {
         GraphForm form = new GraphForm();
@@ -52,6 +55,7 @@ public class MailReportConfig {
         form.setPeriod(period);
         form.setSplitColumn(splitColumn);
         form.setSumColumn(sumColumn);
+        form.setSort(sort);
 
         return form;
     }
@@ -124,6 +128,18 @@ public class MailReportConfig {
         this.sourceName = sourceName;
     }
 
+    public Sort getSort() {
+        return sort;
+    }
+
+    public void setSort(Sort sort) {
+        this.sort = sort;
+    }
+
+    public Sort[] getSorts() {
+        return Sort.values();
+    }
+
     @Override
     public String toString() {
         return "MailReportConfig{" +
@@ -135,6 +151,7 @@ public class MailReportConfig {
                 ", period=" + period +
                 ", sumColumn='" + sumColumn + '\'' +
                 ", splitColumn='" + splitColumn + '\'' +
+                ", sort=" + sort +
                 '}';
     }
 }

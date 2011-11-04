@@ -63,6 +63,13 @@
                     sum on : <form:input path="sumColumn" />
                     <form:errors path="sumColumn" />
                 </p>
+                <p>
+                    sort by : <form:select path="sort">
+                                <form:option value="" />
+                                <form:options items="${form.sorts}" />
+                            </form:select>
+                    <form:errors path="sort" />
+                </p>
                 <input type="submit" value="Save" />
             </form:form>
         </div>
