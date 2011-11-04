@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.github.dbourdette.otto.service.mail.Mail;
 import com.github.dbourdette.otto.service.mail.MailConfiguration;
 import com.github.dbourdette.otto.service.mail.Mailer;
+import com.github.dbourdette.otto.web.util.FlashScope;
 
 /**
  * Edition of mail configuration
@@ -41,6 +42,9 @@ public class MailController {
     @Inject
     private Mailer mailer;
 
+    @Inject
+    private FlashScope flashScope;
+
     @RequestMapping("/mail")
     public String users(Model model) {
         model.addAttribute("navItem", "mail");
@@ -51,7 +55,6 @@ public class MailController {
 
     @RequestMapping("/mail/edit")
     public String edit(Model model) {
-        model.addAttribute("navItem", "mail");
         model.addAttribute("form", mailer.findConfiguration());
 
         return "admin/mail_form";
@@ -60,12 +63,12 @@ public class MailController {
     @RequestMapping(value = "/mail/edit", method = RequestMethod.POST)
     public String edit(@ModelAttribute("form") MailConfiguration form, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            model.addAttribute("navItem", "mail");
-
             return "admin/mail_form";
         }
 
         mailer.saveConfiguration(form);
+
+        flashScope.message("mail config has been modified");
 
         return "redirect:/mail";
     }
@@ -88,6 +91,8 @@ public class MailController {
 
         try {
             mailer.send(form);
+
+            flashScope.message("mail has been sent");
         } catch (Exception e) {
             model.addAttribute("stacktrace", ExceptionUtils.getFullStackTrace(e));
 

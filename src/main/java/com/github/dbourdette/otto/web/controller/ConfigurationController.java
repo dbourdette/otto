@@ -18,8 +18,6 @@ package com.github.dbourdette.otto.web.controller;
 
 import javax.inject.Inject;
 
-import com.github.dbourdette.otto.service.config.Config;
-import com.github.dbourdette.otto.web.form.ConfigForm;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,6 +27,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.github.dbourdette.otto.SpringConfig;
+import com.github.dbourdette.otto.service.config.Config;
+import com.github.dbourdette.otto.web.form.ConfigForm;
+import com.github.dbourdette.otto.web.util.FlashScope;
 
 /**
  * @author damien bourdette
@@ -42,6 +43,9 @@ public class ConfigurationController {
     @Inject
     private Config config;
 
+    @Inject
+    private FlashScope flashScope;
+
     @RequestMapping("/configuration")
     public String configuration(@RequestParam(required = false) Integer page, Model model) {
         model.addAttribute("navItem", "configuration");
@@ -54,6 +58,8 @@ public class ConfigurationController {
     @RequestMapping(value = "/configuration", method = RequestMethod.POST)
     public String update(@ModelAttribute("form") ConfigForm form, BindingResult result, Model model) {
         config.set(Config.MONITORING_SOURCE, form.getMonitoringSource());
+
+        flashScope.message("config has been modified");
 
         return "redirect:/configuration";
     }
