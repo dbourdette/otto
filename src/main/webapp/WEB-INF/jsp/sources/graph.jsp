@@ -50,7 +50,7 @@
             </form:form>
         </div>
 
-        <div>Top 20 items</div>
+        <div>Top 30 items</div>
 
 		${graph}
 
