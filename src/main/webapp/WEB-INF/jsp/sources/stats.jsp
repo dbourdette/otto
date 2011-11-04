@@ -56,6 +56,10 @@
         </div>
 
         <div>
+            Mean event frequency for this period : <fmt:formatNumber value="${frequency.eventsPerMinute}" pattern="# ###.######"/> events per minute
+
+            <br><br>
+
             <c:if test="${not empty sums}">
                 <table>
                     <span>Item sums</span><br/>
@@ -72,6 +76,8 @@
                         <td><b>${sum}</b></td>
                     </tr>
                 </table>
+
+                <br>
             </c:if>
 
             <table>
