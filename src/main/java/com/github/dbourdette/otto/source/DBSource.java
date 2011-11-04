@@ -146,7 +146,27 @@ public class DBSource {
     public Frequency findEventsFrequency(Interval interval) {
         BasicDBObject query = IntervalUtils.query(interval);
 
-        int count = events.find(query).count();
+        int count = 0;
+
+        if (aggregationConfig.isAggregating()) {
+            String attName = aggregationConfig.getAttributeName();
+
+            BasicDBObject fields = new BasicDBObject(attName, "1");
+
+            Iterator<DBObject> iterator = events.find(query, fields).iterator();
+
+            while (iterator.hasNext()) {
+                Object value = iterator.next().get(attName);
+
+                if (value instanceof Integer) {
+                    count += (Integer) value;
+                } else {
+                    count += 1;
+                }
+            }
+        } else {
+            count = (int) events.count(query);
+        }
 
         return new Frequency(count, interval.toDuration());
     }
@@ -154,15 +174,15 @@ public class DBSource {
     public void post(Event event) {
         AggregationConfig config = aggregationConfig;
 
-        if (config.getTimeFrame() == null || config.getTimeFrame() == TimeFrame.MILLISECOND) {
-            events.insert(event.toDBObject());
-        } else {
+        if (config.isAggregating()) {
             event.setDate(config.getTimeFrame().roundDate(event.getDate()));
 
             BasicDBObject inc = new BasicDBObject();
             inc.put("$inc", new BasicDBObject(config.getAttributeName(), 1));
 
             events.update(event.toDBObject(), inc, true, false);
+        } else {
+            events.insert(event.toDBObject());
         }
     }
 
