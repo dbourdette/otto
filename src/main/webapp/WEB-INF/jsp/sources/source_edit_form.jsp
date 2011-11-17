@@ -34,13 +34,13 @@
 	<article>
 		<widget:nav />
 	
-		<h2>New source</h2>
+		<h2>Edit source</h2>
 
         <div>
-            <form:form action="/sources" commandName="form" method="post">
+            <form:form action="/sources/edit" commandName="form" method="post">
                 <p>
-                    name : <form:input path="name"/>
-                    <form:errors path="name" />
+                    name : ${form.name}
+                    <form:hidden path="name" />
                 </p>
                 <p>
                     display group : <form:input path="displayGroup"/>
@@ -50,15 +50,7 @@
                     display name : <form:input path="displayName"/>
                     <form:errors path="displayName" />
                 </p>
-                <p>
-                    size : <form:input path="size"/> (ex : 100M)
-                    <form:errors path="size" />
-                </p>
-                <p>
-                    max events : <form:input path="maxEvents"/> events
-                    <form:errors path="maxEvents" />
-                </p>
-                <input type="submit" value="Create" />
+                <input type="submit" value="Save" />
             </form:form>
         </div>
 	</article>

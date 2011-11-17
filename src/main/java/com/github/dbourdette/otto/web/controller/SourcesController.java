@@ -109,10 +109,28 @@ public class SourcesController {
         return "redirect:/sources";
     }
 
+    @RequestMapping("/sources/{name}/edit")
+    public String form(@PathVariable String name, Model model) {
+        model.addAttribute("form", sources.getSource(name));
+
+        return "sources/source_edit_form";
+    }
+
+    @RequestMapping(value = "/sources/edit", method = RequestMethod.POST)
+    public String form(@Valid @ModelAttribute("form") SourceForm form, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            return "sources/source_edit_form";
+        }
+
+        DBSource source = sources.getSource(form.getName());
+
+        source.updateDisplayGroupAndName(form.getDisplayGroup(), form.getDisplayName());
+
+        return "redirect:/sources/" + form.getName();
+    }
+
     @RequestMapping("/sources/{name}/delete")
     public String dropSourceForm(@PathVariable String name, Model model) {
-        model.addAttribute("navItem", "index");
-
         return "sources/source_delete_form";
     }
 

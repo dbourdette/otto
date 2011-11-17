@@ -38,8 +38,12 @@
     <div>
         <ul>
             <c:forEach var="source" items="${sources}">
-                <sec:authorize access="T(com.github.dbourdette.otto.security.Security).hasSource('${source}')">
-                    <li><a href="/sources/${source}">${source}</a></li>
+                <sec:authorize access="T(com.github.dbourdette.otto.security.Security).hasSource('${source.name}')">
+                    <li><a href="/sources/${source.name}">
+                        <c:if test="${not empty source.displayGroup}">${fn:escapeXml(source.displayGroup)} /</c:if>
+                        <c:if test="${not empty source.displayName}">${fn:escapeXml(source.displayName)}</c:if>
+                        <c:if test="${empty source.displayName}">${fn:escapeXml(source.name)}</c:if>
+                    </a></li>
                 </sec:authorize>
             </c:forEach>
         </ul>

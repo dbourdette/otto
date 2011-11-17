@@ -17,6 +17,7 @@
 package com.github.dbourdette.otto.source;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,14 +26,12 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.stereotype.Component;
+
 import com.github.dbourdette.otto.web.exception.SourceAlreadyExists;
 import com.github.dbourdette.otto.web.form.SourceForm;
 import com.github.dbourdette.otto.web.util.Constants;
 import com.github.dbourdette.otto.web.util.SizeInBytes;
-
-import org.omg.CosNaming.NamingContextExtPackage.StringNameHelper;
-import org.springframework.stereotype.Component;
-
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 
@@ -89,7 +88,11 @@ public class Sources {
 
         loadSources();
 
-        return getSource(form.getName());
+        DBSource source = getSource(form.getName());
+
+        source.updateDisplayGroupAndName(form.getDisplayGroup(), form.getDisplayName());
+
+        return source;
     }
 
     public void dropSource(String name) {
@@ -98,6 +101,10 @@ public class Sources {
         source.drop();
 
         cache.remove(name);
+    }
+
+    public Collection<DBSource> getSources() {
+        return cache.values();
     }
 
     public List<String> getNames() {
