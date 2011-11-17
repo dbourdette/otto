@@ -36,7 +36,7 @@ public class IndexController {
 
     @RequestMapping({"/", "/index", "/sources"})
     public String index(Model model) {
-        model.addAttribute("sources", sources.getSources());
+        model.addAttribute("groups", sources.getSourceGroups());
         
         return "index";
     }

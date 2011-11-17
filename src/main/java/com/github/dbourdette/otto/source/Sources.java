@@ -32,6 +32,8 @@ import com.github.dbourdette.otto.web.exception.SourceAlreadyExists;
 import com.github.dbourdette.otto.web.form.SourceForm;
 import com.github.dbourdette.otto.web.util.Constants;
 import com.github.dbourdette.otto.web.util.SizeInBytes;
+import com.github.dbourdette.otto.web.util.SourceGroup;
+import com.github.dbourdette.otto.web.util.SourceGroups;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 
@@ -105,6 +107,14 @@ public class Sources {
 
     public Collection<DBSource> getSources() {
         return cache.values();
+    }
+
+    public SourceGroups getSourceGroups() {
+        SourceGroups groups = new SourceGroups();
+
+        groups.addAll(cache.values());
+
+        return groups;
     }
 
     public List<String> getNames() {
