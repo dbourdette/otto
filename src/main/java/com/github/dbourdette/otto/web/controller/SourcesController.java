@@ -135,7 +135,7 @@ public class SourcesController {
     }
 
     @RequestMapping(value = "/sources/{name}", method = RequestMethod.DELETE)
-    public String dropSource(@PathVariable String name) {
+    public String dropSource(@PathVariable String name) throws SchedulerException {
         sources.dropSource(name);
 
         flashScope.message("source " + name + " has just been deleted");

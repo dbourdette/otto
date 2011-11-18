@@ -26,8 +26,10 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.apache.commons.lang.StringUtils;
+import org.quartz.SchedulerException;
 import org.springframework.stereotype.Component;
 
+import com.github.dbourdette.otto.source.config.MailReportConfig;
 import com.github.dbourdette.otto.web.exception.SourceAlreadyExists;
 import com.github.dbourdette.otto.web.form.SourceForm;
 import com.github.dbourdette.otto.web.util.Constants;
@@ -47,6 +49,9 @@ public class Sources {
     @Inject
     private DB mongoDb;
 
+    @Inject
+    private MailReports mailReports;
+
     private volatile Map<String, DBSource> cache = new HashMap<String, DBSource>();
 
     @PostConstruct
@@ -61,7 +66,7 @@ public class Sources {
     }
 
     public DBSource getSource(String name) {
-       return cache.get(name);
+        return cache.get(name);
     }
 
     public DBSource createSource(SourceForm form) {
@@ -97,8 +102,12 @@ public class Sources {
         return source;
     }
 
-    public void dropSource(String name) {
+    public void dropSource(String name) throws SchedulerException {
         DBSource source = getSource(name);
+
+        for (MailReportConfig report : source.getMailReports()) {
+            mailReports.onReportDeleted(report);
+        }
 
         source.drop();
 
@@ -130,6 +139,6 @@ public class Sources {
     }
 
     private DBSource loadSource(String name) {
-       return DBSource.fromDb(mongoDb, name);
+        return DBSource.fromDb(mongoDb, name);
     }
 }
