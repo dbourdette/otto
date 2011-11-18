@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.github.dbourdette.otto.SpringConfig;
 import com.google.code.morphia.Datastore;
+import com.google.code.morphia.utils.IndexDirection;
 
 /**
  * @author damien bourdette
@@ -24,6 +25,8 @@ public class Users {
 
     @PostConstruct
     public void bootstrap() {
+        datastore.ensureIndex(User.class, "username_idx", "username", true, false);
+
         if (datastore.find(User.class).countAll() != 0) {
             return;
         }
@@ -46,6 +49,10 @@ public class Users {
 
     public void save(User user) {
         datastore.save(user);
+    }
+
+    public boolean available(String username) {
+        return datastore.find(User.class).field("username").equal(username).countAll() == 0;
     }
 
     public void delete(User user) {

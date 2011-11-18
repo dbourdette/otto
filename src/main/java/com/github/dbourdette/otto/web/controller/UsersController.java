@@ -52,8 +52,11 @@ public class UsersController {
 
     @RequestMapping(value = "/users", method = RequestMethod.POST)
     public String post(Model model, @ModelAttribute("form") @Valid User user, BindingResult result) {
+        if (!result.hasErrors() && !users.available(user.getUsername())) {
+            result.rejectValue("username", "alreadyInDatabase");
+        }
+
         if (result.hasErrors()) {
-            System.out.println(result);
             return "admin/user_form";
         }
 
