@@ -55,6 +55,10 @@ public class DBSource {
 
     private String name;
 
+    private String displayName;
+
+    private String displayGroup;
+
     private DBCollection events;
 
     private DBCollection config;
@@ -77,6 +81,7 @@ public class DBSource {
         source.mailReports = mongoDb.getCollection(qualifiedMailReportsName(name));
 
         source.loadAggregation();
+        source.loadDisplay();
 
         return source;
     }
@@ -93,44 +98,17 @@ public class DBSource {
         return Constants.SOURCES + name + "." + Constants.MAIL_CONFIG;
     }
 
-    public long getCount() {
-        return events.count();
-    }
+    public void updateDisplayGroupAndName(String group, String name) {
+        BasicDBObject filter = new BasicDBObject("name", "display");
 
-    public boolean isCapped() {
-        return events.isCapped();
-    }
+        BasicDBObject values = new BasicDBObject("name", "display");
 
-    public SizeInBytes getSize() {
-        return new SizeInBytes(events.getStats().getLong("storageSize"));
-    }
+        values.put("displayGroup", group);
+        values.put("displayName", name);
 
-    public Long getMax() {
-        return events.getStats().getLong("max");
-    }
+        config.update(filter, values, true, false);
 
-    public String getCollectionName() {
-        return events.getName();
-    }
-
-    public String getConfigCollectionName() {
-        return config.getName();
-    }
-
-    public String getMailReportsCollectionName() {
-        return mailReports.getName();
-    }
-
-    public CommandResult getStats() {
-        return events.getStats();
-    }
-
-    public AggregationConfig getAggregationConfig() {
-        return aggregationConfig;
-    }
-
-    public String getName() {
-        return name;
+        loadDisplay();
     }
 
     public Iterator<DBObject> findEvents(Interval interval) {
@@ -386,6 +364,63 @@ public class DBSource {
         }
 
         aggregationConfig = temp;
+    }
+
+    public void loadDisplay() {
+        DBObject dbObject = findConfigItem("display");
+
+        if (dbObject != null) {
+            displayGroup = (String) dbObject.get("displayGroup");
+            displayName = (String) dbObject.get("displayName");
+        }
+    }
+
+    public long getCount() {
+        return events.count();
+    }
+
+    public boolean isCapped() {
+        return events.isCapped();
+    }
+
+    public SizeInBytes getSize() {
+        return new SizeInBytes(events.getStats().getLong("storageSize"));
+    }
+
+    public Long getMax() {
+        return events.getStats().getLong("max");
+    }
+
+    public String getCollectionName() {
+        return events.getName();
+    }
+
+    public String getConfigCollectionName() {
+        return config.getName();
+    }
+
+    public String getMailReportsCollectionName() {
+        return mailReports.getName();
+    }
+
+    public CommandResult getStats() {
+        return events.getStats();
+    }
+
+    public AggregationConfig getAggregationConfig() {
+        return aggregationConfig;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public String getDisplayGroup() {
+        return displayGroup;
     }
 }
 

@@ -18,10 +18,11 @@ package com.github.dbourdette.otto.web.controller;
 
 import javax.inject.Inject;
 
-import com.github.dbourdette.otto.source.Sources;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.github.dbourdette.otto.source.Sources;
 
 /**
  * @author damien bourdette
@@ -35,7 +36,7 @@ public class IndexController {
 
     @RequestMapping({"/", "/index", "/sources"})
     public String index(Model model) {
-        model.addAttribute("sources", sources.getNames());
+        model.addAttribute("groups", sources.getSourceGroups());
         
         return "index";
     }

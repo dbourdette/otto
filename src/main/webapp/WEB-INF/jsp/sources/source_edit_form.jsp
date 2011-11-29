@@ -2,7 +2,6 @@
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 
@@ -31,43 +30,31 @@
 
 <body>
 	<widget:header />
-
+	
 	<article>
 		<widget:nav />
+	
+		<h2>Edit source</h2>
 
         <div>
-            <form:form action="/sources/${name}/graph" commandName="form" method="GET">
-                <p style="float: left">
-                    Period <form:select path="period" items="${form.periods}"></form:select>
+            <form:form action="/sources/edit" commandName="form" method="post">
+                <p>
+                    name : ${form.name}
+                    <form:hidden path="name" />
                 </p>
-                <p style="float: right">
-                    <input type="submit" value="display" tabindex="6" />
+                <p>
+                    display group : <form:input path="displayGroup"/>
+                    <form:errors path="displayGroup" />
                 </p>
-                <p style="float: right;margin-right: 20px;">
-                    Split on <form:input path="splitColumn" tabindex="4" /> Sum on <form:input path="sumColumn" tabindex="5" />
+                <p>
+                    display name : <form:input path="displayName"/>
+                    <form:errors path="displayName" />
                 </p>
-                <p style="clear:both;"/>
+                <input type="submit" value="Save" />
             </form:form>
         </div>
-
-        <div>Top 30 items</div>
-
-		${graph}
-
-        <div>
-            <c:forEach var="time" items="${times}">
-                ${time}<br/>
-            </c:forEach>
-        </div>
-
-		<c:set var="query">period=${form.period}&amp;splitColumn=${form.splitColumn}&amp;sumColumn=${form.sumColumn}</c:set>
-
-        <div>
-            <a href="/sources/${name}/graph.csv?${query}">csv</a>
-            - <a href="/sources/${name}/graph/table?${query}" target="_blank">table</a>
-        </div>
 	</article>
-
+	
 	<widget:footer />
 </body>
 </html>

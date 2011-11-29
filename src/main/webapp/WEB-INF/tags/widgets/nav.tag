@@ -21,7 +21,12 @@
   ~ limitations under the License.
   --%>
 
-<h1>Source ${fn:escapeXml(name)}</h1>
+<h1>Source
+<c:if test="${not empty source.displayGroup}">${fn:escapeXml(source.displayGroup)} /</c:if>
+<c:if test="${not empty source.displayName}">${fn:escapeXml(source.displayName)}</c:if>
+<c:if test="${empty source.displayName}">${fn:escapeXml(name)}</c:if>
+<a href="/sources/${name}/edit">edit</a>
+</h1>
 
 <div class="nav">
     <c:if test="${navItem eq 'index'}">index</c:if>

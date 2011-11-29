@@ -31,6 +31,10 @@ public class SourceForm {
     @Pattern(regexp = "^[A-Za-z0-9 \\-_]+$")
     private String name;
 
+    private String displayName;
+
+    private String displayGroup;
+
     private String size;
 
     private Integer maxEvents;
@@ -61,5 +65,21 @@ public class SourceForm {
 
     public void setSize(String size) {
         this.size = size;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public String getDisplayGroup() {
+        return displayGroup;
+    }
+
+    public void setDisplayGroup(String displayGroup) {
+        this.displayGroup = displayGroup;
     }
 }

@@ -43,6 +43,14 @@
                     <form:errors path="name" />
                 </p>
                 <p>
+                    display group : <form:input path="displayGroup"/>
+                    <form:errors path="displayGroup" />
+                </p>
+                <p>
+                    display name : <form:input path="displayName"/>
+                    <form:errors path="displayName" />
+                </p>
+                <p>
                     size : <form:input path="size"/> (ex : 100M)
                     <form:errors path="size" />
                 </p>
