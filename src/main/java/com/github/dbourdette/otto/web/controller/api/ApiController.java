@@ -87,7 +87,7 @@ public class ApiController {
         mapper.writeValue(response.getOutputStream(), root);
     }
 
-    @RequestMapping(value = "/jsapi/sources/{name}/event.gif")
+    @RequestMapping(value = "/imgapi/sources/{name}/event.gif")
     public void gifPost(@PathVariable String name, HttpServletRequest request, HttpServletResponse response) throws IOException {
         remoteEventsFacade.post(name, copyParams(request));
 
