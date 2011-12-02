@@ -34,7 +34,7 @@
 	<article>
 		<widget:nav />
 
-		<h2>Source capping</h2>
+		<h2>Report</h2>
 
         <div>
             <form:form action="/sources/${name}/report" commandName="form" method="post">

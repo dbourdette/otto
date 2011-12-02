@@ -68,29 +68,29 @@ public class EventTest {
 	}
 	
 	@Test
-	public void putValue() {
-		Event event = new Event().putValue("name", "sally");
+	public void parseValue() {
+		Event event = new Event().parseValue("name", "sally");
 		
 		Assert.assertEquals("sally", event.get("name"));
 	}
 	
 	@Test
-	public void putIntegerValue() {
-		Event event = new Event().putValue("i_count", "3");
+	public void parseIntegerValue() {
+		Event event = new Event().parseValue("i_count", "3");
 		
 		Assert.assertEquals(3, event.get("count"));
 	}
 	
 	@Test
-	public void putBooleanValue() {
-		Event event = new Event().putValue("b_question", "false");
+	public void parseBooleanValue() {
+		Event event = new Event().parseValue("b_question", "false");
 		
 		Assert.assertEquals(false, event.get("question"));
 	}
 	
 	@Test
-	public void putDateValue() {
-		Event event = new Event().putValue("d_date", "2010-10-10T00:00:00Z");
+	public void parseDateValue() {
+		Event event = new Event().parseValue("d_date", "2010-10-10T00:00:00Z");
 		
 		Assert.assertEquals(new DateTime(2010, 10, 10, 0, 0, 0, 0), event.get("date"));
 	}

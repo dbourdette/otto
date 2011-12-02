@@ -34,16 +34,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.github.dbourdette.otto.graph.GraphPeriod;
-import com.github.dbourdette.otto.source.config.AggregationConfig;
 import com.github.dbourdette.otto.source.DBSource;
-import com.github.dbourdette.otto.source.config.DefaultGraphParameters;
-import com.github.dbourdette.otto.source.config.MailReportConfig;
 import com.github.dbourdette.otto.source.MailReports;
 import com.github.dbourdette.otto.source.Sources;
 import com.github.dbourdette.otto.source.TimeFrame;
+import com.github.dbourdette.otto.source.config.AggregationConfig;
+import com.github.dbourdette.otto.source.config.DefaultGraphParameters;
+import com.github.dbourdette.otto.source.config.MailReportConfig;
+import com.github.dbourdette.otto.source.config.TransformConfig;
 import com.github.dbourdette.otto.web.form.CappingForm;
 import com.github.dbourdette.otto.web.form.IndexForm;
 import com.github.dbourdette.otto.web.form.SourceForm;
+import com.github.dbourdette.otto.web.form.TransformForm;
 import com.github.dbourdette.otto.web.util.FlashScope;
 import com.github.dbourdette.otto.web.util.IntervalUtils;
 
@@ -71,6 +73,7 @@ public class SourcesController {
 
         model.addAttribute("source", source);
         model.addAttribute("aggregation", source.getAggregationConfig());
+        model.addAttribute("transform", source.getTransformConfig());
         model.addAttribute("lastWeekFrequency", source.findEventsFrequency(IntervalUtils.lastWeek()));
         model.addAttribute("yesterdayFrequency", source.findEventsFrequency(IntervalUtils.yesterday()));
         model.addAttribute("todayFrequency", source.findEventsFrequency(IntervalUtils.today()));
@@ -260,6 +263,43 @@ public class SourcesController {
         flashScope.message("your email report has been sent");
 
         return "redirect:/sources/{name}";
+    }
+
+    @RequestMapping("/sources/{name}/transform")
+    public String transform(@PathVariable String name, Model model) {
+        model.addAttribute("form", new TransformForm());
+
+        return "sources/transform_form";
+    }
+
+    @RequestMapping(value = "/sources/{name}/transform", method = RequestMethod.POST)
+    public String transform(@PathVariable String name, @Valid @ModelAttribute("form") TransformForm form, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            return "sources/transform_form";
+        }
+
+        DBSource source = sources.getSource(name);
+
+        TransformConfig config = source.getTransformConfig();
+
+        config.forParam(form.getParameter()).replace(form.getOperations());
+
+        source.saveTransformConfig(config);
+
+        return "redirect:/sources/{name}";
+    }
+
+    @RequestMapping("/sources/{name}/transform/{parameter}")
+    public String transform(@PathVariable String name, @PathVariable String parameter, Model model) {
+        TransformConfig config = sources.getSource(name).getTransformConfig();
+
+        TransformForm form = new TransformForm();
+        form.setParameter(parameter);
+        form.setOperations(config.getOperationsLiteral(parameter));
+
+        model.addAttribute("form", form);
+
+        return "sources/transform_form";
     }
 
     @RequestMapping("/sources/{name}/indexes/form")

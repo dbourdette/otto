@@ -28,6 +28,7 @@ import com.github.dbourdette.otto.graph.GraphPeriod;
 import com.github.dbourdette.otto.source.config.AggregationConfig;
 import com.github.dbourdette.otto.source.config.DefaultGraphParameters;
 import com.github.dbourdette.otto.source.config.MailReportConfig;
+import com.github.dbourdette.otto.source.config.TransformConfig;
 import com.github.dbourdette.otto.util.Page;
 import com.github.dbourdette.otto.web.exception.SourceNotFound;
 import com.github.dbourdette.otto.web.form.CappingForm;
@@ -67,6 +68,8 @@ public class DBSource {
 
     private volatile AggregationConfig aggregationConfig;
 
+    private volatile TransformConfig transformConfig;
+
     public static DBSource fromDb(DB mongoDb, String name) {
         if (!mongoDb.collectionExists(qualifiedName(name))) {
             throw new SourceNotFound();
@@ -82,6 +85,7 @@ public class DBSource {
 
         source.loadAggregation();
         source.loadDisplay();
+        source.loadTransformConfig();
 
         return source;
     }
@@ -150,6 +154,8 @@ public class DBSource {
     }
 
     public void post(Event event) {
+        transformConfig.applyOn(event);
+
         AggregationConfig config = aggregationConfig;
 
         if (config.isAggregating()) {
@@ -184,6 +190,14 @@ public class DBSource {
         config.update(filter, values, true, false);
 
         loadAggregation();
+    }
+
+    public void saveTransformConfig(TransformConfig transformConfig) {
+        BasicDBObject filter = new BasicDBObject("name", "transform");
+
+        config.update(filter, transformConfig.toDBObject(), true, false);
+
+        loadTransformConfig();
     }
 
     public DefaultGraphParameters getDefaultGraphParameters() {
@@ -375,6 +389,12 @@ public class DBSource {
         }
     }
 
+    public void loadTransformConfig() {
+        DBObject dbObject = findConfigItem("transform");
+
+        transformConfig = TransformConfig.fromDBObject(dbObject);
+    }
+
     public long getCount() {
         return events.count();
     }
@@ -409,6 +429,10 @@ public class DBSource {
 
     public AggregationConfig getAggregationConfig() {
         return aggregationConfig;
+    }
+
+    public TransformConfig getTransformConfig() {
+        return transformConfig;
     }
 
     public String getName() {

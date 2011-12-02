@@ -82,6 +82,31 @@
         </table>
 
         <sec:authorize access="hasRole('ROLE_ADMIN')">
+            <h3>Transform operations</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>parameter</th>
+                        <th>operations</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <c:forEach var="parameter" items="${transform.config}">
+                        <tr>
+                            <td>${parameter.name}</td>
+                            <td>${parameter.operations}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <a href="/sources/${name}/transform/${parameter.name}">edit</a>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                </tbody>
+            </table>
+
+            <a href="/sources/${name}/transform">add a transform operation</a>
+
             <h3>Mail reports</h3>
             <table>
                 <thead>
