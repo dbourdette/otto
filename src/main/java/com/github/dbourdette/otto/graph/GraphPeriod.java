@@ -3,6 +3,7 @@ package com.github.dbourdette.otto.graph;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
+import org.joda.time.Duration;
 import org.joda.time.Interval;
 
 /**
@@ -57,6 +58,10 @@ public enum GraphPeriod {
 
     public int getStepInMinutes() {
         return stepInMinutes;
+    }
+
+    public void setRows(Graph graph) {
+        graph.setRows(getInterval(), Duration.standardMinutes(getStepInMinutes()));
     }
 
     private GraphPeriod(int stepInMinutes) {

@@ -27,7 +27,6 @@ import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
-import org.joda.time.Duration;
 import org.joda.time.Interval;
 
 import com.github.dbourdette.otto.graph.Graph;
@@ -102,11 +101,9 @@ public class GraphForm {
     public Graph buildGraph(DBSource source) {
         Graph graph = new Graph();
 
-        Interval interval = getInterval();
+        period.setRows(graph);
 
-        graph.setRows(interval, Duration.standardMinutes(getStepInMinutes()));
-
-        Iterator<DBObject> events = source.findEvents(interval);
+        Iterator<DBObject> events = source.findEvents(getInterval());
 
         while (events.hasNext()) {
             DBObject event = events.next();
@@ -141,10 +138,6 @@ public class GraphForm {
         }
 
         return graph;
-    }
-
-    public int getStepInMinutes() {
-        return period.getStepInMinutes();
     }
 
     public String getSumColumn() {
