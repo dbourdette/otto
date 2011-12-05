@@ -1,5 +1,7 @@
 package com.github.dbourdette.otto.graph.filler;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * @author damien bourdette
  * @version \$Revision$
@@ -11,7 +13,16 @@ public class SumFiller implements Filler {
         this.column = column;
     }
 
-    public void modify(WrittenValue value) {
+    @Override
+    public void handle(FillerContext context) {
+        if (StringUtils.isEmpty(column)) {
+            return;
+        }
 
+        Object object = context.get(column);
+
+        if (object instanceof Integer) {
+            context.setValue((Integer) object);
+        }
     }
 }

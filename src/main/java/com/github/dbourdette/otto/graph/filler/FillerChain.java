@@ -1,10 +1,9 @@
 package com.github.dbourdette.otto.graph.filler;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 
 import com.github.dbourdette.otto.graph.Graph;
@@ -16,8 +15,6 @@ import com.mongodb.DBObject;
  */
 public class FillerChain {
     private Graph graph;
-
-    private String defaultColumn;
 
     private List<Filler> fillers = new ArrayList<Filler>();
 
@@ -32,12 +29,6 @@ public class FillerChain {
     private FillerChain() {
     }
 
-    public FillerChain defaultColumn(String defaultColumn) {
-        this.defaultColumn = defaultColumn;
-
-        return this;
-    }
-
     public FillerChain add(Filler filler) {
         fillers.add(filler);
 
@@ -45,20 +36,37 @@ public class FillerChain {
     }
 
     public void write(DBObject event) {
-        WrittenValue value = new WrittenValue();
+        LinkedList<Filler> fifo = new LinkedList<Filler>();
 
-        if (StringUtils.isNotEmpty(defaultColumn)) {
-            value.setColumn(defaultColumn);
+        fifo.addAll(fillers);
+
+        apply(fifo, new FillerContext(event));
+    }
+
+    @SuppressWarnings("unchecked")
+    private void apply(LinkedList<Filler> fifo, FillerContext context) {
+        if (fifo.size() == 0) {
+            doWrite(context);
+
+            return;
         }
 
-        for (Filler filler : fillers) {
-            filler.modify(value);
+        Filler filler = fifo.pop();
+
+        filler.handle(context);
+
+        if (context.hasSubContextes()) {
+            for (FillerContext subContext : context.getSubContextes()) {
+                apply((LinkedList<Filler>) fifo.clone(), subContext);
+            }
+        } else {
+            apply(fifo, context);
         }
+    }
 
-        Date date = (Date) event.get("date");
+    private void doWrite(FillerContext context) {
+        graph.ensureColumnsExists(context.getColumn());
 
-        graph.ensureColumnsExists(value.getColumn());
-
-        graph.increaseValue(value.getColumn(), new DateTime(date), value.getValue());
+        graph.increaseValue(context.getColumn(), new DateTime(context.getDate()), context.getValue());
     }
 }

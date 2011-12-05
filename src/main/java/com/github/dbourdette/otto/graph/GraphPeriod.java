@@ -60,7 +60,7 @@ public enum GraphPeriod {
         return stepInMinutes;
     }
 
-    public void setRows(Graph graph) {
+    public void createRows(Graph graph) {
         graph.setRows(getInterval(), Duration.standardMinutes(getStepInMinutes()));
     }
 

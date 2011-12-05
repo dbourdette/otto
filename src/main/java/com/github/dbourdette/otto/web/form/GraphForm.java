@@ -17,7 +17,6 @@
 package com.github.dbourdette.otto.web.form;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -26,11 +25,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
 import org.joda.time.Interval;
 
 import com.github.dbourdette.otto.graph.Graph;
 import com.github.dbourdette.otto.graph.GraphPeriod;
+import com.github.dbourdette.otto.graph.filler.FillerChain;
+import com.github.dbourdette.otto.graph.filler.SplitFiller;
+import com.github.dbourdette.otto.graph.filler.SumFiller;
 import com.github.dbourdette.otto.source.DBSource;
 import com.github.dbourdette.otto.source.config.DefaultGraphParameters;
 import com.github.dbourdette.otto.web.util.Pair;
@@ -101,30 +102,16 @@ public class GraphForm {
     public Graph buildGraph(DBSource source) {
         Graph graph = new Graph();
 
-        period.setRows(graph);
+        period.createRows(graph);
+
+        FillerChain chain = buildChain(graph);
 
         Iterator<DBObject> events = source.findEvents(getInterval());
 
         while (events.hasNext()) {
             DBObject event = events.next();
 
-            String columnName = getSplitColumnName(source, event);
-
-            graph.ensureColumnsExists(columnName);
-
-            Date date = (Date) event.get("date");
-
-            if (StringUtils.isEmpty(sumColumn)) {
-                graph.increaseValue(columnName, new DateTime(date));
-            } else {
-                Object value = event.get(sumColumn);
-
-                if (value instanceof Integer) {
-                    graph.increaseValue(columnName, new DateTime(date), (Integer) value);
-                } else {
-                    graph.increaseValue(columnName, new DateTime(date));
-                }
-            }
+            chain.write(event);
         }
 
         if (graph.getColumnCount() == 0) {
@@ -180,28 +167,22 @@ public class GraphForm {
         return Sort.values();
     }
 
-    private String getSplitColumnName(DBSource source, DBObject event) {
-        if (StringUtils.isEmpty(splitColumn)) {
-            return source.getName();
+    private FillerChain buildChain(Graph graph) {
+        FillerChain chain = FillerChain.forGraph(graph);
+
+        if (StringUtils.isNotEmpty(splitColumn)) {
+            SplitFiller split = new SplitFiller();
+            split.setColumns(splitColumn);
+            chain.add(split);
         }
 
-        StringBuilder result = new StringBuilder();
-
-        String[] columns = StringUtils.split(splitColumn, ",");
-
-        for (String column : columns) {
-            Object value = event.get(column);
-
-            if (value != null) {
-                if (result.length() != 0) {
-                    result.append(" - ");
-                }
-
-                result.append(value.toString());
-            }
+        if (StringUtils.isNotEmpty(splitColumn)) {
+            SumFiller sum = new SumFiller();
+            sum.setColumn(sumColumn);
+            chain.add(sum);
         }
 
-        return result.toString();
+        return chain;
     }
 
     @Override

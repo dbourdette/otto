@@ -4,12 +4,12 @@ package com.github.dbourdette.otto.graph.filler;
  * @author damien bourdette
  * @version \$Revision$
  */
-public class WrittenValue {
+public class ColumnValue {
     public static final String DEFAULT_COLUMN = "default";
 
     private String column = DEFAULT_COLUMN;
 
-    private int value;
+    private int value = 1;
 
     public String getColumn() {
         return column;
