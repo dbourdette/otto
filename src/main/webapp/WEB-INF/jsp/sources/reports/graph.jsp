@@ -35,20 +35,7 @@
 	<article>
 		<widget:nav />
 
-        <div>
-            <form:form action="/sources/${name}/graph" commandName="form" method="GET">
-                <p style="float: left">
-                    Period <form:select path="period" items="${form.periods}"></form:select>
-                </p>
-                <p style="float: right">
-                    <input type="submit" value="display" tabindex="6" />
-                </p>
-                <p style="float: right;margin-right: 20px;">
-                    Split on <form:input path="splitColumn" tabindex="4" /> Sum on <form:input path="sumColumn" tabindex="5" />
-                </p>
-                <p style="clear:both;"/>
-            </form:form>
-        </div>
+        <widget:reports_nav />
 
         <div>Top 30 items</div>
 
@@ -60,12 +47,6 @@
             </c:forEach>
         </div>
 
-		<c:set var="query">period=${form.period}&amp;splitColumn=${form.splitColumn}&amp;sumColumn=${form.sumColumn}</c:set>
-
-        <div>
-            <a href="/sources/${name}/graph.csv?${query}">csv</a>
-            - <a href="/sources/${name}/graph/table?${query}" target="_blank">table</a>
-        </div>
 	</article>
 
 	<widget:footer />

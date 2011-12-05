@@ -20,8 +20,8 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
-import com.github.dbourdette.otto.graph.GraphPeriod;
-import com.github.dbourdette.otto.web.form.GraphForm;
+import com.github.dbourdette.otto.graph.ReportPeriod;
+import com.github.dbourdette.otto.web.form.ReportForm;
 import com.github.dbourdette.otto.web.form.Sort;
 
 /**
@@ -41,21 +41,15 @@ public class MailReportConfig {
     private String title;
 
     @NotNull
-    private GraphPeriod period;
+    private ReportPeriod period;
 
-    private String sumColumn;
+    private String reportId;
 
-    private String splitColumn;
-
-    private Sort sort;
-
-    public GraphForm toGraphForm() {
-        GraphForm form = new GraphForm();
+    public ReportForm toReportForm() {
+        ReportForm form = new ReportForm();
 
         form.setPeriod(period);
-        form.setSplitColumn(splitColumn);
-        form.setSumColumn(sumColumn);
-        form.setSort(sort);
+        form.setReportId(reportId);
 
         return form;
     }
@@ -92,32 +86,16 @@ public class MailReportConfig {
         this.title = title;
     }
 
-    public GraphPeriod getPeriod() {
+    public ReportPeriod getPeriod() {
         return period;
     }
 
-    public GraphPeriod[] getPeriods() {
-        return GraphPeriod.values();
+    public ReportPeriod[] getPeriods() {
+        return ReportPeriod.values();
     }
 
-    public void setPeriod(GraphPeriod period) {
+    public void setPeriod(ReportPeriod period) {
         this.period = period;
-    }
-
-    public String getSumColumn() {
-        return sumColumn;
-    }
-
-    public void setSumColumn(String sumColumn) {
-        this.sumColumn = sumColumn;
-    }
-
-    public String getSplitColumn() {
-        return splitColumn;
-    }
-
-    public void setSplitColumn(String splitColumn) {
-        this.splitColumn = splitColumn;
     }
 
     public String getSourceName() {
@@ -128,30 +106,15 @@ public class MailReportConfig {
         this.sourceName = sourceName;
     }
 
-    public Sort getSort() {
-        return sort;
-    }
-
-    public void setSort(Sort sort) {
-        this.sort = sort;
-    }
-
     public Sort[] getSorts() {
         return Sort.values();
     }
 
-    @Override
-    public String toString() {
-        return "MailReportConfig{" +
-                "id='" + id + '\'' +
-                ", sourceName='" + sourceName + '\'' +
-                ", cronExpression='" + cronExpression + '\'' +
-                ", to='" + to + '\'' +
-                ", title='" + title + '\'' +
-                ", period=" + period +
-                ", sumColumn='" + sumColumn + '\'' +
-                ", splitColumn='" + splitColumn + '\'' +
-                ", sort=" + sort +
-                '}';
+    public String getReportId() {
+        return reportId;
+    }
+
+    public void setReportId(String reportId) {
+        this.reportId = reportId;
     }
 }

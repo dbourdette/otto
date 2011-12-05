@@ -34,4 +34,6 @@ public class Constants {
     public static final String USERS = OTTO + "users";
 
     public static final String MAIL_CONFIG = "config.mail";
+
+    public static final String REPORTS = "config.reports";
 }

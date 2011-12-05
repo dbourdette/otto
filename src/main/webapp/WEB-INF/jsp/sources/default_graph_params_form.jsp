@@ -42,14 +42,6 @@
                     Period <form:select path="period" items="${periods}" />
                     <form:errors path="period" />
                 </p>
-                <p>
-                    Split on <form:input path="splitColumn" />
-                    <form:errors path="splitColumn" />
-                </p>
-                <p>
-                    Sum on <form:input path="sumColumn" />
-                    <form:errors path="sumColumn" />
-                </p>
                 <input type="submit" value="Save" />
             </form:form>
         </div>

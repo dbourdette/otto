@@ -16,7 +16,7 @@
 
 package com.github.dbourdette.otto.source.config;
 
-import com.github.dbourdette.otto.graph.GraphPeriod;
+import com.github.dbourdette.otto.graph.ReportPeriod;
 
 /**
  * Default values for graph form for a given source.
@@ -25,33 +25,13 @@ import com.github.dbourdette.otto.graph.GraphPeriod;
  * @version \$Revision$
  */
 public class DefaultGraphParameters {
-    public GraphPeriod period;
+    public ReportPeriod period;
 
-	public String sumColumn;
-
-    public String splitColumn;
-
-    public GraphPeriod getPeriod() {
+    public ReportPeriod getPeriod() {
         return period;
     }
 
-    public void setPeriod(GraphPeriod period) {
+    public void setPeriod(ReportPeriod period) {
         this.period = period;
-    }
-
-    public String getSumColumn() {
-        return sumColumn;
-    }
-
-    public void setSumColumn(String sumColumn) {
-        this.sumColumn = sumColumn;
-    }
-
-    public String getSplitColumn() {
-        return splitColumn;
-    }
-
-    public void setSplitColumn(String splitColumn) {
-        this.splitColumn = splitColumn;
     }
 }

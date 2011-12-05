@@ -57,8 +57,6 @@
             <br/><br/>
             <a href="/sources/${name}/default-graph-params/form">Default gragh parameters</a> :
             <c:if test="${not empty defaultGraphParameters.period}">period <b>${defaultGraphParameters.period}</b></c:if>
-            <c:if test="${not empty defaultGraphParameters.splitColumn}">split on <b>${defaultGraphParameters.splitColumn}</b></c:if>
-            <c:if test="${not empty defaultGraphParameters.sumColumn}">sum on <b>${defaultGraphParameters.sumColumn}</b></c:if>
         </sec:authorize>
 
         <h3>Event frequency</h3>
@@ -107,6 +105,30 @@
 
             <a href="/sources/${name}/transform">add a transform operation</a>
 
+            <h3>Reports</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>title</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <c:forEach var="report" items="${reports}">
+                        <tr>
+                            <td>${report.title}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <a href="/sources/${name}/report/${report.id}">edit</a>
+                                - <a href="/sources/${name}/report/${report.id}/delete">delete</a>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                </tbody>
+            </table>
+
+            <a href="/sources/${name}/report">add a report</a>
+
             <h3>Mail reports</h3>
             <table>
                 <thead>
@@ -127,16 +149,16 @@
                         </tr>
                         <tr>
                             <td colspan="4">
-                                <a href="/sources/${name}/report/${mailReport.id}">edit</a>
-                                - <a href="/sources/${name}/report/${mailReport.id}/send">send now</a>
-                                - <a href="/sources/${name}/report/${mailReport.id}/delete">delete</a>
+                                <a href="/sources/${name}/mailreport/${mailReport.id}">edit</a>
+                                - <a href="/sources/${name}/mailreport/${mailReport.id}/send">send now</a>
+                                - <a href="/sources/${name}/mailreport/${mailReport.id}/delete">delete</a>
                             </td>
                         </tr>
                     </c:forEach>
                 </tbody>
             </table>
 
-            <a href="/sources/${name}/report">add a mail report</a>
+            <a href="/sources/${name}/mailreport">add a mail report</a>
 
             <h3>Mongodb collections</h3>
             <table>
@@ -153,7 +175,11 @@
                     <td>${source.configCollectionName}</td>
                 </tr>
                 <tr>
-                    <td>configuration</td>
+                    <td>report configuration</td>
+                    <td>${source.reportsCollectionName}</td>
+                </tr>
+                <tr>
+                    <td>mail report configuration</td>
                     <td>${source.mailReportsCollectionName}</td>
                 </tr>
             </table>

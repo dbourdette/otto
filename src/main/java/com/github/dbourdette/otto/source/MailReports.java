@@ -42,7 +42,8 @@ import com.github.dbourdette.otto.quartz.SendReportJob;
 import com.github.dbourdette.otto.service.mail.Mail;
 import com.github.dbourdette.otto.service.mail.Mailer;
 import com.github.dbourdette.otto.source.config.MailReportConfig;
-import com.github.dbourdette.otto.web.form.GraphForm;
+import com.github.dbourdette.otto.source.config.ReportConfig;
+import com.github.dbourdette.otto.web.form.ReportForm;
 import com.github.dbourdette.otto.web.util.Pair;
 
 /**
@@ -167,47 +168,17 @@ public class MailReports {
     private String buildHtml(DBSource source, MailReportConfig mailReport) {
         String html = "";
 
-        GraphForm form = mailReport.toGraphForm();
+        ReportForm form = mailReport.toReportForm();
 
-        if (StringUtils.isNotEmpty(form.getSumColumn())) {
-            html += "Sums :<br>";
+        ReportConfig reportConfig = source.getReportConfig(form.getReportId());
 
-            html += "<table>";
-
-            int sum = 0;
-
-            for (Pair pair : form.getValues(source)) {
-                html += "<tr>";
-                html += "<td>";
-                html += pair.getName();
-                html += "</td>";
-                html += "<td>";
-                html += pair.getValue();
-                html += "</td>";
-                html += "</tr>";
-
-                sum += pair.getValue();
-            }
-
-            html += "<tr>";
-            html += "<td>total sum</td>";
-            html += "<td>";
-            html += sum;
-            html += "</td>";
-            html += "</tr>";
-
-            html += "</table>";
-
-            html += "<br>";
-        }
-
-        html += "Counts :<br>";
+        html += reportConfig.getTitle() + " :<br>";
 
         html += "<table>";
 
         int count = 0;
 
-        for (Pair pair : form.getCounts(source)) {
+        for (Pair pair : form.getValues(source)) {
             html += "<tr>";
             html += "<td>";
             html += pair.getName();

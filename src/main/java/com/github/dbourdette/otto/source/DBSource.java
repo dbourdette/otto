@@ -24,16 +24,18 @@ import org.apache.commons.lang.StringUtils;
 import org.bson.types.ObjectId;
 import org.joda.time.Interval;
 
-import com.github.dbourdette.otto.graph.GraphPeriod;
+import com.github.dbourdette.otto.graph.ReportPeriod;
 import com.github.dbourdette.otto.source.config.AggregationConfig;
 import com.github.dbourdette.otto.source.config.DefaultGraphParameters;
 import com.github.dbourdette.otto.source.config.MailReportConfig;
+import com.github.dbourdette.otto.source.config.ReportConfig;
 import com.github.dbourdette.otto.source.config.TransformConfig;
 import com.github.dbourdette.otto.util.Page;
+import com.github.dbourdette.otto.web.exception.SourceAlreadyExists;
 import com.github.dbourdette.otto.web.exception.SourceNotFound;
 import com.github.dbourdette.otto.web.form.CappingForm;
 import com.github.dbourdette.otto.web.form.IndexForm;
-import com.github.dbourdette.otto.web.form.Sort;
+import com.github.dbourdette.otto.web.form.SourceForm;
 import com.github.dbourdette.otto.web.util.Constants;
 import com.github.dbourdette.otto.web.util.Frequency;
 import com.github.dbourdette.otto.web.util.IntervalUtils;
@@ -64,13 +66,52 @@ public class DBSource {
 
     private DBCollection config;
 
+    private DBCollection reports;
+
     private DBCollection mailReports;
 
     private volatile AggregationConfig aggregationConfig;
 
     private volatile TransformConfig transformConfig;
 
-    public static DBSource fromDb(DB mongoDb, String name) {
+    public static boolean exists(DB mongoDb, String name) {
+        String collectionName = qualifiedName(name);
+
+        return mongoDb.collectionExists(collectionName);
+    }
+
+    public static DBSource create(DB mongoDb, SourceForm form) {
+        if (exists(mongoDb, form.getName())) {
+            throw new SourceAlreadyExists();
+        }
+
+        BasicDBObject capping = new BasicDBObject();
+
+        SizeInBytes sizeInBytes = form.getSizeInBytes();
+
+        if (sizeInBytes == null) {
+            capping.put("capped", false);
+        } else {
+            capping.put("capped", true);
+            capping.put("size", sizeInBytes.getValue());
+
+            if (form.getMaxEvents() != null) {
+                capping.put("max", form.getMaxEvents());
+            }
+        }
+
+        String collectionName = qualifiedName(form.getName());
+
+        mongoDb.createCollection(collectionName, capping);
+
+        DBSource source = loadFromDb(mongoDb, form.getName());
+
+        source.updateDisplayGroupAndName(form.getDisplayGroup(), form.getDisplayName());
+
+        return source;
+    }
+
+    public static DBSource loadFromDb(DB mongoDb, String name) {
         if (!mongoDb.collectionExists(qualifiedName(name))) {
             throw new SourceNotFound();
         }
@@ -82,6 +123,7 @@ public class DBSource {
         source.events = mongoDb.getCollection(qualifiedName(name));
         source.config = mongoDb.getCollection(qualifiedConfigName(name));
         source.mailReports = mongoDb.getCollection(qualifiedMailReportsName(name));
+        source.reports = mongoDb.getCollection(qualifiedReportsName(name));
 
         source.loadAggregation();
         source.loadDisplay();
@@ -100,6 +142,10 @@ public class DBSource {
 
     public static String qualifiedMailReportsName(String name) {
         return Constants.SOURCES + name + "." + Constants.MAIL_CONFIG;
+    }
+
+    public static String qualifiedReportsName(String name) {
+        return Constants.SOURCES + name + "." + Constants.REPORTS;
     }
 
     public void updateDisplayGroupAndName(String group, String name) {
@@ -200,6 +246,30 @@ public class DBSource {
         loadTransformConfig();
     }
 
+    public void saveReportConfig(ReportConfig reportConfig) {
+        if (StringUtils.isEmpty(reportConfig.getId())) {
+            BasicDBObject object = reportConfig.toDBObject();
+
+            reports.save(object);
+
+            reportConfig.setId(((ObjectId) object.get("_id")).toString());
+        } else {
+            reports.update(new BasicDBObject("_id", new ObjectId(reportConfig.getId())), reportConfig.toDBObject());
+        }
+    }
+
+    public List<ReportConfig> getReportConfigs() {
+        return ReportConfig.readAll(reports.find().sort(new BasicDBObject("name", 1)));
+    }
+
+    public ReportConfig getReportConfig(String id) {
+        return ReportConfig.read((BasicDBObject) reports.findOne(new BasicDBObject("_id", new ObjectId(id))));
+    }
+
+    public void deleteReportConfig(String id) {
+        reports.remove(new BasicDBObject("_id", new ObjectId(id)));
+    }
+
     public DefaultGraphParameters getDefaultGraphParameters() {
         DBObject dbObject = findConfigItem("defaultGraphParameters");
 
@@ -207,13 +277,10 @@ public class DBSource {
 
         if (dbObject != null) {
             try {
-                parameters.setPeriod(GraphPeriod.valueOf((String) dbObject.get("period")));
+                parameters.setPeriod(ReportPeriod.valueOf((String) dbObject.get("period")));
             } catch (Exception e) {
                 // well, value was not correct in db
             }
-
-            parameters.setSplitColumn((String) dbObject.get("splitColumn"));
-            parameters.setSumColumn((String) dbObject.get("sumColumn"));
         }
 
         return parameters;
@@ -225,8 +292,6 @@ public class DBSource {
         BasicDBObject values = new BasicDBObject("name", "defaultGraphParameters");
 
         values.put("period", params.getPeriod().name());
-        values.put("splitColumn", params.getSplitColumn());
-        values.put("sumColumn", params.getSumColumn());
 
         config.update(filter, values, true, false);
     }
@@ -250,6 +315,7 @@ public class DBSource {
     public void drop() {
         events.drop();
         config.drop();
+        reports.drop();
         mailReports.drop();
     }
 
@@ -285,12 +351,7 @@ public class DBSource {
         object.put("to", mailReport.getTo());
         object.put("title", mailReport.getTitle());
         object.put("period", mailReport.getPeriod().name());
-        object.put("splitColumn", mailReport.getSplitColumn());
-        object.put("sumColumn", mailReport.getSumColumn());
-
-        if (mailReport.getSort() != null) {
-            object.put("sort", mailReport.getSort().name());
-        }
+        object.put("reportId", mailReport.getReportId());
 
         mailReports.save(object);
     }
@@ -326,7 +387,7 @@ public class DBSource {
         BasicDBObject options = new BasicDBObject("name", form.getIndexName());
 
         if (form.isBackground()) {
-             options.put("background", "1");
+            options.put("background", "1");
         }
 
         events.ensureIndex(keys, options);
@@ -354,13 +415,8 @@ public class DBSource {
         mailReport.setCronExpression((String) object.get("cronExpression"));
         mailReport.setTo((String) object.get("to"));
         mailReport.setTitle((String) object.get("title"));
-        mailReport.setPeriod(GraphPeriod.valueOf((String) object.get("period")));
-        mailReport.setSplitColumn((String) object.get("splitColumn"));
-        mailReport.setSumColumn((String) object.get("sumColumn"));
-
-        if (object.containsField("sort")) {
-            mailReport.setSort(Sort.valueOf((String) object.get("sort")));
-        }
+        mailReport.setPeriod(ReportPeriod.valueOf((String) object.get("period")));
+        mailReport.setReportId((String) object.get("reportId"));
 
         return mailReport;
     }
@@ -417,6 +473,10 @@ public class DBSource {
 
     public String getConfigCollectionName() {
         return config.getName();
+    }
+
+    public String getReportsCollectionName() {
+        return reports.getName();
     }
 
     public String getMailReportsCollectionName() {

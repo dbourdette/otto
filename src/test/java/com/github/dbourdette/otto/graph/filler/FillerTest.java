@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.github.dbourdette.otto.graph.Graph;
-import com.github.dbourdette.otto.graph.GraphPeriod;
+import com.github.dbourdette.otto.graph.ReportPeriod;
 import com.mongodb.BasicDBObject;
 
 /**
@@ -19,7 +19,7 @@ public class FillerTest {
     @Before
     public void init() {
         graph = new Graph();
-        GraphPeriod.TODAY.createRows(graph);
+        ReportPeriod.TODAY.createRows(graph);
     }
 
     @Test

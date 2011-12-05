@@ -34,7 +34,6 @@ import com.github.dbourdette.otto.web.exception.SourceAlreadyExists;
 import com.github.dbourdette.otto.web.form.SourceForm;
 import com.github.dbourdette.otto.web.util.Constants;
 import com.github.dbourdette.otto.web.util.SizeInBytes;
-import com.github.dbourdette.otto.web.util.SourceGroup;
 import com.github.dbourdette.otto.web.util.SourceGroups;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -70,36 +69,11 @@ public class Sources {
     }
 
     public DBSource createSource(SourceForm form) {
-        String collectionName = DBSource.qualifiedName(form.getName());
-
-        if (mongoDb.collectionExists(collectionName)) {
-            throw new SourceAlreadyExists();
-        }
-
-        BasicDBObject capping = new BasicDBObject();
-
-        SizeInBytes sizeInBytes = form.getSizeInBytes();
-
-        if (sizeInBytes == null) {
-            capping.put("capped", false);
-        } else {
-            capping.put("capped", true);
-            capping.put("size", sizeInBytes.getValue());
-
-            if (form.getMaxEvents() != null) {
-                capping.put("max", form.getMaxEvents());
-            }
-        }
-
-        mongoDb.createCollection(collectionName, capping);
+        DBSource.create(mongoDb, form);
 
         loadSources();
 
-        DBSource source = getSource(form.getName());
-
-        source.updateDisplayGroupAndName(form.getDisplayGroup(), form.getDisplayName());
-
-        return source;
+        return getSource(form.getName());
     }
 
     public void dropSource(String name) throws SchedulerException {
@@ -139,6 +113,6 @@ public class Sources {
     }
 
     private DBSource loadSource(String name) {
-        return DBSource.fromDb(mongoDb, name);
+        return DBSource.loadFromDb(mongoDb, name);
     }
 }

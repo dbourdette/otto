@@ -9,7 +9,7 @@ import org.joda.time.Interval;
 /**
  * @author damien bourdette
  */
-public enum GraphPeriod {
+public enum ReportPeriod {
     RECENT(5), TODAY(60), YESTERDAY(60), THIS_WEEK(6 * 60), LAST_WEEK(6 * 60), THIS_MONTH(24 * 60), LAST_MONTH(24 * 60);
 
     private int stepInMinutes;
@@ -64,7 +64,7 @@ public enum GraphPeriod {
         graph.setRows(getInterval(), Duration.standardMinutes(getStepInMinutes()));
     }
 
-    private GraphPeriod(int stepInMinutes) {
+    private ReportPeriod(int stepInMinutes) {
         this.stepInMinutes = stepInMinutes;
     }
 }

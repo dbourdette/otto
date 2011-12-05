@@ -35,11 +35,8 @@
     <c:if test="${navItem eq 'logs'}">- logs</c:if>
     <c:if test="${not (navItem eq 'logs')}">- <a href="/sources/${name}/events">logs</a></c:if>
 
-    <c:if test="${navItem eq 'stats'}">- stats</c:if>
-    <c:if test="${not (navItem eq 'stats')}">- <a href="/sources/${name}/stats">stats</a></c:if>
-
-    <c:if test="${navItem eq 'graph'}">- graph</c:if>
-    <c:if test="${not (navItem eq 'graph')}">- <a href="/sources/${name}/graph">graph</a></c:if>
+    <c:if test="${navItem eq 'reports'}">- reports</c:if>
+    <c:if test="${not (navItem eq 'reports')}">- <a href="/sources/${name}/reports">reports</a></c:if>
 
     <sec:authorize access="hasRole('ROLE_ADMIN')">
         <c:if test="${navItem eq 'batch'}">- batch</c:if>

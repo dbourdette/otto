@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.github.dbourdette.otto.graph.GraphPeriod;
+import com.github.dbourdette.otto.graph.ReportPeriod;
 import com.github.dbourdette.otto.source.DBSource;
 import com.github.dbourdette.otto.source.MailReports;
 import com.github.dbourdette.otto.source.Sources;
@@ -41,6 +41,7 @@ import com.github.dbourdette.otto.source.TimeFrame;
 import com.github.dbourdette.otto.source.config.AggregationConfig;
 import com.github.dbourdette.otto.source.config.DefaultGraphParameters;
 import com.github.dbourdette.otto.source.config.MailReportConfig;
+import com.github.dbourdette.otto.source.config.ReportConfig;
 import com.github.dbourdette.otto.source.config.TransformConfig;
 import com.github.dbourdette.otto.web.form.CappingForm;
 import com.github.dbourdette.otto.web.form.IndexForm;
@@ -78,6 +79,7 @@ public class SourcesController {
         model.addAttribute("yesterdayFrequency", source.findEventsFrequency(IntervalUtils.yesterday()));
         model.addAttribute("todayFrequency", source.findEventsFrequency(IntervalUtils.today()));
         model.addAttribute("defaultGraphParameters", source.getDefaultGraphParameters());
+        model.addAttribute("reports", source.getReportConfigs());
         model.addAttribute("mailReports", source.getMailReports());
         model.addAttribute("indexes", source.getIndexes());
 
@@ -170,7 +172,7 @@ public class SourcesController {
     @RequestMapping("/sources/{name}/default-graph-params/form")
     public String defaultGraphParameters(@PathVariable String name, Model model) {
         model.addAttribute("form", sources.getSource(name).getDefaultGraphParameters());
-        model.addAttribute("periods", GraphPeriod.values());
+        model.addAttribute("periods", ReportPeriod.values());
 
         return "sources/default_graph_params_form";
     }
@@ -178,7 +180,7 @@ public class SourcesController {
     @RequestMapping(value = "/sources/{name}/default-graph-params", method = RequestMethod.POST)
     public String saveDefaultGraphParameters(@PathVariable String name, @Valid @ModelAttribute("form") DefaultGraphParameters form, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            model.addAttribute("periods", GraphPeriod.values());
+            model.addAttribute("periods", ReportPeriod.values());
 
             return "sources/default_graph_params_form";
         }
@@ -216,15 +218,47 @@ public class SourcesController {
 
     @RequestMapping("/sources/{name}/report")
     public String report(@PathVariable String name, Model model) {
-        model.addAttribute("form", new MailReportConfig());
+        model.addAttribute("form", new ReportConfig());
 
         return "sources/report_form";
     }
 
     @RequestMapping(value = "/sources/{name}/report", method = RequestMethod.POST)
-    public String report(@PathVariable String name, @Valid @ModelAttribute("form") MailReportConfig form, BindingResult result, Model model) throws SchedulerException, ParseException {
+    public String report(@PathVariable String name, @Valid @ModelAttribute("form") ReportConfig form, BindingResult result, Model model) throws SchedulerException, ParseException {
         if (result.hasErrors()) {
             return "sources/report_form";
+        }
+
+        sources.getSource(name).saveReportConfig(form);
+
+        return "redirect:/sources/{name}";
+    }
+
+    @RequestMapping("/sources/{name}/report/{id}")
+    public String report(@PathVariable String name, @PathVariable String id, Model model) {
+        model.addAttribute("form", sources.getSource(name).getReportConfig(id));
+
+        return "sources/report_form";
+    }
+
+    @RequestMapping("/sources/{name}/report/{id}/delete")
+    public String deleteReport(@PathVariable String name, @PathVariable String id, Model model) {
+        sources.getSource(name).deleteReportConfig(id);
+
+        return "redirect:/sources/{name}";
+    }
+
+    @RequestMapping("/sources/{name}/mailreport")
+    public String mailreport(@PathVariable String name, Model model) {
+        model.addAttribute("form", new MailReportConfig());
+
+        return "sources/mail_report_form";
+    }
+
+    @RequestMapping(value = "/sources/{name}/mailreport", method = RequestMethod.POST)
+    public String mailreport(@PathVariable String name, @Valid @ModelAttribute("form") MailReportConfig form, BindingResult result, Model model) throws SchedulerException, ParseException {
+        if (result.hasErrors()) {
+            return "sources/mail_report_form";
         }
 
         sources.getSource(name).saveMailReport(form);
@@ -234,14 +268,14 @@ public class SourcesController {
         return "redirect:/sources/{name}";
     }
 
-    @RequestMapping("/sources/{name}/report/{id}")
-    public String report(@PathVariable String name, @PathVariable String id, Model model) {
+    @RequestMapping("/sources/{name}/mailreport/{id}")
+    public String mailreport(@PathVariable String name, @PathVariable String id, Model model) {
         model.addAttribute("form", sources.getSource(name).getMailReport(id));
 
-        return "sources/report_form";
+        return "sources/mail_report_form";
     }
 
-    @RequestMapping("/sources/{name}/report/{id}/delete")
+    @RequestMapping("/sources/{name}/mailreport/{id}/delete")
     public String delete(@PathVariable String name, @PathVariable String id, Model model) throws SchedulerException {
         MailReportConfig mailReportConfig = sources.getSource(name).deleteMailReport(id);
 
@@ -252,8 +286,8 @@ public class SourcesController {
         return "redirect:/sources/{name}";
     }
 
-    @RequestMapping("/sources/{name}/report/{id}/send")
-    public String sendReport(@PathVariable String name, @PathVariable String id, Model model) throws MessagingException, UnsupportedEncodingException {
+    @RequestMapping("/sources/{name}/mailreport/{id}/send")
+    public String sendMailReport(@PathVariable String name, @PathVariable String id, Model model) throws MessagingException, UnsupportedEncodingException {
         DBSource source = sources.getSource(name);
 
         MailReportConfig mailReport = source.getMailReport(id);

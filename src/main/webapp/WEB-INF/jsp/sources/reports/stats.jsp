@@ -35,55 +35,17 @@
 	<article>
 		<widget:nav />
 
-        <div>
-            <form:form action="/sources/${name}/stats" commandName="form" method="GET">
-                <p style="float: left">
-                    Period <form:select path="period" items="${form.periods}"></form:select>
-                </p>
-                <p style="float: right">
-                    <input type="submit" value="display" tabindex="7" />
-                </p>
-                <p style="float: right;margin-right: 20px;">
-                    Split on <form:input path="splitColumn" tabindex="4" />
-                    Sum on <form:input path="sumColumn" tabindex="5" />
-                    Sort by <form:select path="sort" tabindex="6">
-                                <form:option value="" />
-                                <form:options items="${form.sorts}" />
-                            </form:select>
-                </p>
-                <p style="clear:both;"/>
-            </form:form>
-        </div>
+        <widget:reports_nav />
 
         <div>
             Mean event frequency for this period : <fmt:formatNumber value="${frequency.eventsPerMinute}" pattern="# ###.######"/> events per minute
 
             <br><br>
 
-            <c:if test="${not empty sums}">
-                <table>
-                    <span>Item sums</span><br/>
-                    <c:set var="sum" value="0" />
-                    <c:forEach var="value" items="${sums}">
-                        <tr>
-                            <td>${value.name}</td>
-                            <td>${value.value}</td>
-                        </tr>
-                        <c:set var="sum" value="${value.value + sum}" />
-                    </c:forEach>
-                    <tr>
-                        <td><b>total sum</b></td>
-                        <td><b>${sum}</b></td>
-                    </tr>
-                </table>
-
-                <br>
-            </c:if>
-
             <table>
-                <span>Item count</span><br/>
+                <span>${form.reportConfig.title}</span><br/>
                 <c:set var="count" value="0" />
-                <c:forEach var="value" items="${counts}">
+                <c:forEach var="value" items="${values}">
                     <tr>
                         <td>${value.name}</td>
                         <td>${value.value}</td>
@@ -91,7 +53,7 @@
                     <c:set var="count" value="${value.value + count}" />
                 </c:forEach>
                 <tr>
-                    <td><b>total count</b></td>
+                    <td><b>total</b></td>
                     <td><b>${count}</b></td>
                 </tr>
             </table>

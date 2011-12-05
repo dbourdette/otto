@@ -24,16 +24,14 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 
-import org.apache.commons.lang.StringUtils;
 import org.joda.time.Interval;
 
 import com.github.dbourdette.otto.graph.Graph;
-import com.github.dbourdette.otto.graph.GraphPeriod;
+import com.github.dbourdette.otto.graph.ReportPeriod;
 import com.github.dbourdette.otto.graph.filler.FillerChain;
-import com.github.dbourdette.otto.graph.filler.SplitFiller;
-import com.github.dbourdette.otto.graph.filler.SumFiller;
 import com.github.dbourdette.otto.source.DBSource;
 import com.github.dbourdette.otto.source.config.DefaultGraphParameters;
+import com.github.dbourdette.otto.source.config.ReportConfig;
 import com.github.dbourdette.otto.web.util.Pair;
 import com.mongodb.DBObject;
 
@@ -41,18 +39,16 @@ import com.mongodb.DBObject;
  * @author damien bourdette
  * @version \$Revision$
  */
-public class GraphForm {
+public class ReportForm {
     @NotNull
-    private GraphPeriod period;
+    private ReportPeriod period;
 
-    public String sumColumn;
+    private String reportId;
 
-    public String splitColumn;
+    private List<ReportConfig> reportConfigs;
 
-    public Sort sort;
-
-    public GraphForm() {
-        period = GraphPeriod.RECENT;
+    public ReportForm() {
+        period = ReportPeriod.RECENT;
     }
 
     public Interval getInterval() {
@@ -65,14 +61,10 @@ public class GraphForm {
         if (!map.containsKey("period") && defaultParameters.getPeriod() != null) {
             setPeriod(defaultParameters.getPeriod());
         }
+    }
 
-        if (!map.containsKey("splitColumn")) {
-            setSplitColumn(defaultParameters.getSplitColumn());
-        }
-
-        if (!map.containsKey("sumColumn")) {
-            setSumColumn(defaultParameters.getSumColumn());
-        }
+    public void setReportConfigs(List<ReportConfig> reportConfigs) {
+        this.reportConfigs = reportConfigs;
     }
 
     public List<Pair> getValues(DBSource source) {
@@ -87,24 +79,14 @@ public class GraphForm {
         return values;
     }
 
-    public List<Pair> getCounts(DBSource source) {
-        String temp = sumColumn;
-
-        sumColumn = null;
-
-        List<Pair> pairs = getValues(source);
-
-        sumColumn = temp;
-
-        return pairs;
-    }
-
     public Graph buildGraph(DBSource source) {
         Graph graph = new Graph();
 
         period.createRows(graph);
 
-        FillerChain chain = buildChain(graph);
+        ReportConfig reportConfig = getReportConfig();
+
+        FillerChain chain = reportConfig.buildChain(graph);
 
         Iterator<DBObject> events = source.findEvents(getInterval());
 
@@ -118,80 +100,53 @@ public class GraphForm {
             graph.ensureColumnExists("no data");
         }
 
-        if (sort == Sort.ALPHABETICALLY) {
+        if (reportConfig.getSort() == Sort.ALPHABETICALLY) {
             graph.sortAlphabetically();
-        } else if (sort == Sort.BY_SUM) {
+        } else if (reportConfig.getSort() == Sort.BY_SUM) {
             graph.sortBySum();
         }
 
         return graph;
     }
 
-    public String getSumColumn() {
-        return sumColumn;
+    public ReportPeriod[] getPeriods() {
+        return ReportPeriod.values();
     }
 
-    public void setSumColumn(String sumColumn) {
-        this.sumColumn = sumColumn;
-    }
-
-    public String getSplitColumn() {
-        return splitColumn;
-    }
-
-    public void setSplitColumn(String splitColumn) {
-        this.splitColumn = splitColumn;
-    }
-
-    public GraphPeriod[] getPeriods() {
-        return GraphPeriod.values();
-    }
-
-    public GraphPeriod getPeriod() {
+    public ReportPeriod getPeriod() {
         return period;
     }
 
-    public void setPeriod(GraphPeriod period) {
+    public void setPeriod(ReportPeriod period) {
         this.period = period;
     }
 
-    public Sort getSort() {
-        return sort;
+    public String getReportId() {
+        return reportId;
     }
 
-    public void setSort(Sort sort) {
-        this.sort = sort;
+    public void setReportId(String reportId) {
+        this.reportId = reportId;
     }
 
-    public Sort[] getSorts() {
-        return Sort.values();
+    public List<ReportConfig> getReportConfigs() {
+        return reportConfigs;
     }
 
-    private FillerChain buildChain(Graph graph) {
-        FillerChain chain = FillerChain.forGraph(graph);
-
-        if (StringUtils.isNotEmpty(splitColumn)) {
-            SplitFiller split = new SplitFiller();
-            split.setColumns(splitColumn);
-            chain.add(split);
+    public ReportConfig getReportConfig() {
+        for (ReportConfig reportConfig : reportConfigs) {
+            if (reportConfig.getId().equals(reportId)) {
+                return reportConfig;
+            }
         }
 
-        if (StringUtils.isNotEmpty(splitColumn)) {
-            SumFiller sum = new SumFiller();
-            sum.setColumn(sumColumn);
-            chain.add(sum);
+        if (reportConfigs.size() > 0) {
+            ReportConfig reportConfig = reportConfigs.get(0);
+            reportId = reportConfig.getId();
+
+            return reportConfig;
         }
 
-        return chain;
-    }
-
-    @Override
-    public String toString() {
-        return "GraphForm{" +
-                "period=" + period +
-                ", sumColumn='" + sumColumn + '\'' +
-                ", splitColumn='" + splitColumn + '\'' +
-                ", sort=" + sort +
-                '}';
+        return new ReportConfig();
     }
 }
