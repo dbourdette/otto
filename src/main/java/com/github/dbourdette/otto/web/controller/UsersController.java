@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.github.dbourdette.otto.service.user.User;
 import com.github.dbourdette.otto.service.user.Users;
 import com.github.dbourdette.otto.web.editor.ObjectIdEditor;
+import com.github.dbourdette.otto.web.util.FlashScope;
 
 /**
  * @author damien bourdette
@@ -25,6 +26,9 @@ import com.github.dbourdette.otto.web.editor.ObjectIdEditor;
 public class UsersController {
     @Inject
     private Users users;
+
+    @Inject
+    private FlashScope flashScope;
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -62,12 +66,18 @@ public class UsersController {
 
         users.save(user);
 
+        flashScope.message("user " + user.getUsername() + " has been modified");
+
         return "redirect:/users";
     }
 
     @RequestMapping(value = "/users", method = RequestMethod.DELETE)
     public String delete(@RequestParam String id, Model model) {
-        users.delete(users.findUser(id));
+        User user = users.findUser(id);
+
+        users.delete(user);
+
+        flashScope.message("user " + user.getUsername() + " has been deleted");
 
         return "redirect:/users";
     }

@@ -28,10 +28,12 @@ import com.github.dbourdette.otto.graph.GraphPeriod;
 import com.github.dbourdette.otto.source.config.AggregationConfig;
 import com.github.dbourdette.otto.source.config.DefaultGraphParameters;
 import com.github.dbourdette.otto.source.config.MailReportConfig;
+import com.github.dbourdette.otto.source.config.TransformConfig;
 import com.github.dbourdette.otto.util.Page;
 import com.github.dbourdette.otto.web.exception.SourceNotFound;
 import com.github.dbourdette.otto.web.form.CappingForm;
 import com.github.dbourdette.otto.web.form.IndexForm;
+import com.github.dbourdette.otto.web.form.Sort;
 import com.github.dbourdette.otto.web.util.Constants;
 import com.github.dbourdette.otto.web.util.Frequency;
 import com.github.dbourdette.otto.web.util.IntervalUtils;
@@ -66,6 +68,8 @@ public class DBSource {
 
     private volatile AggregationConfig aggregationConfig;
 
+    private volatile TransformConfig transformConfig;
+
     public static DBSource fromDb(DB mongoDb, String name) {
         if (!mongoDb.collectionExists(qualifiedName(name))) {
             throw new SourceNotFound();
@@ -81,6 +85,7 @@ public class DBSource {
 
         source.loadAggregation();
         source.loadDisplay();
+        source.loadTransformConfig();
 
         return source;
     }
@@ -123,23 +128,45 @@ public class DBSource {
     public Frequency findEventsFrequency(Interval interval) {
         BasicDBObject query = IntervalUtils.query(interval);
 
-        int count = events.find(query).count();
+        int count = 0;
+
+        if (aggregationConfig.isAggregating()) {
+            String attName = aggregationConfig.getAttributeName();
+
+            BasicDBObject fields = new BasicDBObject(attName, "1");
+
+            Iterator<DBObject> iterator = events.find(query, fields).iterator();
+
+            while (iterator.hasNext()) {
+                Object value = iterator.next().get(attName);
+
+                if (value instanceof Integer) {
+                    count += (Integer) value;
+                } else {
+                    count += 1;
+                }
+            }
+        } else {
+            count = (int) events.count(query);
+        }
 
         return new Frequency(count, interval.toDuration());
     }
 
     public void post(Event event) {
+        transformConfig.applyOn(event);
+
         AggregationConfig config = aggregationConfig;
 
-        if (config.getTimeFrame() == null || config.getTimeFrame() == TimeFrame.MILLISECOND) {
-            events.insert(event.toDBObject());
-        } else {
+        if (config.isAggregating()) {
             event.setDate(config.getTimeFrame().roundDate(event.getDate()));
 
             BasicDBObject inc = new BasicDBObject();
             inc.put("$inc", new BasicDBObject(config.getAttributeName(), 1));
 
             events.update(event.toDBObject(), inc, true, false);
+        } else {
+            events.insert(event.toDBObject());
         }
     }
 
@@ -163,6 +190,14 @@ public class DBSource {
         config.update(filter, values, true, false);
 
         loadAggregation();
+    }
+
+    public void saveTransformConfig(TransformConfig transformConfig) {
+        BasicDBObject filter = new BasicDBObject("name", "transform");
+
+        config.update(filter, transformConfig.toDBObject(), true, false);
+
+        loadTransformConfig();
     }
 
     public DefaultGraphParameters getDefaultGraphParameters() {
@@ -253,6 +288,10 @@ public class DBSource {
         object.put("splitColumn", mailReport.getSplitColumn());
         object.put("sumColumn", mailReport.getSumColumn());
 
+        if (mailReport.getSort() != null) {
+            object.put("sort", mailReport.getSort().name());
+        }
+
         mailReports.save(object);
     }
 
@@ -319,6 +358,10 @@ public class DBSource {
         mailReport.setSplitColumn((String) object.get("splitColumn"));
         mailReport.setSumColumn((String) object.get("sumColumn"));
 
+        if (object.containsField("sort")) {
+            mailReport.setSort(Sort.valueOf((String) object.get("sort")));
+        }
+
         return mailReport;
     }
 
@@ -344,6 +387,12 @@ public class DBSource {
             displayGroup = (String) dbObject.get("displayGroup");
             displayName = (String) dbObject.get("displayName");
         }
+    }
+
+    public void loadTransformConfig() {
+        DBObject dbObject = findConfigItem("transform");
+
+        transformConfig = TransformConfig.fromDBObject(dbObject);
     }
 
     public long getCount() {
@@ -380,6 +429,10 @@ public class DBSource {
 
     public AggregationConfig getAggregationConfig() {
         return aggregationConfig;
+    }
+
+    public TransformConfig getTransformConfig() {
+        return transformConfig;
     }
 
     public String getName() {

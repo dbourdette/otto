@@ -4,7 +4,6 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import com.github.dbourdette.otto.service.config.Config;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -12,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import com.github.dbourdette.otto.service.config.Config;
 import com.github.dbourdette.otto.source.Event;
 import com.github.dbourdette.otto.source.Sources;
 
@@ -55,7 +55,7 @@ public class RemoteEventsFacadeImpl implements RemoteEventsFacade {
         String monitoringSource = config.get(Config.MONITORING_SOURCE);
 
         if (StringUtils.isNotEmpty(monitoringSource)) {
-            Event event = new Event().putValue("source", sourceName);
+            Event event = new Event().putString("source", sourceName);
 
             event.setDate(new DateTime());
 

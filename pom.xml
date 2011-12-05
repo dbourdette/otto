@@ -88,6 +88,15 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>
                 <configuration>
                     <targetJdk>1.6</targetJdk>
@@ -126,6 +135,9 @@
             </resource>
             <resource>
                 <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.gif</include>
+                </includes>
             </resource>
             <resource>
                 <directory>${basedir}</directory>

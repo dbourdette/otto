@@ -49,6 +49,8 @@ public class GraphForm {
 
     public String splitColumn;
 
+    public Sort sort;
+
     public GraphForm() {
         period = GraphPeriod.RECENT;
     }
@@ -115,10 +117,10 @@ public class GraphForm {
 
             Date date = (Date) event.get("date");
 
-            if (StringUtils.isEmpty(getSumColumn())) {
+            if (StringUtils.isEmpty(sumColumn)) {
                 graph.increaseValue(columnName, new DateTime(date));
             } else {
-                Object value = event.get(getSumColumn());
+                Object value = event.get(sumColumn);
 
                 if (value instanceof Integer) {
                     graph.increaseValue(columnName, new DateTime(date), (Integer) value);
@@ -130,6 +132,12 @@ public class GraphForm {
 
         if (graph.getColumnCount() == 0) {
             graph.ensureColumnExists("no data");
+        }
+
+        if (sort == Sort.ALPHABETICALLY) {
+            graph.sortAlphabetically();
+        } else if (sort == Sort.BY_SUM) {
+            graph.sortBySum();
         }
 
         return graph;
@@ -167,6 +175,18 @@ public class GraphForm {
         this.period = period;
     }
 
+    public Sort getSort() {
+        return sort;
+    }
+
+    public void setSort(Sort sort) {
+        this.sort = sort;
+    }
+
+    public Sort[] getSorts() {
+        return Sort.values();
+    }
+
     private String getSplitColumnName(DBSource source, DBObject event) {
         if (StringUtils.isEmpty(splitColumn)) {
             return source.getName();
@@ -189,5 +209,15 @@ public class GraphForm {
         }
 
         return result.toString();
+    }
+
+    @Override
+    public String toString() {
+        return "GraphForm{" +
+                "period=" + period +
+                ", sumColumn='" + sumColumn + '\'' +
+                ", splitColumn='" + splitColumn + '\'' +
+                ", sort=" + sort +
+                '}';
     }
 }

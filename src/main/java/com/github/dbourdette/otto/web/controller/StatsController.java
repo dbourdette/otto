@@ -48,6 +48,7 @@ public class StatsController {
         form.fillWithDefault(source.getDefaultGraphParameters(), request);
 
         model.addAttribute("navItem", "stats");
+        model.addAttribute("frequency", source.findEventsFrequency(form.getInterval()));
         model.addAttribute("form", form);
 
         if (StringUtils.isNotEmpty(form.getSumColumn())) {

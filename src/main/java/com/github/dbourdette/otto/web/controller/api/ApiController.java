@@ -25,6 +25,7 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ObjectNode;
 import org.springframework.stereotype.Controller;
@@ -40,11 +41,12 @@ import com.github.dbourdette.otto.web.service.RemoteEventsFacade;
 import com.mongodb.DBObject;
 
 /**
+ * Controller for external apis.
+ *
  * @author damien bourdette
  * @version \$Revision$
  */
 @Controller
-@RequestMapping("/api/sources/{name}/events")
 public class ApiController {
 
     @Inject
@@ -53,7 +55,24 @@ public class ApiController {
     @Inject
     private Sources sources;
 
-    @RequestMapping(method = RequestMethod.GET, headers = "Accept=application/json")
+    private static final byte[] EMPTY_GIF;
+
+    static {
+        try {
+            EMPTY_GIF = IOUtils.toByteArray(ApiController.class.getResourceAsStream("empty.gif"));
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load empty.gif");
+        }
+    }
+
+    @RequestMapping(value = "/api/sources/{name}/events", method = RequestMethod.POST)
+    public void post(@PathVariable String name, HttpServletRequest request, HttpServletResponse response) {
+        remoteEventsFacade.post(name, copyParams(request));
+
+        response.setStatus(200);
+    }
+
+    @RequestMapping(value = "/jsonapi/sources/{name}/events", method = RequestMethod.GET, headers = "Accept=application/json")
     public void eventsJson(@PathVariable String name, @RequestParam(required = false) Integer page, HttpServletResponse response) throws IOException {
         DBSource source = sources.getSource(name);
         Page<DBObject> events = source.findEvents(page);
@@ -68,11 +87,15 @@ public class ApiController {
         mapper.writeValue(response.getOutputStream(), root);
     }
 
-    @RequestMapping(method = RequestMethod.POST)
-    public void post(@PathVariable String name, HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping(value = "/imgapi/sources/{name}/event.gif")
+    public void gifPost(@PathVariable String name, HttpServletRequest request, HttpServletResponse response) throws IOException {
         remoteEventsFacade.post(name, copyParams(request));
 
+        response.setHeader("Cache-Control", "private, no-cache");
+        response.setHeader("Content-Type", "image/gif");
+        response.setHeader("Pragma", "no-cache");
         response.setStatus(200);
+        response.getOutputStream().write(EMPTY_GIF);
     }
 
     /**

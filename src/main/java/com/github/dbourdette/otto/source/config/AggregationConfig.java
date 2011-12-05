@@ -29,6 +29,10 @@ public class AggregationConfig {
 
     private String attributeName = "count";
 
+    public boolean isAggregating() {
+        return timeFrame != null && timeFrame != TimeFrame.MILLISECOND;
+    }
+
 	public TimeFrame getTimeFrame() {
 		return timeFrame;
 	}

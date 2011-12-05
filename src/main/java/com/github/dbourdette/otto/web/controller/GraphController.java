@@ -54,6 +54,8 @@ import com.github.dbourdette.otto.web.form.GraphForm;
 @Controller
 public class GraphController {
 
+    private static final int TOP_COUNT = 30;
+
     @Inject
     private Sources sources;
 
@@ -69,7 +71,7 @@ public class GraphController {
         Long t1 = System.currentTimeMillis();
 
         Graph graph = form.buildGraph(source);
-        graph.top(20);
+        graph.top(TOP_COUNT);
         graph.sortBySum();
 
         Long t2 = System.currentTimeMillis();
@@ -95,7 +97,7 @@ public class GraphController {
         form.fillWithDefault(source.getDefaultGraphParameters(), request);
 
         Graph graph = form.buildGraph(source);
-        graph.top(20);
+        graph.top(TOP_COUNT);
         graph.sortBySum();
 
         response.setContentType("image/png");

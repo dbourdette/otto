@@ -179,6 +179,19 @@ public class GraphTest {
     }
 
     @Test
+    public void sortAlphabetically() {
+        graph.setRows(new Interval(now.minusMinutes(10), now));
+
+        graph.dropColumn(USER_LOGIN);
+        graph.ensureColumnsExists("col2", "col3", "col1");
+
+        graph.sortAlphabetically();
+
+        Assert.assertEquals("first column is col1", "col1", graph.getColumnTitles().get(0));
+        Assert.assertEquals("last column is col3", "col3", graph.getColumnTitles().get(2));
+    }
+
+    @Test
     public void sortBySum() throws IOException {
         graph.ensureColumnExists(USER_LOGOUT);
 

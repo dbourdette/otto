@@ -40,7 +40,7 @@ public class Users {
     }
 
     public List<User> findUsers() {
-        return datastore.find(User.class).asList();
+        return datastore.find(User.class).order("username").asList();
     }
 
     public User findUser(String id) {
