@@ -39,11 +39,12 @@ import org.quartz.TriggerKey;
 import org.springframework.stereotype.Component;
 
 import com.github.dbourdette.otto.quartz.SendReportJob;
+import com.github.dbourdette.otto.report.Report;
+import com.github.dbourdette.otto.report.ReportPeriod;
 import com.github.dbourdette.otto.service.mail.Mail;
 import com.github.dbourdette.otto.service.mail.Mailer;
 import com.github.dbourdette.otto.source.config.MailReportConfig;
 import com.github.dbourdette.otto.source.config.ReportConfig;
-import com.github.dbourdette.otto.web.form.ReportForm;
 import com.github.dbourdette.otto.web.util.Pair;
 
 /**
@@ -168,17 +169,23 @@ public class MailReports {
     private String buildHtml(DBSource source, MailReportConfig mailReport) {
         String html = "";
 
-        ReportForm form = mailReport.toReportForm();
+        ReportPeriod period = mailReport.getPeriod();
 
-        ReportConfig reportConfig = source.getReportConfig(form.getReportId());
+        ReportConfig config = source.getReportConfigByTitle(mailReport.getReportTitle());
 
-        html += reportConfig.getTitle() + " :<br>";
+        if (config == null) {
+            config = new ReportConfig();
+        }
+
+        Report report = source.buildReport(config, period);
+
+        html += config.getTitle() + " :<br>";
 
         html += "<table>";
 
         int count = 0;
 
-        for (Pair pair : form.getValues(source)) {
+        for (Pair pair : report.getSums()) {
             html += "<tr>";
             html += "<td>";
             html += pair.getName();
@@ -187,7 +194,7 @@ public class MailReports {
             html += pair.getValue();
             html += "</td>";
             html += "</tr>";
-            
+
             count += pair.getValue();
         }
 

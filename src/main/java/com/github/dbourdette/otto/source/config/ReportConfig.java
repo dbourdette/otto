@@ -6,11 +6,11 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.bson.types.ObjectId;
 
-import com.github.dbourdette.otto.graph.Graph;
-import com.github.dbourdette.otto.graph.filler.FillerChain;
-import com.github.dbourdette.otto.graph.filler.SplitFiller;
-import com.github.dbourdette.otto.graph.filler.SumFiller;
-import com.github.dbourdette.otto.graph.filler.TokenizeFiller;
+import com.github.dbourdette.otto.report.Report;
+import com.github.dbourdette.otto.report.filler.FillerChain;
+import com.github.dbourdette.otto.report.filler.SplitFiller;
+import com.github.dbourdette.otto.report.filler.SumFiller;
+import com.github.dbourdette.otto.report.filler.TokenizeFiller;
 import com.github.dbourdette.otto.web.form.Sort;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCursor;
@@ -81,8 +81,8 @@ public class ReportConfig {
         return object;
     }
 
-    public FillerChain buildChain(Graph graph) {
-        FillerChain chain = FillerChain.forGraph(graph);
+    public FillerChain buildChain(Report report) {
+        FillerChain chain = FillerChain.forGraph(report);
 
         if (StringUtils.isNotEmpty(splitOn)) {
             SplitFiller split = new SplitFiller();

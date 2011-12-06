@@ -1,4 +1,4 @@
-package com.github.dbourdette.otto.graph.filler;
+package com.github.dbourdette.otto.report.filler;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 
-import com.github.dbourdette.otto.graph.Graph;
+import com.github.dbourdette.otto.report.Report;
 import com.mongodb.DBObject;
 
 /**
@@ -14,14 +14,14 @@ import com.mongodb.DBObject;
  * @version \$Revision$
  */
 public class FillerChain {
-    private Graph graph;
+    private Report report;
 
     private List<Filler> fillers = new ArrayList<Filler>();
 
-    public static FillerChain forGraph(Graph graph) {
+    public static FillerChain forGraph(Report report) {
         FillerChain chain = new FillerChain();
 
-        chain.graph = graph;
+        chain.report = report;
 
         return chain;
     }
@@ -65,8 +65,8 @@ public class FillerChain {
     }
 
     private void doWrite(FillerContext context) {
-        graph.ensureColumnsExists(context.getColumn());
+        report.ensureColumnsExists(context.getColumn());
 
-        graph.increaseValue(context.getColumn(), new DateTime(context.getDate()), context.getValue());
+        report.increaseValue(context.getColumn(), new DateTime(context.getDate()), context.getValue());
     }
 }

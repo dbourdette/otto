@@ -1,4 +1,4 @@
-package com.github.dbourdette.otto.graph.filler;
+package com.github.dbourdette.otto.report.filler;
 
 /**
  * @author damien bourdette

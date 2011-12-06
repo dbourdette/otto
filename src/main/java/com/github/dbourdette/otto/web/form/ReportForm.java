@@ -16,8 +16,6 @@
 
 package com.github.dbourdette.otto.web.form;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -26,14 +24,11 @@ import javax.validation.constraints.NotNull;
 
 import org.joda.time.Interval;
 
-import com.github.dbourdette.otto.graph.Graph;
-import com.github.dbourdette.otto.graph.ReportPeriod;
-import com.github.dbourdette.otto.graph.filler.FillerChain;
+import com.github.dbourdette.otto.report.Report;
+import com.github.dbourdette.otto.report.ReportPeriod;
 import com.github.dbourdette.otto.source.DBSource;
 import com.github.dbourdette.otto.source.config.DefaultGraphParameters;
 import com.github.dbourdette.otto.source.config.ReportConfig;
-import com.github.dbourdette.otto.web.util.Pair;
-import com.mongodb.DBObject;
 
 /**
  * @author damien bourdette
@@ -67,46 +62,8 @@ public class ReportForm {
         this.reportConfigs = reportConfigs;
     }
 
-    public List<Pair> getValues(DBSource source) {
-        Graph graph = buildGraph(source);
-
-        List<Pair> values = new ArrayList<Pair>();
-
-        for (String column : graph.getColumnTitles()) {
-            values.add(new Pair(column, graph.getSum(column)));
-        }
-
-        return values;
-    }
-
-    public Graph buildGraph(DBSource source) {
-        Graph graph = new Graph();
-
-        period.createRows(graph);
-
-        ReportConfig reportConfig = getReportConfig();
-
-        FillerChain chain = reportConfig.buildChain(graph);
-
-        Iterator<DBObject> events = source.findEvents(getInterval());
-
-        while (events.hasNext()) {
-            DBObject event = events.next();
-
-            chain.write(event);
-        }
-
-        if (graph.getColumnCount() == 0) {
-            graph.ensureColumnExists("no data");
-        }
-
-        if (reportConfig.getSort() == Sort.ALPHABETICALLY) {
-            graph.sortAlphabetically();
-        } else if (reportConfig.getSort() == Sort.BY_SUM) {
-            graph.sortBySum();
-        }
-
-        return graph;
+    public Report buildReport(DBSource source) {
+        return source.buildReport(getReportConfig(), period);
     }
 
     public ReportPeriod[] getPeriods() {

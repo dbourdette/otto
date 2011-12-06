@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.dbourdette.otto.graph.filler;
+package com.github.dbourdette.otto.report.filler;
 
 import org.apache.commons.lang.StringUtils;
 

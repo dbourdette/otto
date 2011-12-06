@@ -20,8 +20,7 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
-import com.github.dbourdette.otto.graph.ReportPeriod;
-import com.github.dbourdette.otto.web.form.ReportForm;
+import com.github.dbourdette.otto.report.ReportPeriod;
 import com.github.dbourdette.otto.web.form.Sort;
 
 /**
@@ -43,16 +42,7 @@ public class MailReportConfig {
     @NotNull
     private ReportPeriod period;
 
-    private String reportId;
-
-    public ReportForm toReportForm() {
-        ReportForm form = new ReportForm();
-
-        form.setPeriod(period);
-        form.setReportId(reportId);
-
-        return form;
-    }
+    private String reportTitle;
 
     public String getId() {
         return id;
@@ -110,11 +100,11 @@ public class MailReportConfig {
         return Sort.values();
     }
 
-    public String getReportId() {
-        return reportId;
+    public String getReportTitle() {
+        return reportTitle;
     }
 
-    public void setReportId(String reportId) {
-        this.reportId = reportId;
+    public void setReportTitle(String reportTitle) {
+        this.reportTitle = reportTitle;
     }
 }

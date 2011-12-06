@@ -24,7 +24,9 @@ import org.apache.commons.lang.StringUtils;
 import org.bson.types.ObjectId;
 import org.joda.time.Interval;
 
-import com.github.dbourdette.otto.graph.ReportPeriod;
+import com.github.dbourdette.otto.report.Report;
+import com.github.dbourdette.otto.report.ReportPeriod;
+import com.github.dbourdette.otto.report.filler.FillerChain;
 import com.github.dbourdette.otto.source.config.AggregationConfig;
 import com.github.dbourdette.otto.source.config.DefaultGraphParameters;
 import com.github.dbourdette.otto.source.config.MailReportConfig;
@@ -35,6 +37,7 @@ import com.github.dbourdette.otto.web.exception.SourceAlreadyExists;
 import com.github.dbourdette.otto.web.exception.SourceNotFound;
 import com.github.dbourdette.otto.web.form.CappingForm;
 import com.github.dbourdette.otto.web.form.IndexForm;
+import com.github.dbourdette.otto.web.form.Sort;
 import com.github.dbourdette.otto.web.form.SourceForm;
 import com.github.dbourdette.otto.web.util.Constants;
 import com.github.dbourdette.otto.web.util.Frequency;
@@ -161,6 +164,34 @@ public class DBSource {
         loadDisplay();
     }
 
+    public Report buildReport(ReportConfig config, ReportPeriod period) {
+        Report report = new Report();
+
+        report.createRows(period);
+
+        FillerChain chain = config.buildChain(report);
+
+        Iterator<DBObject> events = findEvents(period.getInterval());
+
+        while (events.hasNext()) {
+            DBObject event = events.next();
+
+            chain.write(event);
+        }
+
+        if (report.getColumnCount() == 0) {
+            report.ensureColumnExists("no data");
+        }
+
+        if (config.getSort() == Sort.ALPHABETICALLY) {
+            report.sortAlphabetically();
+        } else if (config.getSort() == Sort.BY_SUM) {
+            report.sortBySum();
+        }
+
+        return report;
+    }
+
     public Iterator<DBObject> findEvents(Interval interval) {
         BasicDBObject query = IntervalUtils.query(interval);
 
@@ -266,6 +297,10 @@ public class DBSource {
         return ReportConfig.read((BasicDBObject) reports.findOne(new BasicDBObject("_id", new ObjectId(id))));
     }
 
+    public ReportConfig getReportConfigByTitle(String title) {
+        return ReportConfig.read((BasicDBObject) reports.findOne(new BasicDBObject("title", title)));
+    }
+
     public void deleteReportConfig(String id) {
         reports.remove(new BasicDBObject("_id", new ObjectId(id)));
     }
@@ -351,7 +386,7 @@ public class DBSource {
         object.put("to", mailReport.getTo());
         object.put("title", mailReport.getTitle());
         object.put("period", mailReport.getPeriod().name());
-        object.put("reportId", mailReport.getReportId());
+        object.put("reportTitle", mailReport.getReportTitle());
 
         mailReports.save(object);
     }
@@ -416,7 +451,7 @@ public class DBSource {
         mailReport.setTo((String) object.get("to"));
         mailReport.setTitle((String) object.get("title"));
         mailReport.setPeriod(ReportPeriod.valueOf((String) object.get("period")));
-        mailReport.setReportId((String) object.get("reportId"));
+        mailReport.setReportTitle((String) object.get("reportTitle"));
 
         return mailReport;
     }

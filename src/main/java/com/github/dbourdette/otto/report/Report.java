@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.dbourdette.otto.graph;
+package com.github.dbourdette.otto.report;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,6 +31,7 @@ import org.joda.time.Interval;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import com.github.dbourdette.otto.web.util.Pair;
 import com.google.common.base.Objects;
 
 /**
@@ -40,7 +41,7 @@ import com.google.common.base.Objects;
  * @author damien bourdette
  * @version \$Revision$
  */
-public class Graph {
+public class Report {
     private static final int DEFAULT_WIDTH = 1200;
 
     private static final int DEFAULT_HEIGHT = 500;
@@ -53,22 +54,26 @@ public class Graph {
 
     private final Duration FIVE_MINUTES = Duration.standardMinutes(5);
 
-    private final List<GraphRow> rows = new ArrayList<GraphRow>();
+    private final List<ReportRow> rows = new ArrayList<ReportRow>();
 
-    private List<GraphColumn> columns = new ArrayList<GraphColumn>();
+    private List<ReportColumn> columns = new ArrayList<ReportColumn>();
 
     private final Map<CellKey, Integer> cells = new HashMap<CellKey, Integer>();
 
     private Integer defaultValue = 0;
 
-    public Graph() {
+    public Report() {
     }
 
-    public Graph rows(Interval interval) {
+    public void createRows(ReportPeriod period) {
+        setRows(period.getInterval(), period.getStepDuration());
+    }
+
+    public Report rows(Interval interval) {
         return rows(interval, FIVE_MINUTES);
     }
 
-    public Graph rows(Interval interval, Duration step) {
+    public Report rows(Interval interval, Duration step) {
         setRows(interval, step);
 
         return this;
@@ -80,7 +85,7 @@ public class Graph {
 
     public void ensureColumnExists(String title) {
         if (!hasColumn(title)) {
-            columns.add(new GraphColumn(title));
+            columns.add(new ReportColumn(title));
         }
     }
 
@@ -101,7 +106,7 @@ public class Graph {
     public List<String> getColumnTitles() {
         List<String> titles = new ArrayList<String>();
 
-        for (GraphColumn column : columns) {
+        for (ReportColumn column : columns) {
             titles.add(column.getTitle());
         }
 
@@ -118,7 +123,7 @@ public class Graph {
         DateTime current = interval.getStart();
 
         while (current.isBefore(interval.getEnd())) {
-            rows.add(new GraphRow(new Interval(current, step)));
+            rows.add(new ReportRow(new Interval(current, step)));
 
             current = current.plus(step);
         }
@@ -149,8 +154,8 @@ public class Graph {
     }
 
     public void setValue(String columnTitle, DateTime date, Integer value) {
-        GraphRow row = getRow(date);
-        GraphColumn column = getColumn(columnTitle);
+        ReportRow row = getRow(date);
+        ReportColumn column = getColumn(columnTitle);
 
         setValue(row, column, value);
     }
@@ -164,8 +169,8 @@ public class Graph {
             return;
         }
 
-        GraphRow row = getRow(date);
-        GraphColumn column = getColumn(columnTitle);
+        ReportRow row = getRow(date);
+        ReportColumn column = getColumn(columnTitle);
 
         Integer cellValue = cells.get(new CellKey(row, column));
 
@@ -177,8 +182,8 @@ public class Graph {
     }
 
     public Integer getValue(String columnTitle, int rowIndex) {
-        GraphRow row = rows.get(rowIndex);
-        GraphColumn column = getColumn(columnTitle);
+        ReportRow row = rows.get(rowIndex);
+        ReportColumn column = getColumn(columnTitle);
 
         return getValue(row, column);
     }
@@ -203,11 +208,11 @@ public class Graph {
      * @param columnTitle column on which sum is operated
      */
     public void cumulate(String columnTitle) {
-        GraphColumn column = getColumn(columnTitle);
+        ReportColumn column = getColumn(columnTitle);
 
         Integer sum = 0;
 
-        for (GraphRow row : rows) {
+        for (ReportRow row : rows) {
             Integer value = getValue(row, column);
 
             if (value != null) {
@@ -219,15 +224,25 @@ public class Graph {
     }
 
     public int getSum(String columnTitle) {
-        GraphColumn column = getColumn(columnTitle);
+        ReportColumn column = getColumn(columnTitle);
 
         int sum = 0;
 
-        for (GraphRow row : rows) {
+        for (ReportRow row : rows) {
             sum += getValue(row, column);
         }
 
         return sum;
+    }
+
+    public List<Pair> getSums() {
+        List<Pair> values = new ArrayList<Pair>();
+
+        for (String column : getColumnTitles()) {
+            values.add(new Pair(column, getSum(column)));
+        }
+
+        return values;
     }
 
     /**
@@ -248,9 +263,9 @@ public class Graph {
     }
 
     public void sortAlphabetically() {
-        Collections.sort(columns, new Comparator<GraphColumn>() {
+        Collections.sort(columns, new Comparator<ReportColumn>() {
             @Override
-            public int compare(GraphColumn o1, GraphColumn o2) {
+            public int compare(ReportColumn o1, ReportColumn o2) {
                 return o1.getTitle().compareTo(o2.getTitle());
             }
         });
@@ -272,19 +287,19 @@ public class Graph {
 
         builder.append("startDate,endDate");
 
-        for (GraphColumn column : columns) {
+        for (ReportColumn column : columns) {
             builder.append(",");
             builder.append(column.getTitle());
         }
 
         builder.append("\n");
 
-        for (GraphRow row : rows) {
+        for (ReportRow row : rows) {
             builder.append(DATE_TIME_FORMATTER.print(row.getStartDate()));
             builder.append(",");
             builder.append(DATE_TIME_FORMATTER.print(row.getEndDate()));
 
-            for (GraphColumn column : columns) {
+            for (ReportColumn column : columns) {
                 builder.append(",");
                 builder.append(getValue(row, column));
             }
@@ -304,7 +319,7 @@ public class Graph {
         builder.append("var data = new google.visualization.DataTable();\n");
         builder.append("data.addColumn('date', 'Date');\n");
 
-        for (GraphColumn column : columns) {
+        for (ReportColumn column : columns) {
             builder.append("data.addColumn('number', '" + StringEscapeUtils.escapeJavaScript(column.getTitle())
                     + "');\n");
         }
@@ -314,13 +329,13 @@ public class Graph {
         int rowIndex = 0;
         int columnIndex = 0;
 
-        for (GraphRow row : rows) {
+        for (ReportRow row : rows) {
             columnIndex = 0;
 
             builder.append("data.setValue(" + rowIndex + ", " + columnIndex + ", new Date("
                     + row.getStartDate().getMillis() + "));\n");
 
-            for (GraphColumn column : columns) {
+            for (ReportColumn column : columns) {
                 columnIndex++;
 
                 builder.append("data.setValue(" + rowIndex + ", " + columnIndex + ", " + getValue(row, column) + ");\n");
@@ -378,7 +393,7 @@ public class Graph {
 
         int columnIndex = 0;
         String colors = "";
-        for (GraphColumn column : columns) {
+        for (ReportColumn column : columns) {
             colors += GOOGLE_COLORS[columnIndex % GOOGLE_COLORS.length];
 
             if (columnIndex != columns.size() - 1) {
@@ -391,7 +406,7 @@ public class Graph {
 
         DateTimeFormatter dayFormatter = DateTimeFormat.forPattern("yyyy MM dd");
         String labels = "0:|";
-        for (GraphRow row : rows) {
+        for (ReportRow row : rows) {
             DateTime startDate = row.getStartDate();
 
             if (startDate.getSecondOfDay() == 0) {
@@ -403,10 +418,10 @@ public class Graph {
 
         columnIndex = 0;
         String data = "t:";
-        for (GraphColumn column : columns) {
+        for (ReportColumn column : columns) {
             int rowIndex = 0;
 
-            for (GraphRow row : rows) {
+            for (ReportRow row : rows) {
                 data += getValue(row, column);
 
                 if (rowIndex != rows.size() - 1) {
@@ -433,7 +448,7 @@ public class Graph {
     public List<Map<String, String>> getGoogleImageCurves() {
         List<Map<String, String>> curves = new ArrayList<Map<String, String>>();
 
-        for (GraphColumn column : columns) {
+        for (ReportColumn column : columns) {
             Map<String, String> curve = new HashMap<String, String>();
 
             curve.put("color", GOOGLE_COLORS[curves.size() % GOOGLE_COLORS.length]);
@@ -456,7 +471,7 @@ public class Graph {
         builder.append("date");
         builder.append("</td>");
 
-        for (GraphColumn column : columns) {
+        for (ReportColumn column : columns) {
             builder.append("<td>");
             builder.append(column.getTitle());
             builder.append("</td>");
@@ -464,14 +479,14 @@ public class Graph {
 
         builder.append("</tr>");
 
-        for (GraphRow row : rows) {
+        for (ReportRow row : rows) {
             builder.append("<tr>");
 
             builder.append("<td>");
             builder.append(row.getStartDate());
             builder.append("</td>");
 
-            for (GraphColumn column : columns) {
+            for (ReportColumn column : columns) {
                 builder.append("<td>");
                 builder.append(getValue(row, column));
                 builder.append("</td>");
@@ -499,8 +514,8 @@ public class Graph {
         }
     }
 
-    private GraphRow getRow(DateTime date) {
-        for (GraphRow row : rows) {
+    private ReportRow getRow(DateTime date) {
+        for (ReportRow row : rows) {
             if (row.contains(date)) {
                 return row;
             }
@@ -509,8 +524,8 @@ public class Graph {
         throw new IllegalArgumentException("No row found for date " + date);
     }
 
-    private GraphColumn getColumn(String title) {
-        GraphColumn column = safeGetColumn(title);
+    private ReportColumn getColumn(String title) {
+        ReportColumn column = safeGetColumn(title);
 
         if (column == null) {
             throw new IllegalArgumentException("No column found for title " + title);
@@ -519,8 +534,8 @@ public class Graph {
         return column;
     }
 
-    private List<GraphColumn> getColumns(String... titles) {
-        List<GraphColumn> columns = new ArrayList<GraphColumn>();
+    private List<ReportColumn> getColumns(String... titles) {
+        List<ReportColumn> columns = new ArrayList<ReportColumn>();
 
         for (String title : titles) {
             columns.add(getColumn(title));
@@ -529,8 +544,8 @@ public class Graph {
         return columns;
     }
 
-    private GraphColumn safeGetColumn(String title) {
-        for (GraphColumn column : columns) {
+    private ReportColumn safeGetColumn(String title) {
+        for (ReportColumn column : columns) {
             if (Objects.equal(column.getTitle(), title)) {
                 return column;
             }
@@ -539,20 +554,20 @@ public class Graph {
         return null;
     }
 
-    private void setValue(GraphRow row, GraphColumn column, Integer value) {
+    private void setValue(ReportRow row, ReportColumn column, Integer value) {
         cells.put(new CellKey(row, column), value);
     }
 
-    private Integer getValue(GraphRow row, GraphColumn column) {
+    private Integer getValue(ReportRow row, ReportColumn column) {
         Integer value = cells.get(new CellKey(row, column));
 
         return value == null ? defaultValue : value;
     }
 
-    private void dropColumn(GraphColumn column) {
+    private void dropColumn(ReportColumn column) {
         columns.remove(column);
 
-        for (GraphRow row : rows) {
+        for (ReportRow row : rows) {
             cells.remove(new CellKey(row, column));
         }
     }
@@ -560,8 +575,8 @@ public class Graph {
     private Integer getMaxValue() {
         Integer maxValue = 0;
 
-        for (GraphColumn column : columns) {
-            for (GraphRow row : rows) {
+        for (ReportColumn column : columns) {
+            for (ReportRow row : rows) {
                 maxValue = Math.max(maxValue, getValue(row, column));
             }
         }
@@ -572,10 +587,10 @@ public class Graph {
     private List<ColumnSum> sortedSums() {
         List<ColumnSum> sums = new ArrayList<ColumnSum>();
 
-        for (GraphColumn column : columns) {
+        for (ReportColumn column : columns) {
             ColumnSum sum = new ColumnSum(column);
 
-            for (GraphRow row : rows) {
+            for (ReportRow row : rows) {
                 sum.add(getValue(row, column));
             }
 
@@ -589,11 +604,11 @@ public class Graph {
 
     private class CellKey {
 
-        private final GraphRow row;
+        private final ReportRow row;
 
-        private final GraphColumn column;
+        private final ReportColumn column;
 
-        public CellKey(GraphRow row, GraphColumn column) {
+        public CellKey(ReportRow row, ReportColumn column) {
             super();
             this.row = row;
             this.column = column;
@@ -633,8 +648,8 @@ public class Graph {
             return true;
         }
 
-        private Graph getOuterType() {
-            return Graph.this;
+        private Report getOuterType() {
+            return Report.this;
         }
     }
 
@@ -642,9 +657,9 @@ public class Graph {
 
         private int sum;
 
-        private final GraphColumn column;
+        private final ReportColumn column;
 
-        public ColumnSum(GraphColumn column) {
+        public ColumnSum(ReportColumn column) {
             this.column = column;
         }
 
@@ -656,7 +671,7 @@ public class Graph {
             sum += value;
         }
 
-        public GraphColumn getColumn() {
+        public ReportColumn getColumn() {
             return column;
         }
 

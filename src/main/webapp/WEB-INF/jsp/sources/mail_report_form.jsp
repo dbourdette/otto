@@ -56,19 +56,8 @@
                     <form:errors path="period" />
                 </p>
                 <p>
-                    split on : <form:input path="splitColumn" />
-                    <form:errors path="splitColumn" />
-                </p>
-                <p>
-                    sum on : <form:input path="sumColumn" />
-                    <form:errors path="sumColumn" />
-                </p>
-                <p>
-                    sort by : <form:select path="sort">
-                                <form:option value="" />
-                                <form:options items="${form.sorts}" />
-                            </form:select>
-                    <form:errors path="sort" />
+                    report title : <form:input path="reportTitle" />
+                    <form:errors path="reportTitle" />
                 </p>
                 <input type="submit" value="Save" />
             </form:form>

@@ -8,11 +8,8 @@ import org.springframework.stereotype.Service;
 import javax.inject.Inject;
 
 /**
- * Created by IntelliJ IDEA.
- * User: dbourdette
- * Date: 30/10/11
- * Time: 23:28
- * To change this template use File | Settings | File Templates.
+ * @author damien bourdette
+ * @version \$Revision$
  */
 @Service
 public class Config {

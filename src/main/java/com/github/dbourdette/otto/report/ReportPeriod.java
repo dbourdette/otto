@@ -1,4 +1,4 @@
-package com.github.dbourdette.otto.graph;
+package com.github.dbourdette.otto.report;
 
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
@@ -60,8 +60,8 @@ public enum ReportPeriod {
         return stepInMinutes;
     }
 
-    public void createRows(Graph graph) {
-        graph.setRows(getInterval(), Duration.standardMinutes(getStepInMinutes()));
+    public Duration getStepDuration() {
+        return Duration.standardMinutes(stepInMinutes);
     }
 
     private ReportPeriod(int stepInMinutes) {

@@ -42,7 +42,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.github.dbourdette.otto.graph.Graph;
+import com.github.dbourdette.otto.report.Report;
 import com.github.dbourdette.otto.source.DBSource;
 import com.github.dbourdette.otto.source.Sources;
 import com.github.dbourdette.otto.web.form.ReportForm;
@@ -70,7 +70,7 @@ public class ReportController {
         model.addAttribute("subNavItem", "stats");
         model.addAttribute("frequency", source.findEventsFrequency(form.getInterval()));
         model.addAttribute("form", form);
-        model.addAttribute("values", form.getValues(source));
+        model.addAttribute("values", form.buildReport(source).getSums());
 
         return "sources/reports/stats";
     }
@@ -83,27 +83,27 @@ public class ReportController {
         form.setReportConfigs(source.getReportConfigs());
 
         model.addAttribute("navItem", "reports");
-        model.addAttribute("subNavItem", "graph");
+        model.addAttribute("subNavItem", "report");
         model.addAttribute("form", form);
 
         Long t1 = System.currentTimeMillis();
 
-        Graph graph = form.buildGraph(source);
-        graph.top(TOP_COUNT);
-        graph.sortBySum();
+        Report report = form.buildReport(source);
+        report.top(TOP_COUNT);
+        report.sortBySum();
 
         Long t2 = System.currentTimeMillis();
 
-        String html = graph.toGoogleHtml(1080, 750);
+        String html = report.toGoogleHtml(1080, 750);
 
         Long t3 = System.currentTimeMillis();
 
         List<String> times = new ArrayList<String>();
-        times.add("Gathered graph data in " + (t2 - t1) + "ms");
+        times.add("Gathered report data in " + (t2 - t1) + "ms");
         times.add("Build html " + (t3 - t2) + "ms");
 
         model.addAttribute("times", times);
-        model.addAttribute("graph", html);
+        model.addAttribute("html", html);
 
         return "sources/reports/graph";
     }
@@ -115,14 +115,14 @@ public class ReportController {
         form.fillWithDefault(source.getDefaultGraphParameters(), request);
         form.setReportConfigs(source.getReportConfigs());
 
-        Graph graph = form.buildGraph(source);
-        graph.top(TOP_COUNT);
-        graph.sortBySum();
+        Report report = form.buildReport(source);
+        report.top(TOP_COUNT);
+        report.sortBySum();
 
         response.setContentType("image/png");
 
         List<NameValuePair> params = new ArrayList<NameValuePair>();
-        for (Map.Entry<String, String> entry : graph.toGoogleImageParams(750, 400).entrySet()) {
+        for (Map.Entry<String, String> entry : report.toGoogleImageParams(750, 400).entrySet()) {
             params.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
         }
         UrlEncodedFormEntity entity = new UrlEncodedFormEntity(params, "UTF-8");
@@ -153,11 +153,11 @@ public class ReportController {
         form.fillWithDefault(source.getDefaultGraphParameters(), request);
         form.setReportConfigs(source.getReportConfigs());
 
-        Graph graph = form.buildGraph(source);
-        graph.top(TOP_COUNT);
-        graph.sortBySum();
+        Report report = form.buildReport(source);
+        report.top(TOP_COUNT);
+        report.sortBySum();
 
-        response.getWriter().write(graph.toCsv());
+        response.getWriter().write(report.toCsv());
     }
 
     @RequestMapping({"/sources/{name}/reports/table"})
@@ -167,7 +167,7 @@ public class ReportController {
         form.fillWithDefault(source.getDefaultGraphParameters(), request);
         form.setReportConfigs(source.getReportConfigs());
 
-        model.addAttribute("table", form.buildGraph(source).toHtmlTable());
+        model.addAttribute("table", form.buildReport(source).toHtmlTable());
 
         return "sources/reports/table";
     }

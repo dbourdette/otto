@@ -133,6 +133,7 @@
             <table>
                 <thead>
                     <tr>
+                        <th>report</th>
                         <th>title</th>
                         <th>planification</th>
                         <th>previous firetime</th>
@@ -142,6 +143,7 @@
                 <tbody>
                     <c:forEach var="mailReport" items="${mailReports}">
                         <tr>
+                            <td>${mailReport.reportTitle}</td>
                             <td>${mailReport.title}</td>
                             <td>${mailReport.cronExpression}</td>
                             <td>${quartz:previousFiretime(mailReport)}</td>

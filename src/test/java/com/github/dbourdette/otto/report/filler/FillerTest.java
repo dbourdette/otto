@@ -1,12 +1,12 @@
-package com.github.dbourdette.otto.graph.filler;
+package com.github.dbourdette.otto.report.filler;
 
 import org.joda.time.DateMidnight;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.github.dbourdette.otto.graph.Graph;
-import com.github.dbourdette.otto.graph.ReportPeriod;
+import com.github.dbourdette.otto.report.Report;
+import com.github.dbourdette.otto.report.ReportPeriod;
 import com.mongodb.BasicDBObject;
 
 /**
@@ -14,19 +14,19 @@ import com.mongodb.BasicDBObject;
  * @version \$Revision$
  */
 public class FillerTest {
-    private Graph graph;
+    private Report report;
 
     @Before
     public void init() {
-        graph = new Graph();
-        ReportPeriod.TODAY.createRows(graph);
+        report = new Report();
+        report.createRows(ReportPeriod.TODAY);
     }
 
     @Test
     public void nofiller() {
         chain().write(event());
 
-        Assert.assertEquals(1, graph.getValue(ColumnValue.DEFAULT_COLUMN, 0).intValue());
+        Assert.assertEquals(1, report.getValue(ColumnValue.DEFAULT_COLUMN, 0).intValue());
     }
 
     @Test
@@ -36,7 +36,7 @@ public class FillerTest {
 
         chain(sum).write(event());
 
-        Assert.assertEquals(10, graph.getValue(ColumnValue.DEFAULT_COLUMN, 0).intValue());
+        Assert.assertEquals(10, report.getValue(ColumnValue.DEFAULT_COLUMN, 0).intValue());
     }
 
     @Test
@@ -46,7 +46,7 @@ public class FillerTest {
 
         chain(split).write(event());
 
-        Assert.assertEquals(1, graph.getValue("this is a dummy content - 10", 0).intValue());
+        Assert.assertEquals(1, report.getValue("this is a dummy content - 10", 0).intValue());
     }
 
     @Test
@@ -57,8 +57,8 @@ public class FillerTest {
 
         chain(tokenize).write(event());
 
-        Assert.assertEquals(1, graph.getValue("dummy", 0).intValue());
-        Assert.assertEquals(1, graph.getValue("content", 0).intValue());
+        Assert.assertEquals(1, report.getValue("dummy", 0).intValue());
+        Assert.assertEquals(1, report.getValue("content", 0).intValue());
     }
 
     @Test
@@ -72,8 +72,8 @@ public class FillerTest {
 
         chain(tokenize, sum).write(event());
 
-        Assert.assertEquals(10, graph.getValue("dummy", 0).intValue());
-        Assert.assertEquals(10, graph.getValue("content", 0).intValue());
+        Assert.assertEquals(10, report.getValue("dummy", 0).intValue());
+        Assert.assertEquals(10, report.getValue("content", 0).intValue());
     }
 
     private BasicDBObject event() {
@@ -87,7 +87,7 @@ public class FillerTest {
     }
 
     private FillerChain chain(Filler... fillers) {
-        FillerChain chain = FillerChain.forGraph(graph);
+        FillerChain chain = FillerChain.forGraph(report);
 
         for (Filler filler : fillers) {
             chain.add(filler);

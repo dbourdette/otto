@@ -14,36 +14,49 @@
  * limitations under the License.
  */
 
-package com.github.dbourdette.otto.graph;
+package com.github.dbourdette.otto.report;
+
+import org.joda.time.DateTime;
+import org.joda.time.Interval;
 
 /**
  * @author damien bourdette
  * @version \$Revision$
  */
-public class GraphColumn {
+public class ReportRow implements Comparable<ReportRow> {
 
-    private String title;
+    private Interval interval;
 
-    public GraphColumn() {
+    public ReportRow() {
     }
 
-    public GraphColumn(String title) {
-        this.title = title;
+    public ReportRow(Interval interval) {
+        super();
+        this.interval = interval;
     }
 
-    public String getTitle() {
-        return title;
+    public boolean contains(DateTime date) {
+        return interval.contains(date);
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public DateTime getStartDate() {
+        return interval.getStart();
+    }
+
+    public DateTime getEndDate() {
+        return interval.getEnd();
+    }
+
+    @Override
+    public int compareTo(ReportRow row) {
+        return getStartDate().compareTo(row.getStartDate());
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((title == null) ? 0 : title.hashCode());
+        result = prime * result + ((interval == null) ? 0 : interval.hashCode());
         return result;
     }
 
@@ -55,17 +68,13 @@ public class GraphColumn {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        GraphColumn other = (GraphColumn) obj;
-        if (title == null) {
-            if (other.title != null)
+        ReportRow other = (ReportRow) obj;
+        if (interval == null) {
+            if (other.interval != null)
                 return false;
-        } else if (!title.equals(other.title))
+        } else if (!interval.equals(other.interval))
             return false;
         return true;
     }
 
-    @Override
-    public String toString() {
-        return "GraphColumn [title=" + title + "]";
-    }
 }

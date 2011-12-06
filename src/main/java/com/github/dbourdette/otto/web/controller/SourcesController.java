@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.github.dbourdette.otto.graph.ReportPeriod;
+import com.github.dbourdette.otto.report.ReportPeriod;
 import com.github.dbourdette.otto.source.DBSource;
 import com.github.dbourdette.otto.source.MailReports;
 import com.github.dbourdette.otto.source.Sources;

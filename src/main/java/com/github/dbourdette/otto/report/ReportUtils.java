@@ -14,30 +14,30 @@
  * limitations under the License.
  */
 
-package com.github.dbourdette.otto.graph;
+package com.github.dbourdette.otto.report;
 
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
-import org.junit.Test;
-
-import junit.framework.Assert;
 
 /**
  * @author damien bourdette
  * @version \$Revision$
  */
-public class GraphUtilsTest {
+public class ReportUtils {
 
-    @Test
-    public void findBest() {
-        DateTime end = new DateTime();
-        DateTime start = end.minusDays(1);
+    private static final Duration ONE_DAY = Duration.standardDays(1);
 
-        Assert.assertEquals(Duration.standardMinutes(5), GraphUtils.findBest(start, end));
+    private static final Duration FIVE_DAYS = Duration.standardDays(5);
 
-        end = new DateTime();
-        start = end.minusDays(30);
+    public static Duration findBest(DateTime start, DateTime end) {
+        Duration duration = new Duration(start, end);
 
-        Assert.assertEquals(Duration.standardDays(1), GraphUtils.findBest(start, end));
+        if (duration.isShorterThan(ONE_DAY) || duration.equals(ONE_DAY)) {
+            return Duration.standardMinutes(5);
+        } else if (duration.isShorterThan(FIVE_DAYS) || duration.equals(FIVE_DAYS)) {
+            return Duration.standardMinutes(30);
+        } else {
+            return Duration.standardDays(1);
+        }
     }
 }

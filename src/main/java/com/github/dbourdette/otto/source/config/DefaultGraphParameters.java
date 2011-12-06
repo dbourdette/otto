@@ -16,7 +16,7 @@
 
 package com.github.dbourdette.otto.source.config;
 
-import com.github.dbourdette.otto.graph.ReportPeriod;
+import com.github.dbourdette.otto.report.ReportPeriod;
 
 /**
  * Default values for graph form for a given source.

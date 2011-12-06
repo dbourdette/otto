@@ -39,7 +39,7 @@
 
         <div>Top 30 items</div>
 
-		${graph}
+		${html}
 
         <div>
             <c:forEach var="time" items="${times}">

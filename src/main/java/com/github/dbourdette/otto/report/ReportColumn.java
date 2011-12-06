@@ -14,49 +14,36 @@
  * limitations under the License.
  */
 
-package com.github.dbourdette.otto.graph;
-
-import org.joda.time.DateTime;
-import org.joda.time.Interval;
+package com.github.dbourdette.otto.report;
 
 /**
  * @author damien bourdette
  * @version \$Revision$
  */
-public class GraphRow implements Comparable<GraphRow> {
+public class ReportColumn {
 
-    private Interval interval;
+    private String title;
 
-    public GraphRow() {
+    public ReportColumn() {
     }
 
-    public GraphRow(Interval interval) {
-        super();
-        this.interval = interval;
+    public ReportColumn(String title) {
+        this.title = title;
     }
 
-    public boolean contains(DateTime date) {
-        return interval.contains(date);
+    public String getTitle() {
+        return title;
     }
 
-    public DateTime getStartDate() {
-        return interval.getStart();
-    }
-
-    public DateTime getEndDate() {
-        return interval.getEnd();
-    }
-
-    @Override
-    public int compareTo(GraphRow row) {
-        return getStartDate().compareTo(row.getStartDate());
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((interval == null) ? 0 : interval.hashCode());
+        result = prime * result + ((title == null) ? 0 : title.hashCode());
         return result;
     }
 
@@ -68,13 +55,17 @@ public class GraphRow implements Comparable<GraphRow> {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        GraphRow other = (GraphRow) obj;
-        if (interval == null) {
-            if (other.interval != null)
+        ReportColumn other = (ReportColumn) obj;
+        if (title == null) {
+            if (other.title != null)
                 return false;
-        } else if (!interval.equals(other.interval))
+        } else if (!title.equals(other.title))
             return false;
         return true;
     }
 
+    @Override
+    public String toString() {
+        return "ReportColumn [title=" + title + "]";
+    }
 }

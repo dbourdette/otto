@@ -1,15 +1,11 @@
 package com.github.dbourdette.otto.service.config;
 
-import com.github.dbourdette.otto.web.util.Constants;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Property;
 
 /**
- * Created by IntelliJ IDEA.
- * User: dbourdette
- * Date: 30/10/11
- * Time: 23:32
- * To change this template use File | Settings | File Templates.
+ * @author damien bourdette
+ * @version \$Revision$
  */
 @Entity("otto.config.entries")
 public class ConfigEntry {
