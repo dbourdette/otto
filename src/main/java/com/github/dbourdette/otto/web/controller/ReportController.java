@@ -144,7 +144,7 @@ public class ReportController {
         });
     }
 
-    @RequestMapping({"/sources/{name}/reports/graph.csv"})
+    @RequestMapping({"/sources/{name}/reports/csv"})
     public void csv(@PathVariable String name, ReportForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/csv");
 
@@ -153,7 +153,11 @@ public class ReportController {
         form.fillWithDefault(source.getDefaultGraphParameters(), request);
         form.setReportConfigs(source.getReportConfigs());
 
-        response.getWriter().write(form.buildGraph(source).toCsv());
+        Graph graph = form.buildGraph(source);
+        graph.top(TOP_COUNT);
+        graph.sortBySum();
+
+        response.getWriter().write(graph.toCsv());
     }
 
     @RequestMapping({"/sources/{name}/reports/table"})
