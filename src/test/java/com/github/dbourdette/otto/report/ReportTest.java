@@ -230,7 +230,7 @@ public class ReportTest {
     }
 
     @Test
-    public void toGoogleJs() throws IOException {
+    public void toGoogleChartJs() throws IOException {
         DateTime dateTime = new DateTime(2010, 10, 10, 0, 0, 0, 0, DateTimeZone.forID("+02:00"));
 
         report.setDefaultValue(0);
@@ -243,7 +243,7 @@ public class ReportTest {
 
         expected = StringUtils.replace(expected, "\r\n", "\n");
 
-        Assert.assertEquals("toGoogleJs is incorrect", expected, report.toGoogleJs("chart_div", null, null));
+        Assert.assertEquals("toGoogleJs is incorrect", expected, report.toGoogleChartJs("chart_div", null, null));
     }
 
     @Test
