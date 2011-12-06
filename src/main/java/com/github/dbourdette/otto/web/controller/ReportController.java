@@ -83,7 +83,7 @@ public class ReportController {
         form.setReportConfigs(source.getReportConfigs());
 
         model.addAttribute("navItem", "reports");
-        model.addAttribute("subNavItem", "report");
+        model.addAttribute("subNavItem", "graph");
         model.addAttribute("form", form);
 
         Long t1 = System.currentTimeMillis();
@@ -94,7 +94,7 @@ public class ReportController {
 
         Long t2 = System.currentTimeMillis();
 
-        String html = report.toGoogleHtml(1080, 750);
+        String html = report.toGoogleChartHtml(1080, 750);
 
         Long t3 = System.currentTimeMillis();
 
@@ -106,6 +106,39 @@ public class ReportController {
         model.addAttribute("html", html);
 
         return "sources/reports/graph";
+    }
+
+    @RequestMapping({"/sources/{name}/reports/pie"})
+    public String pie(@PathVariable String name, @Valid ReportForm form, BindingResult result, Model model, HttpServletRequest request) {
+        DBSource source = sources.getSource(name);
+
+        form.fillWithDefault(source.getDefaultGraphParameters(), request);
+        form.setReportConfigs(source.getReportConfigs());
+
+        model.addAttribute("navItem", "reports");
+        model.addAttribute("subNavItem", "pie");
+        model.addAttribute("form", form);
+
+        Long t1 = System.currentTimeMillis();
+
+        Report report = form.buildReport(source);
+        report.top(TOP_COUNT);
+        report.sortBySum();
+
+        Long t2 = System.currentTimeMillis();
+
+        String html = report.toGooglePieHtml(1080, 750);
+
+        Long t3 = System.currentTimeMillis();
+
+        List<String> times = new ArrayList<String>();
+        times.add("Gathered report data in " + (t2 - t1) + "ms");
+        times.add("Build html " + (t3 - t2) + "ms");
+
+        model.addAttribute("times", times);
+        model.addAttribute("html", html);
+
+        return "sources/reports/pie";
     }
 
     @RequestMapping({"/sources/{name}/reports/graph.png"})

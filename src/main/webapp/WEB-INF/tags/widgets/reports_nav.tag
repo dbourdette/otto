@@ -49,6 +49,9 @@
     <c:if test="${subNavItem eq 'graph'}">graph</c:if>
     <c:if test="${not (subNavItem eq 'graph')}"><a href="/sources/${name}/reports/graph?${query}">graph</a></c:if>
 
+    <c:if test="${subNavItem eq 'pie'}">- pie</c:if>
+    <c:if test="${not (subNavItem eq 'pie')}">- <a href="/sources/${name}/reports/pie?${query}">pie</a></c:if>
+
     <c:if test="${subNavItem eq 'stats'}">- stats</c:if>
     <c:if test="${not (subNavItem eq 'stats')}">- <a href="/sources/${name}/reports/stats?${query}">stats</a></c:if>
 

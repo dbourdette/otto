@@ -310,10 +310,16 @@ public class Report {
         return builder.toString();
     }
 
+    public String toGoogleChartHtml(Integer width, Integer height) {
+        String elementId = "chart_div_" + UUID.randomUUID().toString();
+
+        return toGoogleHtml(elementId, toGoogleChartJs(elementId, width, height));
+    }
+
     /**
      * Produces google chart js code.
      */
-    public String toGoogleJs(String elementId, Integer width, Integer height) {
+    public String toGoogleChartJs(String elementId, Integer width, Integer height) {
         StringBuilder builder = new StringBuilder();
 
         builder.append("var data = new google.visualization.DataTable();\n");
@@ -355,9 +361,39 @@ public class Report {
         return builder.toString();
     }
 
-    public String toGoogleHtml(Integer width, Integer height) {
+    public String toGooglePieHtml(Integer width, Integer height) {
         String elementId = "chart_div_" + UUID.randomUUID().toString();
 
+        return toGoogleHtml(elementId, toGooglePiejs(elementId, width, height));
+    }
+
+    public String toGooglePiejs(String elementId, Integer width, Integer height) {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("var data = new google.visualization.DataTable();\n");
+
+        builder.append("data.addColumn('string', 'entry');\n");
+        builder.append("data.addColumn('number', 'sum');\n");
+
+        builder.append("data.addRows(" + columns.size() + ");\n");
+
+        int columnIndex = 0;
+
+        for (ReportColumn column : columns) {
+            builder.append("data.setValue(" + columnIndex + ", 0, '" + StringEscapeUtils.escapeJavaScript(column.getTitle()) + "');\n");
+            builder.append("data.setValue(" + columnIndex + ", 1, " + getSum(column.getTitle()) + ");\n");
+
+            columnIndex++;
+        }
+
+        builder.append("var chart = new google.visualization.PieChart(document.getElementById('" + elementId + "'));\n");
+        builder.append("chart.draw(data, {width: " + (width == null ? DEFAULT_WIDTH : width) + ", height: "
+                + (height == null ? DEFAULT_HEIGHT : height) + ", backgroundColor:'#FAFAFA'});");
+
+        return builder.toString();
+    }
+
+    public String toGoogleHtml(String elementId, String js) {
         StringBuilder builder = new StringBuilder();
 
         builder.append("<div id=\"" + elementId + "\"></div>");
@@ -368,7 +404,7 @@ public class Report {
         builder.append("google.setOnLoadCallback(drawChart);");
         builder.append("function drawChart() {");
 
-        builder.append(toGoogleJs(elementId, width, height));
+        builder.append(js);
 
         builder.append("}");
         builder.append("</script>");
