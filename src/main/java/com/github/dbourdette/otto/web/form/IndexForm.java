@@ -16,7 +16,6 @@
 
 package com.github.dbourdette.otto.web.form;
 
-import org.apache.commons.lang.StringUtils;
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**
@@ -25,8 +24,6 @@ import org.hibernate.validator.constraints.NotEmpty;
 public class IndexForm {
     @NotEmpty
     private String key;
-
-    private String indexName;
 
     private boolean ascending;
 
@@ -38,18 +35,6 @@ public class IndexForm {
 
     public void setKey(String key) {
         this.key = key;
-    }
-
-    public String getIndexName() {
-        if (StringUtils.isEmpty(indexName)) {
-            return key;
-        } else {
-            return indexName;
-        }
-    }
-
-    public void setIndexName(String indexName) {
-        this.indexName = indexName;
     }
 
     public boolean isAscending() {

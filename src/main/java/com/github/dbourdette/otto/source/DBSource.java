@@ -418,8 +418,11 @@ public class DBSource {
     }
 
     public void createIndex(IndexForm form) {
-        BasicDBObject keys = new BasicDBObject("date", form.isAscending() ? 1 : -1);
-        BasicDBObject options = new BasicDBObject("name", form.getIndexName());
+        BasicDBObject keys = new BasicDBObject(form.getKey(), form.isAscending() ? 1 : -1);
+
+        String name = form.getKey() + (form.isAscending() ? "_1" : "_-1");
+
+        BasicDBObject options = new BasicDBObject("name", name);
 
         if (form.isBackground()) {
             options.put("background", "1");
