@@ -22,7 +22,7 @@ import org.apache.commons.lang.StringUtils;
 /**
  * @author damien bourdette
  */
-public class TokenizeFiller implements Filler {
+public class TokenizeOperation implements Operation {
     private String column;
 
     private String separator = " ";
@@ -42,7 +42,7 @@ public class TokenizeFiller implements Filler {
     }
 
     @Override
-    public void handle(FillerContext context) {
+    public void handle(ChainContext context) {
         String[] tokens = StringUtils.split(context.getString(column), separator);
 
         for (String token : tokens) {

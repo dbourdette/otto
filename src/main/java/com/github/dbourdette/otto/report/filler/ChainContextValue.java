@@ -1,10 +1,12 @@
 package com.github.dbourdette.otto.report.filler;
 
 /**
+ * Holds data that will be written in report.
+ *
  * @author damien bourdette
  * @version \$Revision$
  */
-public class ColumnValue {
+public class ChainContextValue {
     public static final String DEFAULT_COLUMN = "default";
 
     private String column = DEFAULT_COLUMN;

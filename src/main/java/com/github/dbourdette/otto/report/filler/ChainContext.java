@@ -23,16 +23,18 @@ import java.util.List;
 import com.mongodb.DBObject;
 
 /**
+ * Context that will be transmitted to all chain elements.
+ *
  * @author damien bourdette
  */
-public class FillerContext {
+public class ChainContext {
     private DBObject event;
 
-    private ColumnValue columnValue = new ColumnValue();
+    private ChainContextValue value = new ChainContextValue();
 
-    private List<FillerContext> subContextes;
+    private List<ChainContext> subContextes;
 
-    public FillerContext(DBObject event) {
+    public ChainContext(DBObject event) {
         this.event = event;
     }
 
@@ -49,42 +51,46 @@ public class FillerContext {
     }
 
     public void setValue(int value) {
-        columnValue.setValue(value);
+        this.value.setValue(value);
     }
 
     public int getValue() {
-        return columnValue.getValue();
+        return value.getValue();
     }
 
     public String getColumn() {
-        return columnValue.getColumn();
+        return value.getColumn();
+    }
+
+    public void setColumn(String column) {
+        value.setColumn(column);
     }
 
     public boolean hasSubContextes() {
         return subContextes != null;
     }
 
-    public List<FillerContext> getSubContextes() {
+    public List<ChainContext> getSubContextes() {
         return subContextes;
     }
 
     public void addContext(String column) {
         if (subContextes == null) {
-            subContextes = new ArrayList<FillerContext>();
+            subContextes = new ArrayList<ChainContext>();
         }
 
-        FillerContext context = new FillerContext(event);
-        context.columnValue.setColumn(column);
-        context.columnValue.setValue(columnValue.getValue());
+        ChainContext context = new ChainContext(event);
+        context.value.setColumn(column);
+        context.value.setValue(value.getValue());
 
         subContextes.add(context);
     }
 
     @Override
     public String toString() {
-        return "FillerContext{" +
+        return "ChainContext{" +
                 "event=" + event +
-                ", columnValue=" + columnValue +
+                ", value=" + value +
                 ", subContextes=" + subContextes +
                 '}';
     }

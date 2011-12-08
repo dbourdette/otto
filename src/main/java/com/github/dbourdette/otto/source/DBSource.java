@@ -26,7 +26,7 @@ import org.joda.time.Interval;
 
 import com.github.dbourdette.otto.report.Report;
 import com.github.dbourdette.otto.report.ReportPeriod;
-import com.github.dbourdette.otto.report.filler.FillerChain;
+import com.github.dbourdette.otto.report.filler.OperationChain;
 import com.github.dbourdette.otto.source.config.AggregationConfig;
 import com.github.dbourdette.otto.source.config.DefaultGraphParameters;
 import com.github.dbourdette.otto.source.config.MailReportConfig;
@@ -169,7 +169,7 @@ public class DBSource {
 
         report.createRows(period);
 
-        FillerChain chain = config.buildChain(report);
+        OperationChain chain = config.buildChain(report);
 
         Iterator<DBObject> events = findEvents(period.getInterval());
 

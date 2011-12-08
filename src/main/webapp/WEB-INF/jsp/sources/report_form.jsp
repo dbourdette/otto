@@ -60,6 +60,18 @@
                     <form:errors path="tokenizeStopWords" />
                 </p>
                 <p>
+                    remove accent : <form:checkbox path="noAccent" />
+                    <form:errors path="noAccent" />
+                </p>
+                <p>
+                    remove punctuation : <form:checkbox path="noPunctuation" />
+                    <form:errors path="noPunctuation" />
+                </p>
+                <p>
+                    lower case : <form:checkbox path="lowerCase" />
+                    <form:errors path="lowerCase" />
+                </p>
+                <p>
                     sort by : <form:select path="sort">
                                 <form:option value="" />
                                 <form:options items="${form.sorts}" />

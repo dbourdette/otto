@@ -22,7 +22,7 @@ import org.apache.commons.lang.StringUtils;
  * @author damien bourdette
  * @version \$Revision$
  */
-public class SplitFiller implements Filler {
+public class SplitOperation implements Operation {
     private String[] columns;
 
     public void setColumns(String... columns) {
@@ -34,7 +34,7 @@ public class SplitFiller implements Filler {
     }
 
     @Override
-    public void handle(FillerContext context) {
+    public void handle(ChainContext context) {
         if (columns == null) {
             return;
         }

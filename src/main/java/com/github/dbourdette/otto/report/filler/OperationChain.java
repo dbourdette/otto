@@ -13,58 +13,58 @@ import com.mongodb.DBObject;
  * @author damien bourdette
  * @version \$Revision$
  */
-public class FillerChain {
+public class OperationChain {
     private Report report;
 
-    private List<Filler> fillers = new ArrayList<Filler>();
+    private List<Operation> operations = new ArrayList<Operation>();
 
-    public static FillerChain forGraph(Report report) {
-        FillerChain chain = new FillerChain();
+    public static OperationChain forGraph(Report report) {
+        OperationChain chain = new OperationChain();
 
         chain.report = report;
 
         return chain;
     }
 
-    private FillerChain() {
+    private OperationChain() {
     }
 
-    public FillerChain add(Filler filler) {
-        fillers.add(filler);
+    public OperationChain add(Operation operation) {
+        operations.add(operation);
 
         return this;
     }
 
     public void write(DBObject event) {
-        LinkedList<Filler> fifo = new LinkedList<Filler>();
+        LinkedList<Operation> fifo = new LinkedList<Operation>();
 
-        fifo.addAll(fillers);
+        fifo.addAll(operations);
 
-        apply(fifo, new FillerContext(event));
+        apply(fifo, new ChainContext(event));
     }
 
     @SuppressWarnings("unchecked")
-    private void apply(LinkedList<Filler> fifo, FillerContext context) {
+    private void apply(LinkedList<Operation> fifo, ChainContext context) {
         if (fifo.size() == 0) {
             doWrite(context);
 
             return;
         }
 
-        Filler filler = fifo.pop();
+        Operation operation = fifo.pop();
 
-        filler.handle(context);
+        operation.handle(context);
 
         if (context.hasSubContextes()) {
-            for (FillerContext subContext : context.getSubContextes()) {
-                apply((LinkedList<Filler>) fifo.clone(), subContext);
+            for (ChainContext subContext : context.getSubContextes()) {
+                apply((LinkedList<Operation>) fifo.clone(), subContext);
             }
         } else {
             apply(fifo, context);
         }
     }
 
-    private void doWrite(FillerContext context) {
+    private void doWrite(ChainContext context) {
         report.ensureColumnsExists(context.getColumn());
 
         report.increaseValue(context.getColumn(), new DateTime(context.getDate()), context.getValue());

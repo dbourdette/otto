@@ -13,7 +13,7 @@ import com.mongodb.BasicDBObject;
  * @author damien bourdette
  * @version \$Revision$
  */
-public class FillerTest {
+public class OperationChainTest {
     private Report report;
 
     @Before
@@ -26,22 +26,22 @@ public class FillerTest {
     public void nofiller() {
         chain().write(event());
 
-        Assert.assertEquals(1, report.getValue(ColumnValue.DEFAULT_COLUMN, 0).intValue());
+        Assert.assertEquals(1, report.getValue(ChainContextValue.DEFAULT_COLUMN, 0).intValue());
     }
 
     @Test
     public void sum() {
-        SumFiller sum = new SumFiller();
+        SumOperation sum = new SumOperation();
         sum.setColumn("value");
 
         chain(sum).write(event());
 
-        Assert.assertEquals(10, report.getValue(ColumnValue.DEFAULT_COLUMN, 0).intValue());
+        Assert.assertEquals(10, report.getValue(ChainContextValue.DEFAULT_COLUMN, 0).intValue());
     }
 
     @Test
     public void split() {
-        SplitFiller split = new SplitFiller();
+        SplitOperation split = new SplitOperation();
         split.setColumns("text", "value");
 
         chain(split).write(event());
@@ -51,7 +51,7 @@ public class FillerTest {
 
     @Test
     public void tokenize() {
-        TokenizeFiller tokenize = new TokenizeFiller();
+        TokenizeOperation tokenize = new TokenizeOperation();
         tokenize.setColumn("text");
         tokenize.setStopWords("this", "is", "a");
 
@@ -63,11 +63,11 @@ public class FillerTest {
 
     @Test
     public void multipleFillers() {
-        TokenizeFiller tokenize = new TokenizeFiller();
+        TokenizeOperation tokenize = new TokenizeOperation();
         tokenize.setColumn("text");
         tokenize.setStopWords("this", "is", "a");
 
-        SumFiller sum = new SumFiller();
+        SumOperation sum = new SumOperation();
         sum.setColumn("value");
 
         chain(tokenize, sum).write(event());
@@ -86,11 +86,11 @@ public class FillerTest {
         return event;
     }
 
-    private FillerChain chain(Filler... fillers) {
-        FillerChain chain = FillerChain.forGraph(report);
+    private OperationChain chain(Operation... operations) {
+        OperationChain chain = OperationChain.forGraph(report);
 
-        for (Filler filler : fillers) {
-            chain.add(filler);
+        for (Operation operation : operations) {
+            chain.add(operation);
         }
 
         return chain;

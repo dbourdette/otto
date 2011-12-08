@@ -6,7 +6,7 @@ import org.apache.commons.lang.StringUtils;
  * @author damien bourdette
  * @version \$Revision$
  */
-public class SumFiller implements Filler {
+public class SumOperation implements Operation {
     private String column;
 
     public void setColumn(String column) {
@@ -14,7 +14,7 @@ public class SumFiller implements Filler {
     }
 
     @Override
-    public void handle(FillerContext context) {
+    public void handle(ChainContext context) {
         if (StringUtils.isEmpty(column)) {
             return;
         }
