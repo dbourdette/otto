@@ -39,7 +39,7 @@
 
             <br/>
 
-            <form:form action="/sources/${name}" commandName="form" method="delete">
+            <form:form id="deleteForm" action="/sources/${name}" commandName="form" method="delete">
                 <input type="submit" value="delete source" />
             </form:form>
         </div>

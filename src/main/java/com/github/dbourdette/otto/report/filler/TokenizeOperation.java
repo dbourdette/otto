@@ -16,6 +16,9 @@
 
 package com.github.dbourdette.otto.report.filler;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -23,15 +26,9 @@ import org.apache.commons.lang.StringUtils;
  * @author damien bourdette
  */
 public class TokenizeOperation implements Operation {
-    private String column;
-
     private String separator = " ";
 
     private String[] stopWords;
-
-    public void setColumn(String column) {
-        this.column = column;
-    }
 
     public void setSeparator(String separator) {
         this.separator = separator;
@@ -42,13 +39,17 @@ public class TokenizeOperation implements Operation {
     }
 
     @Override
-    public void handle(ChainContext context) {
-        String[] tokens = StringUtils.split(context.getString(column), separator);
+    public List<String> handle(String column) {
+        String[] tokens = StringUtils.split(column, separator);
+
+        List<String> result = new ArrayList<String>();
 
         for (String token : tokens) {
             if (!ArrayUtils.contains(stopWords, token)) {
-                context.addContext(token);
+                result.add(token);
             }
         }
+
+        return result;
     }
 }

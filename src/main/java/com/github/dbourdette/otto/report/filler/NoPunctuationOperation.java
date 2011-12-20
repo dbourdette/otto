@@ -1,5 +1,7 @@
 package com.github.dbourdette.otto.report.filler;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -10,9 +12,11 @@ public class NoPunctuationOperation implements Operation {
     private Pattern pattern = Pattern.compile("\\p{Punct}+");
 
     @Override
-    public void handle(ChainContext context) {
-        String column = pattern.matcher(context.getColumn()).replaceAll("");
+    public List<String> handle(String column) {
+        List<String> result = new ArrayList<String>();
 
-        context.setColumn(column);
+        result.add(pattern.matcher(column).replaceAll(""));
+
+        return result;
     }
 }

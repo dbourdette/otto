@@ -38,21 +38,21 @@ public class DBSourceTest {
     public void reportConfigs() {
         ReportConfig config = new ReportConfig();
         config.setTitle("hits");
-        config.setSumOn("hits");
+        config.setValueAttribute("hits");
 
         source.saveReportConfig(config);
         source.saveReportConfig(config);
 
         Assert.assertEquals(1, source.getReportConfigs().size());
-        Assert.assertEquals("hits", source.getReportConfigs().get(0).getSumOn());
+        Assert.assertEquals("hits", source.getReportConfigs().get(0).getValueAttribute());
 
         config = source.getReportConfig(config.getId());
 
-        Assert.assertEquals("hits", config.getSumOn());
+        Assert.assertEquals("hits", config.getValueAttribute());
 
-        config.setSumOn("slug");
+        config.setValueAttribute("slug");
         source.saveReportConfig(config);
 
-        Assert.assertEquals("slug", source.getReportConfigs().get(0).getSumOn());
+        Assert.assertEquals("slug", source.getReportConfigs().get(0).getValueAttribute());
     }
 }

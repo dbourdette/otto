@@ -1,9 +1,11 @@
 package com.github.dbourdette.otto.report.filler;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 
 import com.github.dbourdette.otto.report.Report;
@@ -14,11 +16,17 @@ import com.mongodb.DBObject;
  * @version \$Revision$
  */
 public class OperationChain {
+    public static final String DEFAULT_COLUMN = "default";
+
     private Report report;
+
+    private String labelAttributes;
+
+    private String valueAttribute;
 
     private List<Operation> operations = new ArrayList<Operation>();
 
-    public static OperationChain forGraph(Report report) {
+    public static OperationChain forReport(Report report) {
         OperationChain chain = new OperationChain();
 
         chain.report = report;
@@ -27,6 +35,26 @@ public class OperationChain {
     }
 
     private OperationChain() {
+    }
+
+    public void setLabelAttributes(String labelAttributes) {
+        this.labelAttributes = labelAttributes;
+    }
+
+    public OperationChain labelAttributes(String labelAttributes) {
+        setLabelAttributes(labelAttributes);
+
+        return this;
+    }
+
+    public void setValueAttribute(String valueAttribute) {
+        this.valueAttribute = valueAttribute;
+    }
+
+    public OperationChain valueAttribute(String valueAttribute) {
+        setValueAttribute(valueAttribute);
+
+        return this;
     }
 
     public OperationChain add(Operation operation) {
@@ -40,33 +68,71 @@ public class OperationChain {
 
         fifo.addAll(operations);
 
-        apply(fifo, new ChainContext(event));
+        apply(fifo, (Date) event.get("date"), readColumn(event), readValue(event));
     }
 
     @SuppressWarnings("unchecked")
-    private void apply(LinkedList<Operation> fifo, ChainContext context) {
+    private void apply(LinkedList<Operation> fifo, Date date, String column, int value) {
         if (fifo.size() == 0) {
-            doWrite(context);
+            doWrite(date, column, value);
 
             return;
         }
 
         Operation operation = fifo.pop();
 
-        operation.handle(context);
+        List<String> columns = operation.handle(column);
 
-        if (context.hasSubContextes()) {
-            for (ChainContext subContext : context.getSubContextes()) {
-                apply((LinkedList<Operation>) fifo.clone(), subContext);
-            }
-        } else {
-            apply(fifo, context);
+        for (String newColumn : columns) {
+            apply((LinkedList<Operation>) fifo.clone(), date, newColumn, value);
         }
     }
 
-    private void doWrite(ChainContext context) {
-        report.ensureColumnsExists(context.getColumn());
+    private void doWrite(Date date, String column, int value) {
+        report.ensureColumnsExists(column);
 
-        report.increaseValue(context.getColumn(), new DateTime(context.getDate()), context.getValue());
+        report.increaseValue(column, new DateTime(date), value);
+    }
+
+    private String readColumn(DBObject event) {
+        if (StringUtils.isEmpty(labelAttributes)) {
+            return DEFAULT_COLUMN;
+        }
+
+        StringBuilder result = new StringBuilder();
+
+        for (String attribute : StringUtils.split(labelAttributes, ",")) {
+            Object value = event.get(attribute);
+
+            if (value != null) {
+                if (result.length() != 0) {
+                    result.append(" - ");
+                }
+
+                result.append(value.toString());
+            }
+        }
+
+        String column = result.toString();
+
+        if (StringUtils.isEmpty(column)) {
+            return DEFAULT_COLUMN;
+        }
+
+        return column;
+    }
+
+    private int readValue(DBObject event) {
+        if (StringUtils.isEmpty(valueAttribute)) {
+            return 1;
+        }
+
+        Object object = event.get(valueAttribute);
+
+        if (object instanceof Integer) {
+            return (Integer) object;
+        }
+
+        return 1;
     }
 }

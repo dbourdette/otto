@@ -26,51 +26,42 @@ public class OperationChainTest {
     public void nofiller() {
         chain().write(event());
 
-        Assert.assertEquals(1, report.getValue(ChainContextValue.DEFAULT_COLUMN, 0).intValue());
+        Assert.assertEquals(1, report.getValue(OperationChain.DEFAULT_COLUMN, 0).intValue());
     }
 
     @Test
-    public void sum() {
-        SumOperation sum = new SumOperation();
-        sum.setColumn("value");
+    public void valueAttribute() {
+        chain().valueAttribute("value").write(event());
 
-        chain(sum).write(event());
-
-        Assert.assertEquals(10, report.getValue(ChainContextValue.DEFAULT_COLUMN, 0).intValue());
+        Assert.assertEquals(10, report.getValue(OperationChain.DEFAULT_COLUMN, 0).intValue());
     }
 
     @Test
-    public void split() {
-        SplitOperation split = new SplitOperation();
-        split.setColumns("text", "value");
+    public void labelAttributes() {
+        chain().labelAttributes("text,value").write(event());
 
-        chain(split).write(event());
-
-        Assert.assertEquals(1, report.getValue("this is a dummy content - 10", 0).intValue());
+        Assert.assertEquals(1, report.getValue("this is a Dummy conTent - 10", 0).intValue());
     }
 
     @Test
     public void tokenize() {
         TokenizeOperation tokenize = new TokenizeOperation();
-        tokenize.setColumn("text");
         tokenize.setStopWords("this", "is", "a");
 
-        chain(tokenize).write(event());
+        chain(tokenize).labelAttributes("text").write(event());
 
-        Assert.assertEquals(1, report.getValue("dummy", 0).intValue());
-        Assert.assertEquals(1, report.getValue("content", 0).intValue());
+        Assert.assertEquals(1, report.getValue("Dummy", 0).intValue());
+        Assert.assertEquals(1, report.getValue("conTent", 0).intValue());
     }
 
     @Test
     public void multipleFillers() {
         TokenizeOperation tokenize = new TokenizeOperation();
-        tokenize.setColumn("text");
         tokenize.setStopWords("this", "is", "a");
 
-        SumOperation sum = new SumOperation();
-        sum.setColumn("value");
+        LowerCaseOperation lowerCase = new LowerCaseOperation();
 
-        chain(tokenize, sum).write(event());
+        chain(tokenize, lowerCase).labelAttributes("text").valueAttribute("value").write(event());
 
         Assert.assertEquals(10, report.getValue("dummy", 0).intValue());
         Assert.assertEquals(10, report.getValue("content", 0).intValue());
@@ -80,14 +71,14 @@ public class OperationChainTest {
         BasicDBObject event = new BasicDBObject();
 
         event.put("value", 10);
-        event.put("text", "this is a dummy content");
+        event.put("text", "this is a Dummy conTent");
         event.put("date", new DateMidnight().toDate());
 
         return event;
     }
 
     private OperationChain chain(Operation... operations) {
-        OperationChain chain = OperationChain.forGraph(report);
+        OperationChain chain = OperationChain.forReport(report);
 
         for (Operation operation : operations) {
             chain.add(operation);

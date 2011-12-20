@@ -1,9 +1,9 @@
 package com.github.dbourdette.otto.report.filler;
 
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
-
-import com.mongodb.BasicDBObject;
 
 /**
  * @author damien bourdette
@@ -14,11 +14,9 @@ public class NoPunctuationFillerTest {
 
     @Test
     public void removeAccents() {
-        ChainContext context = new ChainContext(new BasicDBObject());
-        context.setColumn("h'o, mé. dd");
+        List<String> columns = filler.handle("h'o, mé. dd");
 
-        filler.handle(context);
-
-        Assert.assertEquals("ho mé dd", context.getColumn());
+        Assert.assertEquals(1, columns.size());
+        Assert.assertEquals("ho mé dd", columns.get(0));
     }
 }

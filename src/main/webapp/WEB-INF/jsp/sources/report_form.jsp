@@ -40,23 +40,27 @@
             <form:form action="/sources/${name}/report" commandName="form" method="post">
                 <form:hidden path="id" />
                 <p>
-                    title : <form:input path="title"/>
+                    title : <form:input path="title" size="30" />
                     <form:errors path="title" />
                 </p>
                 <p>
-                    split on : <form:input path="splitOn" />  (comma separated values)
-                    <form:errors path="splitOn" />
+                    label attributes : <form:input path="labelAttributes" size="50" />  (comma separated values)
+                    <form:errors path="labelAttributes" />
                 </p>
                 <p>
-                    sum on : <form:input path="sumOn" />
-                    <form:errors path="sumOn" />
+                    value attribute : <form:input path="valueAttribute" />
+                    <form:errors path="valueAttribute" />
                 </p>
                 <p>
-                    tokenize on : <form:input path="tokenizeOn" />
-                    <form:errors path="tokenizeOn" />
+                    tokenize : <form:checkbox path="tokenize" />
+                    <form:errors path="tokenize" />
                 </p>
                 <p>
-                    tokenize stop words : <form:input path="tokenizeStopWords" />
+                    tokenize separator : <form:input path="tokenizeSeparator" size="4" /> (default is single space)
+                    <form:errors path="tokenizeSeparator" />
+                </p>
+                <p>
+                    tokenize stop words : <form:input path="tokenizeStopWords" size="50" />
                     <form:errors path="tokenizeStopWords" />
                 </p>
                 <p>

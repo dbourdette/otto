@@ -1,5 +1,7 @@
 package com.github.dbourdette.otto.report.filler;
 
+import java.util.List;
+
 /**
  * A baic operation to transform the value that will be written in the report.
  *
@@ -7,5 +9,5 @@ package com.github.dbourdette.otto.report.filler;
  * @version \$Revision$
  */
 public interface Operation {
-    public void handle(ChainContext context);
+    public List<String> handle(String column);
 }

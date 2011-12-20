@@ -7,12 +7,10 @@ import org.apache.commons.lang.StringUtils;
 import org.bson.types.ObjectId;
 
 import com.github.dbourdette.otto.report.Report;
-import com.github.dbourdette.otto.report.filler.OperationChain;
 import com.github.dbourdette.otto.report.filler.LowerCaseOperation;
 import com.github.dbourdette.otto.report.filler.NoAccentOperation;
 import com.github.dbourdette.otto.report.filler.NoPunctuationOperation;
-import com.github.dbourdette.otto.report.filler.SplitOperation;
-import com.github.dbourdette.otto.report.filler.SumOperation;
+import com.github.dbourdette.otto.report.filler.OperationChain;
 import com.github.dbourdette.otto.report.filler.TokenizeOperation;
 import com.github.dbourdette.otto.web.form.Sort;
 import com.mongodb.BasicDBObject;
@@ -27,11 +25,13 @@ public class ReportConfig {
 
     private String title;
 
-    private String splitOn;
+    private String labelAttributes;
 
-    private String sumOn;
+    private String valueAttribute;
 
-    private String tokenizeOn;
+    private boolean tokenize;
+
+    private String tokenizeSeparator;
 
     private String tokenizeStopWords;
 
@@ -58,9 +58,10 @@ public class ReportConfig {
 
         config.setId(((ObjectId) object.get("_id")).toString());
         config.setTitle(object.getString("title"));
-        config.setSplitOn(object.getString("splitOn"));
-        config.setSumOn(object.getString("sumOn"));
-        config.setTokenizeOn(object.getString("tokenizeOn"));
+        config.setLabelAttributes(object.getString("labelAttributes"));
+        config.setValueAttribute(object.getString("valueAttribute"));
+        config.setTokenize(object.getBoolean("tokenize"));
+        config.setTokenizeSeparator(object.getString("tokenizeSeparator"));
         config.setTokenizeStopWords(object.getString("tokenizeStopWords"));
         config.setNoAccent(object.getBoolean("noAccent", false));
         config.setNoPunctuation(object.getBoolean("noPunctuation", false));
@@ -81,9 +82,10 @@ public class ReportConfig {
         }
 
         object.put("title", title);
-        object.put("splitOn", splitOn);
-        object.put("sumOn", sumOn);
-        object.put("tokenizeOn", tokenizeOn);
+        object.put("labelAttributes", labelAttributes);
+        object.put("valueAttribute", valueAttribute);
+        object.put("tokenize", tokenize);
+        object.put("tokenizeSeparator", tokenizeSeparator);
         object.put("tokenizeStopWords", tokenizeStopWords);
         object.put("noAccent", noAccent);
         object.put("noPunctuation", noPunctuation);
@@ -97,17 +99,17 @@ public class ReportConfig {
     }
 
     public OperationChain buildChain(Report report) {
-        OperationChain chain = OperationChain.forGraph(report);
+        OperationChain chain = OperationChain.forReport(report);
 
-        if (StringUtils.isNotEmpty(splitOn)) {
-            SplitOperation split = new SplitOperation();
-            split.setColumns(splitOn);
-            chain.add(split);
-        }
+        chain.setLabelAttributes(labelAttributes);
+        chain.setValueAttribute(valueAttribute);
 
-        if (StringUtils.isNotEmpty(tokenizeOn)) {
+        if (tokenize) {
             TokenizeOperation tokenize = new TokenizeOperation();
-            tokenize.setColumn(tokenizeOn);
+
+            if (StringUtils.isNotEmpty(tokenizeSeparator)) {
+                tokenize.setSeparator(tokenizeSeparator);
+            }
 
             if (StringUtils.isNotEmpty(tokenizeStopWords)) {
                 tokenize.setStopWords(StringUtils.split(tokenizeStopWords, ","));
@@ -126,12 +128,6 @@ public class ReportConfig {
 
         if (lowerCase) {
             chain.add(new LowerCaseOperation());
-        }
-
-        if (StringUtils.isNotEmpty(sumOn)) {
-            SumOperation sum = new SumOperation();
-            sum.setColumn(sumOn);
-            chain.add(sum);
         }
 
         return chain;
@@ -153,28 +149,36 @@ public class ReportConfig {
         this.title = title;
     }
 
-    public String getSplitOn() {
-        return splitOn;
+    public String getLabelAttributes() {
+        return labelAttributes;
     }
 
-    public void setSplitOn(String splitOn) {
-        this.splitOn = splitOn;
+    public void setLabelAttributes(String labelAttributes) {
+        this.labelAttributes = labelAttributes;
     }
 
-    public String getSumOn() {
-        return sumOn;
+    public String getValueAttribute() {
+        return valueAttribute;
     }
 
-    public void setSumOn(String sumOn) {
-        this.sumOn = sumOn;
+    public void setValueAttribute(String valueAttribute) {
+        this.valueAttribute = valueAttribute;
     }
 
-    public String getTokenizeOn() {
-        return tokenizeOn;
+    public boolean isTokenize() {
+        return tokenize;
     }
 
-    public void setTokenizeOn(String tokenizeOn) {
-        this.tokenizeOn = tokenizeOn;
+    public void setTokenize(boolean tokenize) {
+        this.tokenize = tokenize;
+    }
+
+    public String getTokenizeSeparator() {
+        return tokenizeSeparator;
+    }
+
+    public void setTokenizeSeparator(String tokenizeSeparator) {
+        this.tokenizeSeparator = tokenizeSeparator;
     }
 
     public String getTokenizeStopWords() {

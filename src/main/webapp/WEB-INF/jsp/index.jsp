@@ -51,7 +51,7 @@
         </ul>
 
         <sec:authorize access="hasRole('ROLE_ADMIN')">
-            <a href="/sources/form">Create a new event source</a>
+            <a href="/sources/form">create a new event source</a>
         </sec:authorize>
     </div>
 </article>

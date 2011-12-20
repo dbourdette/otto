@@ -1,12 +1,19 @@
 package com.github.dbourdette.otto.report.filler;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author damien bourdette
  * @version \$Revision$
  */
 public class LowerCaseOperation implements Operation {
     @Override
-    public void handle(ChainContext context) {
-        context.setColumn(context.getColumn().toLowerCase());
+    public List<String> handle(String column) {
+        List<String> result = new ArrayList<String>();
+
+        result.add(column.toLowerCase());
+
+        return result;
     }
 }
