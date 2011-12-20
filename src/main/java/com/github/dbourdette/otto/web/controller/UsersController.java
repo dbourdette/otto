@@ -56,7 +56,7 @@ public class UsersController {
 
     @RequestMapping(value = "/users", method = RequestMethod.POST)
     public String post(Model model, @ModelAttribute("form") @Valid User user, BindingResult result) {
-        if (!result.hasErrors() && !users.available(user.getUsername())) {
+        if (!result.hasErrors() && (user.getId() == null && !users.available(user.getUsername()))) {
             result.rejectValue("username", "alreadyInDatabase");
         }
 
@@ -64,9 +64,15 @@ public class UsersController {
             return "admin/user_form";
         }
 
+        boolean newUser = user.getId() == null;
+
         users.save(user);
 
-        flashScope.message("user " + user.getUsername() + " has been modified");
+        if (newUser) {
+            flashScope.message("user " + user.getUsername() + " has been created");
+        } else {
+            flashScope.message("user " + user.getUsername() + " has been updated");
+        }
 
         return "redirect:/users";
     }

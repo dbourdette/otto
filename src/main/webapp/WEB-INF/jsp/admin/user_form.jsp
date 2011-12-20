@@ -65,7 +65,7 @@
             <h2>Delete this user</h2>
 
             <div>
-                <form:form action="/users" commandName="form" method="delete">
+                <form:form id="deleteForm" action="/users" commandName="form" method="delete">
                     <form:hidden path="id" />
                     <input type="submit" value="delete" />
                 </form:form>
