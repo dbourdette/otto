@@ -44,6 +44,12 @@ public class TokenizeOperation implements Operation {
 
         List<String> result = new ArrayList<String>();
 
+        if (StringUtils.isEmpty(column)) {
+            result.add("");
+
+            return result;
+        }
+
         for (String token : tokens) {
             if (!ArrayUtils.contains(stopWords, token)) {
                 result.add(token);
