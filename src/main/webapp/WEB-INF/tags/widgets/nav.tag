@@ -22,21 +22,26 @@
   --%>
 
 <h1>Source
-<c:if test="${not empty source.displayGroup}">${fn:escapeXml(source.displayGroup)} /</c:if>
-<c:if test="${not empty source.displayName}">${fn:escapeXml(source.displayName)}</c:if>
-<c:if test="${empty source.displayName}">${fn:escapeXml(name)}</c:if>
-<a href="/sources/${name}/edit">edit</a>
+    <c:if test="${not empty source.displayGroup}">${fn:escapeXml(source.displayGroup)} /</c:if>
+    <c:if test="${not empty source.displayName}">${fn:escapeXml(source.displayName)}</c:if>
+    <c:if test="${empty source.displayName}">${fn:escapeXml(name)}</c:if>
+    <a href="/sources/${name}/edit">edit</a>
 </h1>
 
 <div class="nav">
-    <c:if test="${navItem eq 'index'}">index</c:if>
-    <c:if test="${not (navItem eq 'index')}"><a href="/sources/${name}">index</a></c:if>
+    <c:if test="${navItem eq 'reports'}">reports</c:if>
+    <c:if test="${not (navItem eq 'reports')}"><a href="/sources/${name}/reports">reports</a></c:if>
+
+    <sec:authorize access="hasRole('ROLE_ADMIN')">
+        <c:if test="${navItem eq 'configuration'}">- configuration</c:if>
+        <c:if test="${not (navItem eq 'configuration')}">- <a id="sourceConfiguration" href="/sources/${name}/configuration">configuration</a></c:if>
+
+        <c:if test="${navItem eq 'statistics'}">- statistics</c:if>
+        <c:if test="${not (navItem eq 'statistics')}">- <a href="/sources/${name}/statistics">statistics</a></c:if>
+    </sec:authorize>
 
     <c:if test="${navItem eq 'logs'}">- logs</c:if>
     <c:if test="${not (navItem eq 'logs')}">- <a href="/sources/${name}/events">logs</a></c:if>
-
-    <c:if test="${navItem eq 'reports'}">- reports</c:if>
-    <c:if test="${not (navItem eq 'reports')}">- <a href="/sources/${name}/reports">reports</a></c:if>
 
     <sec:authorize access="hasRole('ROLE_ADMIN')">
         <c:if test="${navItem eq 'batch'}">- batch</c:if>

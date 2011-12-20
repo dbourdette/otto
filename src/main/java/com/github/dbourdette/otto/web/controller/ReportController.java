@@ -75,7 +75,7 @@ public class ReportController {
         return "sources/reports/stats";
     }
 
-    @RequestMapping({"/sources/{name}/reports", "/sources/{name}/reports/graph"})
+    @RequestMapping({"/sources/{name}", "/sources/{name}/reports", "/sources/{name}/reports/graph"})
     public String graph(@PathVariable String name, @Valid ReportForm form, BindingResult result, Model model, HttpServletRequest request) {
         DBSource source = sources.getSource(name);
 

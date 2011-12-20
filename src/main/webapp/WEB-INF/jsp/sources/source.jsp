@@ -39,8 +39,6 @@
     <widget:nav/>
 
     <div>
-        Event count in db : ${source.count} <br/>
-
         <sec:authorize access="hasRole('ROLE_ADMIN')">
             <br/>
             Capping : ${source.capped ? 'yes' : 'no'}
@@ -57,73 +55,26 @@
             <br/><br/>
             <a href="/sources/${name}/default-graph-params/form">Default gragh parameters</a> :
             <c:if test="${not empty defaultGraphParameters.period}">period <b>${defaultGraphParameters.period}</b></c:if>
-        </sec:authorize>
-
-        <h3>Event frequency</h3>
-        <table>
-            <colgroup>
-                <col class="label">
-                <col>
-            </colgroup>
-            <tr>
-                <td>today</td>
-                <td><fmt:formatNumber value="${todayFrequency.eventsPerMinute}" pattern="# ###.######"/> events per minute</td>
-            </tr>
-            <tr>
-                <td>yesterday</td>
-                <td><fmt:formatNumber value="${yesterdayFrequency.eventsPerMinute}" pattern="# ###.######"/> events per minute</td>
-            </tr>
-            <tr>
-                <td>last week</td>
-                <td><fmt:formatNumber value="${lastWeekFrequency.eventsPerMinute}" pattern="# ###.######"/> events per minute</td>
-            </tr>
-        </table>
-
-        <sec:authorize access="hasRole('ROLE_ADMIN')">
-            <h3>Transform operations</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>parameter</th>
-                        <th>operations</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <c:forEach var="parameter" items="${transform.config}">
-                        <tr>
-                            <td>${parameter.name}</td>
-                            <td>${parameter.operations}</td>
-                        </tr>
-                        <tr>
-                            <td colspan="4">
-                                <a href="/sources/${name}/transform/${parameter.name}">edit</a>
-                            </td>
-                        </tr>
-                    </c:forEach>
-                </tbody>
-            </table>
-
-            <a href="/sources/${name}/transform">add a transform operation</a>
 
             <h3>Reports</h3>
             <table>
                 <thead>
-                    <tr>
-                        <th>title</th>
-                    </tr>
+                <tr>
+                    <th>title</th>
+                </tr>
                 </thead>
                 <tbody>
-                    <c:forEach var="report" items="${reports}">
-                        <tr>
-                            <td>${report.title}</td>
-                        </tr>
-                        <tr>
-                            <td colspan="4">
-                                <a href="/sources/${name}/report/${report.id}">edit</a>
-                                - <a href="/sources/${name}/report/${report.id}/delete">delete</a>
-                            </td>
-                        </tr>
-                    </c:forEach>
+                <c:forEach var="report" items="${reports}">
+                    <tr>
+                        <td>${report.title}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <a href="/sources/${name}/report/${report.id}">edit</a>
+                            - <a href="/sources/${name}/report/${report.id}/delete">delete</a>
+                        </td>
+                    </tr>
+                </c:forEach>
                 </tbody>
             </table>
 
@@ -132,59 +83,60 @@
             <h3>Mail reports</h3>
             <table>
                 <thead>
-                    <tr>
-                        <th>report</th>
-                        <th>title</th>
-                        <th>planification</th>
-                        <th>previous firetime</th>
-                        <th>next firetime</th>
-                    </tr>
+                <tr>
+                    <th>report</th>
+                    <th>title</th>
+                    <th>planification</th>
+                    <th>previous firetime</th>
+                    <th>next firetime</th>
+                </tr>
                 </thead>
                 <tbody>
-                    <c:forEach var="mailReport" items="${mailReports}">
-                        <tr>
-                            <td>${mailReport.reportTitle}</td>
-                            <td>${mailReport.title}</td>
-                            <td>${mailReport.cronExpression}</td>
-                            <td>${quartz:previousFiretime(mailReport)}</td>
-                            <td>${quartz:nextFiretime(mailReport)}</td>
-                        </tr>
-                        <tr>
-                            <td colspan="4">
-                                <a href="/sources/${name}/mailreport/${mailReport.id}">edit</a>
-                                - <a href="/sources/${name}/mailreport/${mailReport.id}/send">send now</a>
-                                - <a href="/sources/${name}/mailreport/${mailReport.id}/delete">delete</a>
-                            </td>
-                        </tr>
-                    </c:forEach>
+                <c:forEach var="mailReport" items="${mailReports}">
+                    <tr>
+                        <td>${mailReport.reportTitle}</td>
+                        <td>${mailReport.title}</td>
+                        <td>${mailReport.cronExpression}</td>
+                        <td>${quartz:previousFiretime(mailReport)}</td>
+                        <td>${quartz:nextFiretime(mailReport)}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <a href="/sources/${name}/mailreport/${mailReport.id}">edit</a>
+                            - <a href="/sources/${name}/mailreport/${mailReport.id}/send">send now</a>
+                            - <a href="/sources/${name}/mailreport/${mailReport.id}/delete">delete</a>
+                        </td>
+                    </tr>
+                </c:forEach>
                 </tbody>
             </table>
 
             <a href="/sources/${name}/mailreport">add a mail report</a>
 
-            <h3>Mongodb collections</h3>
+            <h3>Transform operations</h3>
             <table>
-                <colgroup>
-                    <col class="label">
-                    <col>
-                </colgroup>
+                <thead>
                 <tr>
-                    <td>events</td>
-                    <td>${source.collectionName}</td>
+                    <th>parameter</th>
+                    <th>operations</th>
                 </tr>
-                <tr>
-                    <td>configuration</td>
-                    <td>${source.configCollectionName}</td>
-                </tr>
-                <tr>
-                    <td>report configuration</td>
-                    <td>${source.reportsCollectionName}</td>
-                </tr>
-                <tr>
-                    <td>mail report configuration</td>
-                    <td>${source.mailReportsCollectionName}</td>
-                </tr>
+                </thead>
+                <tbody>
+                <c:forEach var="parameter" items="${transform.config}">
+                    <tr>
+                        <td>${parameter.name}</td>
+                        <td>${parameter.operations}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <a href="/sources/${name}/transform/${parameter.name}">edit</a>
+                        </td>
+                    </tr>
+                </c:forEach>
+                </tbody>
             </table>
+
+            <a href="/sources/${name}/transform">add a transform operation</a>
 
             <h3>Indexes</h3>
             <table>
@@ -205,20 +157,6 @@
                 </c:forEach>
             </table>
             <a href="/sources/${name}/indexes/form">add index</a>
-
-            <h3>Statistics</h3>
-            <table>
-                <colgroup>
-                    <col class="label">
-                    <col>
-                </colgroup>
-                <c:forEach var="stat" items="${source.stats}">
-                    <tr>
-                        <td>${stat.key}</td>
-                        <td>${stat.value}</td>
-                    </tr>
-                </c:forEach>
-            </table>
 
             <br/><br/>
 

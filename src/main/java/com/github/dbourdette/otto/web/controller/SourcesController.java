@@ -66,24 +66,35 @@ public class SourcesController {
     @Inject
     private MailReports mailReports;
 
-    @RequestMapping({"/sources/{name}"})
+    @RequestMapping({"/sources/{name}/configuration"})
     public String source(@PathVariable String name, Model model) {
-        model.addAttribute("navItem", "index");
+        model.addAttribute("navItem", "configuration");
 
         DBSource source = sources.getSource(name);
 
         model.addAttribute("source", source);
         model.addAttribute("aggregation", source.getAggregationConfig());
         model.addAttribute("transform", source.getTransformConfig());
-        model.addAttribute("lastWeekFrequency", source.findEventsFrequency(IntervalUtils.lastWeek()));
-        model.addAttribute("yesterdayFrequency", source.findEventsFrequency(IntervalUtils.yesterday()));
-        model.addAttribute("todayFrequency", source.findEventsFrequency(IntervalUtils.today()));
         model.addAttribute("defaultGraphParameters", source.getDefaultGraphParameters());
         model.addAttribute("reports", source.getReportConfigs());
         model.addAttribute("mailReports", source.getMailReports());
         model.addAttribute("indexes", source.getIndexes());
 
         return "sources/source";
+    }
+
+    @RequestMapping({"/sources/{name}/statistics"})
+    public String statistics(@PathVariable String name, Model model) {
+        model.addAttribute("navItem", "statistics");
+
+        DBSource source = sources.getSource(name);
+
+        model.addAttribute("source", source);
+        model.addAttribute("lastWeekFrequency", source.findEventsFrequency(IntervalUtils.lastWeek()));
+        model.addAttribute("yesterdayFrequency", source.findEventsFrequency(IntervalUtils.yesterday()));
+        model.addAttribute("todayFrequency", source.findEventsFrequency(IntervalUtils.today()));
+
+        return "sources/statistics";
     }
 
     @RequestMapping("/sources/form")
@@ -111,7 +122,7 @@ public class SourcesController {
 
         flashScope.message("source " + form.getName() + " has just been created");
 
-        return "redirect:/sources";
+        return "redirect:/sources/" + form.getName() + "/configuration";
     }
 
     @RequestMapping("/sources/{name}/edit")
@@ -131,7 +142,7 @@ public class SourcesController {
 
         source.updateDisplayGroupAndName(form.getDisplayGroup(), form.getDisplayName());
 
-        return "redirect:/sources/" + form.getName();
+        return "redirect:/sources/" + form.getName() + "/configuration";
     }
 
     @RequestMapping("/sources/{name}/delete")
@@ -166,7 +177,7 @@ public class SourcesController {
 
         sources.getSource(name).saveAggregation(form);
 
-        return "redirect:/sources/{name}";
+        return "redirect:/sources/{name}/configuration";
     }
 
     @RequestMapping("/sources/{name}/default-graph-params/form")
@@ -187,7 +198,7 @@ public class SourcesController {
 
         sources.getSource(name).setDefaultGraphParameters(form);
 
-        return "redirect:/sources/{name}";
+        return "redirect:/sources/{name}/configuration";
     }
 
     @RequestMapping("/sources/{name}/capping/form")
@@ -213,7 +224,7 @@ public class SourcesController {
 
         sources.getSource(name).cap(form);
 
-        return "redirect:/sources/{name}";
+        return "redirect:/sources/{name}/configuration";
     }
 
     @RequestMapping("/sources/{name}/report")
@@ -231,7 +242,7 @@ public class SourcesController {
 
         sources.getSource(name).saveReportConfig(form);
 
-        return "redirect:/sources/{name}";
+        return "redirect:/sources/{name}/configuration";
     }
 
     @RequestMapping("/sources/{name}/report/{id}")
@@ -245,7 +256,7 @@ public class SourcesController {
     public String deleteReport(@PathVariable String name, @PathVariable String id, Model model) {
         sources.getSource(name).deleteReportConfig(id);
 
-        return "redirect:/sources/{name}";
+        return "redirect:/sources/{name}/configuration";
     }
 
     @RequestMapping("/sources/{name}/mailreport")
@@ -265,7 +276,7 @@ public class SourcesController {
 
         mailReports.onReportChange(form);
 
-        return "redirect:/sources/{name}";
+        return "redirect:/sources/{name}/configuration";
     }
 
     @RequestMapping("/sources/{name}/mailreport/{id}")
@@ -283,7 +294,7 @@ public class SourcesController {
             mailReports.onReportDeleted(mailReportConfig);
         }
 
-        return "redirect:/sources/{name}";
+        return "redirect:/sources/{name}/configuration";
     }
 
     @RequestMapping("/sources/{name}/mailreport/{id}/send")
@@ -296,7 +307,7 @@ public class SourcesController {
 
         flashScope.message("your email report has been sent");
 
-        return "redirect:/sources/{name}";
+        return "redirect:/sources/{name}/configuration";
     }
 
     @RequestMapping("/sources/{name}/transform")
@@ -320,7 +331,7 @@ public class SourcesController {
 
         source.saveTransformConfig(config);
 
-        return "redirect:/sources/{name}";
+        return "redirect:/sources/{name}/configuration";
     }
 
     @RequestMapping("/sources/{name}/transform/{parameter}")
@@ -353,7 +364,7 @@ public class SourcesController {
 
         source.createIndex(form);
 
-        return "redirect:/sources/{name}";
+        return "redirect:/sources/{name}/configuration";
     }
 
     @RequestMapping("/sources/{name}/indexes/{index}/drop")
@@ -362,7 +373,7 @@ public class SourcesController {
 
         source.dropIndex(index);
 
-        return "redirect:/sources/{name}";
+        return "redirect:/sources/{name}/configuration";
     }
 
 
