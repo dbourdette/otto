@@ -189,4 +189,11 @@ public class TransformConfig {
 
         return StringUtils.join(parameteroperations, ",");
     }
+
+    @Override
+    public String toString() {
+        return "TransformConfig{" +
+                "operations=" + operations +
+                '}';
+    }
 }

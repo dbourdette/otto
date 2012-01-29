@@ -3,7 +3,6 @@ package com.github.dbourdette.otto.selenium;
 import org.junit.After;
 import org.junit.Test;
 
-import static fr.javafreelance.fluentlenium.core.filter.FilterConstructor.withText;
 import static org.fest.assertions.Assertions.assertThat;
 
 /**
@@ -27,13 +26,13 @@ public class ManageSourceTest extends OttoFluentTest {
 
         goTo("/sources/" + SOURCE_NAME + "/edit");
 
-        $("#displayName").text("My display name");
+        $("#displayName").text(SOURCE_DISPLAY_NAME);
         $("#displayGroup").text("My display group");
 
         $("#form").submit();
 
         goToHome();
-        $("a", withText("My display name")).click();
+        link(SOURCE_DISPLAY_NAME).click();
 
         checkH1();
 

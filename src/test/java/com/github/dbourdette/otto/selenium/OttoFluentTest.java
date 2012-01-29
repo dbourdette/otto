@@ -2,6 +2,8 @@ package com.github.dbourdette.otto.selenium;
 
 import org.fest.assertions.StringAssert;
 
+import fr.javafreelance.fluentlenium.core.domain.FluentList;
+import fr.javafreelance.fluentlenium.core.domain.FluentWebElement;
 import static fr.javafreelance.fluentlenium.core.filter.FilterConstructor.withText;
 import fr.javafreelance.fluentlenium.core.test.FluentTest;
 import static org.fest.assertions.Assertions.assertThat;
@@ -12,6 +14,8 @@ import static org.fest.assertions.Assertions.assertThat;
  */
 public class OttoFluentTest extends FluentTest {
     public static final String SOURCE_NAME = "selenium source";
+
+    public static final String SOURCE_DISPLAY_NAME = "My display name";
     
     public void goToHome() {
         goTo("/");
@@ -32,7 +36,7 @@ public class OttoFluentTest extends FluentTest {
     protected void createSource() {
         goToHome();
 
-        $("a", withText("create a new event source")).click();
+        link("create a new event source").click();
 
         $("#name").text(SOURCE_NAME);
         $("#form").submit();
@@ -44,17 +48,27 @@ public class OttoFluentTest extends FluentTest {
     protected void deleteSource() {
         goToHome();
 
-        if ($("a", withText(SOURCE_NAME)).size() == 0) {
-            return;
+        FluentList deleteLinks = $("a", withText(SOURCE_NAME));
+
+        if (deleteLinks.size() == 0) {
+            deleteLinks = $("a", withText(SOURCE_DISPLAY_NAME));
+
+            if (deleteLinks.size() == 0) {
+                return;
+            }
         }
 
-        $("a", withText(SOURCE_NAME)).click();
+        deleteLinks.click();
 
         $("#sourceConfiguration").click();
 
-        $("a", withText("delete source")).click();
+        link("delete source").click();
 
         $("#deleteForm").submit();
+    }
+    
+    protected FluentWebElement link(String text) {
+        return $("a", withText(text)).first();
     }
 
     protected StringAssert assertThatMessage() {

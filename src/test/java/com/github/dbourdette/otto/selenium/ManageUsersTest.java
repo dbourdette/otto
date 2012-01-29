@@ -3,8 +3,6 @@ package com.github.dbourdette.otto.selenium;
 import org.junit.Before;
 import org.junit.Test;
 
-import static fr.javafreelance.fluentlenium.core.filter.FilterConstructor.withText;
-
 /**
  * @author damien bourdette
  * @version \$Revision$
@@ -15,7 +13,7 @@ public class ManageUsersTest extends OttoFluentTest {
         goTo("/users");
 
         try {
-            $("a", withText("selenium user"));
+            link("selenium user");
 
             doDeleteUser();
         } catch (Exception e) {
@@ -25,7 +23,7 @@ public class ManageUsersTest extends OttoFluentTest {
 
     @Test
     public void createUser() {
-        $("a", withText("Add user")).click();
+        link("Add user").click();
 
         $("#username").text("selenium user");
         $("#sources").text("source");
@@ -47,7 +45,7 @@ public class ManageUsersTest extends OttoFluentTest {
 
         goTo("/users");
 
-        $("a", withText("selenium user")).click();
+        link("selenium user").click();
 
         $("#sources").text("source,anothersource");
         $("#form").submit();
@@ -58,7 +56,7 @@ public class ManageUsersTest extends OttoFluentTest {
     private void doDeleteUser() {
         goTo("/users");
 
-        $("a", withText("selenium user")).click();
+        link("selenium user").click();
 
         $("#deleteForm").submit();
     }

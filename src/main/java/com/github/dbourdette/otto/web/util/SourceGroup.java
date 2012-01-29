@@ -4,6 +4,8 @@ import java.util.Comparator;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.github.dbourdette.otto.source.DBSource;
 
 /**
@@ -18,8 +20,8 @@ public class SourceGroup {
     private Set<DBSource> sources = new TreeSet<DBSource>(new Comparator<DBSource>() {
         @Override
         public int compare(DBSource dbSource, DBSource dbSource1) {
-            String name = dbSource.getDisplayName() == null ? dbSource.getName() : dbSource.getDisplayName();
-            String name1 = dbSource1.getDisplayName() == null ? dbSource1.getName() : dbSource1.getDisplayName();
+            String name = StringUtils.isEmpty(dbSource.getDisplayName()) ? dbSource.getName() : dbSource.getDisplayName();
+            String name1 = StringUtils.isEmpty(dbSource1.getDisplayName()) ? dbSource1.getName() : dbSource1.getDisplayName();
 
             return name.compareTo(name1);
         }
@@ -39,5 +41,13 @@ public class SourceGroup {
 
     public String getName() {
         return name;
+    }
+
+    @Override
+    public String toString() {
+        return "SourceGroup{" +
+                "name='" + name + '\'' +
+                ", sources=" + sources +
+                '}';
     }
 }

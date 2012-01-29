@@ -3,8 +3,6 @@ package com.github.dbourdette.otto.selenium;
 import org.junit.Before;
 import org.junit.Test;
 
-import static fr.javafreelance.fluentlenium.core.filter.FilterConstructor.withText;
-
 /**
  * @author damien bourdette
  * @version \$Revision$
@@ -21,11 +19,11 @@ public class ManageReportsTest extends OttoFluentTest {
     public void createReport() {
         goToHome();
 
-        $("a", withText("selenium source")).click();
+        link(SOURCE_NAME).click();
 
         $("#sourceConfiguration").click();
 
-        $("a", withText("add a report")).click();
+        link("add a report").click();
 
         $("#title").text("selenium source report");
         $("#labelAttributes").text("slug");

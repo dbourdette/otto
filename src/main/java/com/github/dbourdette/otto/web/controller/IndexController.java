@@ -16,12 +16,17 @@
 
 package com.github.dbourdette.otto.web.controller;
 
+import java.io.IOException;
+import java.io.Writer;
+
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.github.dbourdette.otto.source.DBSource;
 import com.github.dbourdette.otto.source.Sources;
 
 /**
@@ -39,5 +44,14 @@ public class IndexController {
         model.addAttribute("groups", sources.getSourceGroups());
         
         return "index";
+    }
+
+    @RequestMapping("/state")
+    public void state(HttpServletResponse response) throws IOException {
+        Writer writer = response.getWriter();
+        
+        for (DBSource source : sources.getSources()) {
+            writer.write(source.toString());
+        }
     }
 }

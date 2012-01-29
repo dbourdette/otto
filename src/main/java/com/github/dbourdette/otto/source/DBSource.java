@@ -489,6 +489,17 @@ public class DBSource {
         transformConfig = TransformConfig.fromDBObject(dbObject);
     }
 
+    @Override
+    public String toString() {
+        return "DBSource{" +
+                "name='" + name + '\'' +
+                ", displayName='" + displayName + '\'' +
+                ", displayGroup='" + displayGroup + '\'' +
+                ", aggregationConfig=" + aggregationConfig +
+                ", transformConfig=" + transformConfig +
+                '}';
+    }
+
     public long getCount() {
         return events.count();
     }
