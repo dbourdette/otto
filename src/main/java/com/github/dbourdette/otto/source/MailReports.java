@@ -186,15 +186,6 @@ public class MailReports {
         int count = 0;
 
         for (Pair pair : report.getSums()) {
-            html += "<tr>";
-            html += "<td>";
-            html += pair.getName();
-            html += "</td>";
-            html += "<td>";
-            html += pair.getValue();
-            html += "</td>";
-            html += "</tr>";
-
             count += pair.getValue();
         }
 
@@ -204,6 +195,17 @@ public class MailReports {
         html += count;
         html += "</td>";
         html += "</tr>";
+
+        for (Pair pair : report.getSums()) {
+            html += "<tr>";
+            html += "<td>";
+            html += pair.getName();
+            html += "</td>";
+            html += "<td>";
+            html += pair.getValue();
+            html += "</td>";
+            html += "</tr>";
+        }
 
         html += "</table>";
 
