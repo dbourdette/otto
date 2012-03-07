@@ -28,6 +28,7 @@
         <intercept-url pattern="/imgapi/**" access="permitAll" />
         <intercept-url pattern="/**" access="isAuthenticated()"/>
         <http-basic />
+        <logout logout-url="/logout" delete-cookies="" />
     </http>
 
     <authentication-manager>
