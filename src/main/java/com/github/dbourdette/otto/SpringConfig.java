@@ -224,6 +224,18 @@ public class SpringConfig {
         return getInitParameter("security/ldap.searchFilter", "");
     }
 
+    public String getSecurityRadiusHost() {
+        return getInitParameter("security/radius.host", "");
+    }
+
+    public String getSecurityRadiusPort() {
+        return getInitParameter("security/radius.port", "1812");
+    }
+
+    public String getSecurityRadiusSecret() {
+        return getInitParameter("security/radius.secret", "");
+    }
+
     public String getInitParameter(String name, String defaultValue) {
         String value = servletContext.getInitParameter(name);
 

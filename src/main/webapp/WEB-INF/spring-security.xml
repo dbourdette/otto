@@ -32,10 +32,12 @@
 
     <authentication-manager>
         <authentication-provider ref="mongoAuthenticationProvider" />
-        <authentication-provider ref="ldapMongoAuthenticationProvider" />
+        <authentication-provider ref="ldapAuthenticationProvider" />
+        <authentication-provider ref="radiusAuthenticationProvider" />
     </authentication-manager>
 
     <beans:bean id="mongoAuthenticationProvider" class="com.github.dbourdette.otto.security.MongoAuthenticationProvider" />
-    <beans:bean id="ldapMongoAuthenticationProvider" class="com.github.dbourdette.otto.security.LdapAndMongoAuthenticationProvider" />
+    <beans:bean id="ldapAuthenticationProvider" class="com.github.dbourdette.otto.security.LdapAndMongoAuthenticationProvider" />
+    <beans:bean id="radiusAuthenticationProvider" class="com.github.dbourdette.otto.security.RadiusAuthenticationProvider" />
 
 </beans:beans>
