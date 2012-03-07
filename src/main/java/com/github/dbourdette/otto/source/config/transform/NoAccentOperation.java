@@ -40,4 +40,11 @@ public class NoAccentOperation implements TransformOperation {
 
         return value;
     }
+
+    @Override
+    public String toString() {
+        return "NoAccentOperation{" +
+                "pattern=" + pattern +
+                '}';
+    }
 }

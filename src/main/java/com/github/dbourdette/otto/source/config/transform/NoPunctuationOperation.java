@@ -37,4 +37,11 @@ public class NoPunctuationOperation implements TransformOperation {
 
         return value;
     }
+
+    @Override
+    public String toString() {
+        return "NoPunctuationOperation{" +
+                "pattern=" + pattern +
+                '}';
+    }
 }

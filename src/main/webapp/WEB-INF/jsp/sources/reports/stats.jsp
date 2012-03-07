@@ -42,20 +42,23 @@
 
             <br><br>
 
+            <c:set var="count" value="0" />
+            <c:forEach var="value" items="${values}">
+                <c:set var="count" value="${value.value + count}" />
+            </c:forEach>
+
+            <span>${form.reportConfig.title}</span><br/>
             <table>
-                <span>${form.reportConfig.title}</span><br/>
-                <c:set var="count" value="0" />
+                <tr>
+                    <td><b>total</b></td>
+                    <td id="total"><b>${count}</b></td>
+                </tr>
                 <c:forEach var="value" items="${values}">
                     <tr>
                         <td>${value.name}</td>
                         <td>${value.value}</td>
                     </tr>
-                    <c:set var="count" value="${value.value + count}" />
                 </c:forEach>
-                <tr>
-                    <td><b>total</b></td>
-                    <td><b>${count}</b></td>
-                </tr>
             </table>
         </div>
 

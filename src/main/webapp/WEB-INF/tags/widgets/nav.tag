@@ -30,21 +30,21 @@
 
 <div class="nav">
     <c:if test="${navItem eq 'reports'}">reports</c:if>
-    <c:if test="${not (navItem eq 'reports')}"><a href="/sources/${name}/reports">reports</a></c:if>
+    <c:if test="${not (navItem eq 'reports')}"><a id="sourceReports" href="/sources/${name}/reports">reports</a></c:if>
 
     <sec:authorize access="hasRole('ROLE_ADMIN')">
         <c:if test="${navItem eq 'configuration'}">- configuration</c:if>
         <c:if test="${not (navItem eq 'configuration')}">- <a id="sourceConfiguration" href="/sources/${name}/configuration">configuration</a></c:if>
 
         <c:if test="${navItem eq 'statistics'}">- statistics</c:if>
-        <c:if test="${not (navItem eq 'statistics')}">- <a href="/sources/${name}/statistics">statistics</a></c:if>
+        <c:if test="${not (navItem eq 'statistics')}">- <a id="sourceStatistics" href="/sources/${name}/statistics">statistics</a></c:if>
     </sec:authorize>
 
     <c:if test="${navItem eq 'logs'}">- logs</c:if>
-    <c:if test="${not (navItem eq 'logs')}">- <a href="/sources/${name}/events">logs</a></c:if>
+    <c:if test="${not (navItem eq 'logs')}">- <a id="sourceLogs" href="/sources/${name}/events">logs</a></c:if>
 
     <sec:authorize access="hasRole('ROLE_ADMIN')">
         <c:if test="${navItem eq 'batch'}">- batch</c:if>
-        <c:if test="${not (navItem eq 'batch')}">- <a href="/sources/${name}/events/batch">batch</a></c:if>
+        <c:if test="${not (navItem eq 'batch')}">- <a id="sourceBatch" href="/sources/${name}/events/batch">batch</a></c:if>
     </sec:authorize>
 </div>

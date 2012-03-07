@@ -33,7 +33,15 @@ public class AggregationConfig {
         return timeFrame != null && timeFrame != TimeFrame.MILLISECOND;
     }
 
-	public TimeFrame getTimeFrame() {
+    @Override
+    public String toString() {
+        return "AggregationConfig{" +
+                "timeFrame=" + timeFrame +
+                ", attributeName='" + attributeName + '\'' +
+                '}';
+    }
+
+    public TimeFrame getTimeFrame() {
 		return timeFrame;
 	}
 

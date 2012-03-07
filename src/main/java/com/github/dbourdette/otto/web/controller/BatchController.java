@@ -21,14 +21,7 @@ import java.io.IOException;
 import javax.inject.Inject;
 import javax.validation.Valid;
 
-import com.github.dbourdette.otto.web.service.RemoteEventsFacade;
 import org.codehaus.jackson.JsonParseException;
-import com.github.dbourdette.otto.source.DBSource;
-import com.github.dbourdette.otto.source.Event;
-import com.github.dbourdette.otto.source.Sources;
-import com.github.dbourdette.otto.web.form.BatchForm;
-import com.github.dbourdette.otto.web.form.BatchValuesType;
-import com.github.dbourdette.otto.web.util.FlashScope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -36,6 +29,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.github.dbourdette.otto.source.DBSource;
+import com.github.dbourdette.otto.source.Event;
+import com.github.dbourdette.otto.source.Sources;
+import com.github.dbourdette.otto.web.form.BatchForm;
+import com.github.dbourdette.otto.web.form.BatchValuesType;
+import com.github.dbourdette.otto.web.service.RemoteEventsFacade;
+import com.github.dbourdette.otto.web.util.FlashScope;
 
 /**
  * @author damien bourdette
@@ -54,6 +55,9 @@ public class BatchController {
 
 	@RequestMapping("/sources/{name}/events/batch")
 	public String form(@PathVariable String name, Model model) {
+        DBSource source = sources.getSource(name);
+
+        model.addAttribute("source", source);
 		model.addAttribute("navItem", "batch");
 		model.addAttribute("form", new BatchForm());
 

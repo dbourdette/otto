@@ -33,4 +33,9 @@ public class LowerCaseOperation implements TransformOperation {
 
         return value;
     }
+
+    @Override
+    public String toString() {
+        return "LowerCaseOperation{}";
+    }
 }

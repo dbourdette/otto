@@ -47,6 +47,7 @@ public class EventsController {
     public String events(@PathVariable String name, @RequestParam(required = false) Integer page, Model model) {
         DBSource source = sources.getSource(name);
 
+        model.addAttribute("source", source);
         model.addAttribute("navItem", "logs");
         model.addAttribute("events", source.findEvents(page));
 

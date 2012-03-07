@@ -66,6 +66,7 @@ public class ReportController {
         form.fillWithDefault(source.getDefaultGraphParameters(), request);
         form.setReportConfigs(source.getReportConfigs());
 
+        model.addAttribute("source", source);
         model.addAttribute("navItem", "reports");
         model.addAttribute("subNavItem", "stats");
         model.addAttribute("frequency", source.findEventsFrequency(form.getInterval()));
@@ -82,6 +83,7 @@ public class ReportController {
         form.fillWithDefault(source.getDefaultGraphParameters(), request);
         form.setReportConfigs(source.getReportConfigs());
 
+        model.addAttribute("source", source);
         model.addAttribute("navItem", "reports");
         model.addAttribute("subNavItem", "graph");
         model.addAttribute("form", form);
@@ -115,6 +117,7 @@ public class ReportController {
         form.fillWithDefault(source.getDefaultGraphParameters(), request);
         form.setReportConfigs(source.getReportConfigs());
 
+        model.addAttribute("source", source);
         model.addAttribute("navItem", "reports");
         model.addAttribute("subNavItem", "pie");
         model.addAttribute("form", form);
