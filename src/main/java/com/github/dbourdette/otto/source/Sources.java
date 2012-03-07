@@ -16,27 +16,19 @@
 
 package com.github.dbourdette.otto.source;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-
+import com.github.dbourdette.otto.source.config.MailReportConfig;
+import com.github.dbourdette.otto.web.form.SourceForm;
+import com.github.dbourdette.otto.web.util.Constants;
+import com.github.dbourdette.otto.web.util.SourceGroups;
+import com.mongodb.DB;
 import org.apache.commons.lang.StringUtils;
 import org.quartz.SchedulerException;
 import org.springframework.stereotype.Component;
 
-import com.github.dbourdette.otto.source.config.MailReportConfig;
-import com.github.dbourdette.otto.web.exception.SourceAlreadyExists;
-import com.github.dbourdette.otto.web.form.SourceForm;
-import com.github.dbourdette.otto.web.util.Constants;
-import com.github.dbourdette.otto.web.util.SizeInBytes;
-import com.github.dbourdette.otto.web.util.SourceGroups;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import java.text.ParseException;
+import java.util.*;
 
 /**
  * @author damien bourdette
@@ -52,6 +44,13 @@ public class Sources {
     private MailReports mailReports;
 
     private volatile Map<String, DBSource> cache = new HashMap<String, DBSource>();
+
+    @PostConstruct
+    public void init() throws SchedulerException, ParseException {
+        loadSources();
+
+        mailReports.initScheduler();
+    }
 
     @PostConstruct
     public void loadSources() {

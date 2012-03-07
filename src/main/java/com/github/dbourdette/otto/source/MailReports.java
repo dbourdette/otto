@@ -16,28 +16,6 @@
 
 package com.github.dbourdette.otto.source;
 
-import java.io.UnsupportedEncodingException;
-import java.text.ParseException;
-import java.util.Date;
-
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.mail.MessagingException;
-
-import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
-import org.quartz.CronScheduleBuilder;
-import org.quartz.JobBuilder;
-import org.quartz.JobDataMap;
-import org.quartz.JobDetail;
-import org.quartz.JobKey;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.Trigger;
-import org.quartz.TriggerBuilder;
-import org.quartz.TriggerKey;
-import org.springframework.stereotype.Component;
-
 import com.github.dbourdette.otto.quartz.SendReportJob;
 import com.github.dbourdette.otto.report.Report;
 import com.github.dbourdette.otto.report.ReportPeriod;
@@ -46,6 +24,16 @@ import com.github.dbourdette.otto.service.mail.Mailer;
 import com.github.dbourdette.otto.source.config.MailReportConfig;
 import com.github.dbourdette.otto.source.config.ReportConfig;
 import com.github.dbourdette.otto.web.util.Pair;
+import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
+import org.quartz.*;
+import org.springframework.stereotype.Component;
+
+import javax.inject.Inject;
+import javax.mail.MessagingException;
+import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
+import java.util.Date;
 
 /**
  * Helper class for mail reports
@@ -71,7 +59,6 @@ public class MailReports {
     @Inject
     private Mailer mailer;
 
-    @PostConstruct
     public void initScheduler() throws SchedulerException, ParseException {
         JobDetail jobDetail = JobBuilder.newJob(SendReportJob.class)
                 .withIdentity(new JobKey(JOB_NAME, JOB_GROUP))
