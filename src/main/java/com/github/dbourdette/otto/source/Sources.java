@@ -49,7 +49,7 @@ public class Sources {
     public void init() throws SchedulerException, ParseException {
         loadSources();
 
-        mailReports.initScheduler();
+        mailReports.initScheduler(this);
     }
 
     @PostConstruct

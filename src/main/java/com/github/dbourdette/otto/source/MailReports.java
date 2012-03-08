@@ -59,7 +59,7 @@ public class MailReports {
     @Inject
     private Mailer mailer;
 
-    public void initScheduler() throws SchedulerException, ParseException {
+    public void initScheduler(Sources sources) throws SchedulerException, ParseException {
         JobDetail jobDetail = JobBuilder.newJob(SendReportJob.class)
                 .withIdentity(new JobKey(JOB_NAME, JOB_GROUP))
                 .storeDurably()
