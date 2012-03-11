@@ -19,7 +19,7 @@ package com.github.dbourdette.otto.source;
 import org.joda.time.DateTime;
 import org.junit.Test;
 
-import junit.framework.Assert;
+import static junit.framework.Assert.assertEquals;
 
 /**
  * @author damien bourdette
@@ -28,60 +28,46 @@ import junit.framework.Assert;
 public class TimeFrameTest {
     @Test
     public void roundDateMillisecond() {
-        DateTime source = new DateTime(2010, 10, 10, 11, 12, 13, 5);
-
-        Assert.assertEquals(source, TimeFrame.MILLISECOND.roundDate(source));
+        for (DateTime date : refDates()) {
+            assertEquals(date, TimeFrame.MILLISECOND.roundDate(date));
+        }
     }
 
     @Test
     public void roundDate30Seconds() {
-        DateTime source = new DateTime(2010, 10, 10, 11, 12, 13, 5);
-        DateTime expected = new DateTime(2010, 10, 10, 11, 12, 0, 0);
+        for (DateTime date : refDates()) {
+            int times = date.getSecondOfMinute() / 30;
 
-        Assert.assertEquals(expected, TimeFrame.THIRTY_SECONDS.roundDate(source));
-
-        source = new DateTime(2010, 10, 10, 11, 12, 34, 5);
-        expected = new DateTime(2010, 10, 10, 11, 12, 30, 0);
-
-        Assert.assertEquals(expected, TimeFrame.THIRTY_SECONDS.roundDate(source));
+            assertEquals(date.withSecondOfMinute(times * 30).withMillisOfSecond(0), TimeFrame.THIRTY_SECONDS.roundDate(date));
+        }
     }
 
     @Test
     public void roundDateMinute() {
-        DateTime source = new DateTime(2010, 10, 10, 11, 12, 13, 5);
-        DateTime expected = new DateTime(2010, 10, 10, 11, 12, 0, 0);
-
-        Assert.assertEquals(expected, TimeFrame.ONE_MINUTE.roundDate(source));
-
-        source = new DateTime(2010, 10, 10, 11, 12, 34, 5);
-        expected = new DateTime(2010, 10, 10, 11, 12, 0, 0);
-
-        Assert.assertEquals(expected, TimeFrame.ONE_MINUTE.roundDate(source));
+        for (DateTime date : refDates()) {
+            assertEquals(date.withSecondOfMinute(0).withMillisOfSecond(0), TimeFrame.ONE_MINUTE.roundDate(date));
+        }
     }
 
     @Test
     public void roundDateFiveMinutes() {
-        DateTime source = new DateTime(2010, 10, 10, 11, 12, 13, 5);
-        DateTime expected = new DateTime(2010, 10, 10, 11, 10, 0, 0);
-
-        Assert.assertEquals(expected, TimeFrame.FIVE_MINUTES.roundDate(source));
-
-        source = new DateTime(2010, 10, 10, 11, 35, 34, 5);
-        expected = new DateTime(2010, 10, 10, 11, 35, 0, 0);
-
-        Assert.assertEquals(expected, TimeFrame.FIVE_MINUTES.roundDate(source));
+        for (DateTime date : refDates()) {
+            int times = date.getMinuteOfHour() / 5;
+            
+            assertEquals(date.withMinuteOfHour(times * 5).withSecondOfMinute(0).withMillisOfSecond(0), TimeFrame.FIVE_MINUTES.roundDate(date));
+        }
     }
 
     @Test
     public void roundDateThirtyMinutes() {
-        DateTime source = new DateTime(2010, 10, 10, 11, 12, 13, 5);
-        DateTime expected = new DateTime(2010, 10, 10, 11, 0, 0, 0);
+        for (DateTime date : refDates()) {
+            int times = date.getMinuteOfHour() / 30;
 
-        Assert.assertEquals(expected, TimeFrame.THIRTY_MINUTES.roundDate(source));
+            assertEquals(date.withMinuteOfHour(times * 30).withSecondOfMinute(0).withMillisOfSecond(0), TimeFrame.THIRTY_MINUTES.roundDate(date));
+        }
+    }
 
-        source = new DateTime(2010, 10, 10, 11, 35, 34, 5);
-        expected = new DateTime(2010, 10, 10, 11, 30, 0, 0);
-
-        Assert.assertEquals(expected, TimeFrame.THIRTY_MINUTES.roundDate(source));
+    private DateTime[] refDates() {
+        return new DateTime[] {new DateTime(2010, 10, 10, 11, 12, 13, 5), new DateTime(2010, 10, 10, 11, 35, 34, 5)};
     }
 }
