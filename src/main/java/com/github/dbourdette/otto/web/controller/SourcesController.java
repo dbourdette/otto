@@ -34,9 +34,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.github.dbourdette.otto.report.ReportPeriod;
-import com.github.dbourdette.otto.source.DBSource;
 import com.github.dbourdette.otto.source.MailReports;
-import com.github.dbourdette.otto.source.Sources;
+import com.github.dbourdette.otto.source.Source;
 import com.github.dbourdette.otto.source.TimeFrame;
 import com.github.dbourdette.otto.source.config.AggregationConfig;
 import com.github.dbourdette.otto.source.config.DefaultGraphParameters;
@@ -58,9 +57,6 @@ import com.github.dbourdette.otto.web.util.IntervalUtils;
 public class SourcesController {
 
     @Inject
-    private Sources sources;
-
-    @Inject
     private FlashScope flashScope;
 
     @Inject
@@ -70,7 +66,7 @@ public class SourcesController {
     public String source(@PathVariable String name, Model model) {
         model.addAttribute("navItem", "configuration");
 
-        DBSource source = sources.getSource(name);
+        Source source = Source.findByName(name);
 
         model.addAttribute("source", source);
         model.addAttribute("aggregation", source.getAggregationConfig());
@@ -87,7 +83,7 @@ public class SourcesController {
     public String statistics(@PathVariable String name, Model model) {
         model.addAttribute("navItem", "statistics");
 
-        DBSource source = sources.getSource(name);
+        Source source = Source.findByName(name);
 
         model.addAttribute("source", source);
         model.addAttribute("lastWeekFrequency", source.findEventsFrequency(IntervalUtils.lastWeek()));
@@ -118,7 +114,7 @@ public class SourcesController {
             return "sources/source_form";
         }
 
-        sources.createSource(form);
+        Source.create(form);
 
         flashScope.message("source " + form.getName() + " has just been created");
 
@@ -127,7 +123,7 @@ public class SourcesController {
 
     @RequestMapping("/sources/{name}/edit")
     public String form(@PathVariable String name, Model model) {
-        model.addAttribute("form", sources.getSource(name));
+        model.addAttribute("form", Source.findByName(name));
 
         return "sources/source_edit_form";
     }
@@ -138,7 +134,7 @@ public class SourcesController {
             return "sources/source_edit_form";
         }
 
-        DBSource source = sources.getSource(form.getName());
+        Source source = Source.findByName(form.getName());
 
         source.updateDisplayGroupAndName(form.getDisplayGroup(), form.getDisplayName());
 
@@ -152,7 +148,7 @@ public class SourcesController {
 
     @RequestMapping(value = "/sources/{name}", method = RequestMethod.DELETE)
     public String dropSource(@PathVariable String name) throws SchedulerException {
-        sources.dropSource(name);
+        Source.findByName(name).drop();
 
         flashScope.message("source " + name + " has just been deleted");
 
@@ -161,7 +157,7 @@ public class SourcesController {
 
     @RequestMapping("/sources/{name}/aggregation/form")
     public String aggregation(@PathVariable String name, Model model) {
-        model.addAttribute("form", sources.getSource(name).getAggregationConfig());
+        model.addAttribute("form", Source.findByName(name).getAggregationConfig());
         model.addAttribute("timeFrames", TimeFrame.values());
 
         return "sources/aggregation_form";
@@ -175,14 +171,14 @@ public class SourcesController {
             return "sources/aggregation_form";
         }
 
-        sources.getSource(name).saveAggregation(form);
+        Source.findByName(name).saveAggregation(form);
 
         return "redirect:/sources/{name}/configuration";
     }
 
     @RequestMapping("/sources/{name}/default-graph-params/form")
     public String defaultGraphParameters(@PathVariable String name, Model model) {
-        model.addAttribute("form", sources.getSource(name).getDefaultGraphParameters());
+        model.addAttribute("form", Source.findByName(name).getDefaultGraphParameters());
         model.addAttribute("periods", ReportPeriod.values());
 
         return "sources/default_graph_params_form";
@@ -196,7 +192,7 @@ public class SourcesController {
             return "sources/default_graph_params_form";
         }
 
-        sources.getSource(name).setDefaultGraphParameters(form);
+        Source.findByName(name).setDefaultGraphParameters(form);
 
         return "redirect:/sources/{name}/configuration";
     }
@@ -222,7 +218,7 @@ public class SourcesController {
             return "sources/capping_form";
         }
 
-        sources.getSource(name).cap(form);
+        Source.findByName(name).cap(form);
 
         return "redirect:/sources/{name}/configuration";
     }
@@ -240,21 +236,21 @@ public class SourcesController {
             return "sources/report_form";
         }
 
-        sources.getSource(name).saveReportConfig(form);
+        Source.findByName(name).saveReportConfig(form);
 
         return "redirect:/sources/{name}/configuration";
     }
 
     @RequestMapping("/sources/{name}/report/{id}")
     public String report(@PathVariable String name, @PathVariable String id, Model model) {
-        model.addAttribute("form", sources.getSource(name).getReportConfig(id));
+        model.addAttribute("form", Source.findByName(name).getReportConfig(id));
 
         return "sources/report_form";
     }
 
     @RequestMapping("/sources/{name}/report/{id}/delete")
     public String deleteReport(@PathVariable String name, @PathVariable String id, Model model) {
-        sources.getSource(name).deleteReportConfig(id);
+        Source.findByName(name).deleteReportConfig(id);
 
         return "redirect:/sources/{name}/configuration";
     }
@@ -272,7 +268,7 @@ public class SourcesController {
             return "sources/mail_report_form";
         }
 
-        sources.getSource(name).saveMailReport(form);
+        Source.findByName(name).saveMailReport(form);
 
         mailReports.onReportChange(form);
 
@@ -281,14 +277,14 @@ public class SourcesController {
 
     @RequestMapping("/sources/{name}/mailreport/{id}")
     public String mailreport(@PathVariable String name, @PathVariable String id, Model model) {
-        model.addAttribute("form", sources.getSource(name).getMailReport(id));
+        model.addAttribute("form", Source.findByName(name).getMailReport(id));
 
         return "sources/mail_report_form";
     }
 
     @RequestMapping("/sources/{name}/mailreport/{id}/delete")
     public String delete(@PathVariable String name, @PathVariable String id, Model model) throws SchedulerException {
-        MailReportConfig mailReportConfig = sources.getSource(name).deleteMailReport(id);
+        MailReportConfig mailReportConfig = Source.findByName(name).deleteMailReport(id);
 
         if (mailReportConfig != null) {
             mailReports.onReportDeleted(mailReportConfig);
@@ -299,7 +295,7 @@ public class SourcesController {
 
     @RequestMapping("/sources/{name}/mailreport/{id}/send")
     public String sendMailReport(@PathVariable String name, @PathVariable String id, Model model) throws MessagingException, UnsupportedEncodingException {
-        DBSource source = sources.getSource(name);
+        Source source = Source.findByName(name);
 
         MailReportConfig mailReport = source.getMailReport(id);
 
@@ -323,7 +319,7 @@ public class SourcesController {
             return "sources/transform_form";
         }
 
-        DBSource source = sources.getSource(name);
+        Source source = Source.findByName(name);
 
         TransformConfig config = source.getTransformConfig();
 
@@ -336,7 +332,7 @@ public class SourcesController {
 
     @RequestMapping("/sources/{name}/transform/{parameter}")
     public String transform(@PathVariable String name, @PathVariable String parameter, Model model) {
-        TransformConfig config = sources.getSource(name).getTransformConfig();
+        TransformConfig config = Source.findByName(name).getTransformConfig();
 
         TransformForm form = new TransformForm();
         form.setParameter(parameter);
@@ -360,7 +356,7 @@ public class SourcesController {
             return "sources/index_form";
         }
 
-        DBSource source = sources.getSource(name);
+        Source source = Source.findByName(name);
 
         source.createIndex(form);
 
@@ -369,7 +365,7 @@ public class SourcesController {
 
     @RequestMapping("/sources/{name}/indexes/{index}/drop")
     public String dropIndex(@PathVariable String name, @PathVariable String index) {
-        DBSource source = sources.getSource(name);
+        Source source = Source.findByName(name);
 
         source.dropIndex(index);
 

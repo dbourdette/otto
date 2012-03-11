@@ -6,7 +6,7 @@ import java.util.TreeSet;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.github.dbourdette.otto.source.DBSource;
+import com.github.dbourdette.otto.source.Source;
 
 /**
  * Used for jsp layout by group
@@ -17,11 +17,11 @@ import com.github.dbourdette.otto.source.DBSource;
 public class SourceGroup {
     private String name;
 
-    private Set<DBSource> sources = new TreeSet<DBSource>(new Comparator<DBSource>() {
+    private Set<Source> sources = new TreeSet<Source>(new Comparator<Source>() {
         @Override
-        public int compare(DBSource dbSource, DBSource dbSource1) {
-            String name = StringUtils.isEmpty(dbSource.getDisplayName()) ? dbSource.getName() : dbSource.getDisplayName();
-            String name1 = StringUtils.isEmpty(dbSource1.getDisplayName()) ? dbSource1.getName() : dbSource1.getDisplayName();
+        public int compare(Source source1, Source source2) {
+            String name = StringUtils.isEmpty(source1.getDisplayName()) ? source1.getName() : source1.getDisplayName();
+            String name1 = StringUtils.isEmpty(source2.getDisplayName()) ? source2.getName() : source2.getDisplayName();
 
             return name.compareTo(name1);
         }
@@ -31,11 +31,11 @@ public class SourceGroup {
         this.name = name == null ? "" : name;
     }
 
-    public void addSource(DBSource source) {
+    public void addSource(Source source) {
         sources.add(source);
     }
 
-    public Set<DBSource> getSources() {
+    public Set<Source> getSources() {
         return sources;
     }
 

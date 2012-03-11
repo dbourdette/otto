@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.github.dbourdette.otto.service.config.Config;
 import com.github.dbourdette.otto.source.Event;
-import com.github.dbourdette.otto.source.Sources;
+import com.github.dbourdette.otto.source.Source;
 
 /**
  * Provides a facade for posting and retrieving events.
@@ -24,9 +24,6 @@ import com.github.dbourdette.otto.source.Sources;
 @Service
 public class RemoteEventsFacadeImpl implements RemoteEventsFacade {
     private static final Logger LOGGER = LoggerFactory.getLogger(RemoteEventsFacadeImpl.class);
-
-    @Inject
-    private Sources sources;
 
     @Inject
     private Config config;
@@ -43,7 +40,7 @@ public class RemoteEventsFacadeImpl implements RemoteEventsFacade {
 
             LOGGER.debug("Saving event " + event);
 
-            sources.getSource(sourceName).post(event);
+            Source.findByName(sourceName).post(event);
 
             onEvent(sourceName);
         } catch (Exception e) {
@@ -59,7 +56,7 @@ public class RemoteEventsFacadeImpl implements RemoteEventsFacade {
 
             event.setDate(new DateTime());
 
-            sources.getSource(monitoringSource).post(event);
+            Source.findByName(monitoringSource).post(event);
         }
     }
 }

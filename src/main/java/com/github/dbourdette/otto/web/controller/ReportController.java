@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -43,8 +42,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.github.dbourdette.otto.report.Report;
-import com.github.dbourdette.otto.source.DBSource;
-import com.github.dbourdette.otto.source.Sources;
+import com.github.dbourdette.otto.source.Source;
 import com.github.dbourdette.otto.web.form.ReportForm;
 
 /**
@@ -56,12 +54,9 @@ public class ReportController {
 
     private static final int TOP_COUNT = 30;
 
-    @Inject
-    private Sources sources;
-
     @RequestMapping({"/sources/{name}/reports/stats"})
     public String stats(@PathVariable String name, @Valid ReportForm form, BindingResult result, Model model, HttpServletRequest request) {
-        DBSource source = sources.getSource(name);
+        Source source = Source.findByName(name);
 
         form.fillWithDefault(source.getDefaultGraphParameters(), request);
         form.setReportConfigs(source.getReportConfigs());
@@ -78,7 +73,7 @@ public class ReportController {
 
     @RequestMapping({"/sources/{name}", "/sources/{name}/reports", "/sources/{name}/reports/graph"})
     public String graph(@PathVariable String name, @Valid ReportForm form, BindingResult result, Model model, HttpServletRequest request) {
-        DBSource source = sources.getSource(name);
+        Source source = Source.findByName(name);
 
         form.fillWithDefault(source.getDefaultGraphParameters(), request);
         form.setReportConfigs(source.getReportConfigs());
@@ -112,7 +107,7 @@ public class ReportController {
 
     @RequestMapping({"/sources/{name}/reports/pie"})
     public String pie(@PathVariable String name, @Valid ReportForm form, BindingResult result, Model model, HttpServletRequest request) {
-        DBSource source = sources.getSource(name);
+        Source source = Source.findByName(name);
 
         form.fillWithDefault(source.getDefaultGraphParameters(), request);
         form.setReportConfigs(source.getReportConfigs());
@@ -146,7 +141,7 @@ public class ReportController {
 
     @RequestMapping({"/sources/{name}/reports/graph.png"})
     public void png(@PathVariable String name, ReportForm form, HttpServletRequest request, final HttpServletResponse response) throws IOException {
-        DBSource source = sources.getSource(name);
+        Source source = Source.findByName(name);
 
         form.fillWithDefault(source.getDefaultGraphParameters(), request);
         form.setReportConfigs(source.getReportConfigs());
@@ -184,7 +179,7 @@ public class ReportController {
     public void csv(@PathVariable String name, ReportForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/csv");
 
-        DBSource source = sources.getSource(name);
+        Source source = Source.findByName(name);
 
         form.fillWithDefault(source.getDefaultGraphParameters(), request);
         form.setReportConfigs(source.getReportConfigs());
@@ -198,7 +193,7 @@ public class ReportController {
 
     @RequestMapping({"/sources/{name}/reports/table"})
     public String table(@PathVariable String name, ReportForm form, HttpServletRequest request, Model model) throws IOException {
-        DBSource source = sources.getSource(name);
+        Source source = Source.findByName(name);
 
         form.fillWithDefault(source.getDefaultGraphParameters(), request);
         form.setReportConfigs(source.getReportConfigs());

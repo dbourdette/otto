@@ -25,8 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.github.dbourdette.otto.source.DBSource;
-import com.github.dbourdette.otto.source.Sources;
+import com.github.dbourdette.otto.source.Source;
 import com.github.dbourdette.otto.web.util.FlashScope;
 
 /**
@@ -38,14 +37,11 @@ import com.github.dbourdette.otto.web.util.FlashScope;
 public class EventsController {
 
     @Inject
-    private Sources sources;
-
-    @Inject
     private FlashScope flashScope;
 
     @RequestMapping(method = RequestMethod.GET, headers = "Accept=text/html")
     public String events(@PathVariable String name, @RequestParam(required = false) Integer page, Model model) {
-        DBSource source = sources.getSource(name);
+        Source source = Source.findByName(name);
 
         model.addAttribute("source", source);
         model.addAttribute("navItem", "logs");
@@ -58,7 +54,7 @@ public class EventsController {
     public String clearForm(@PathVariable String name, Model model) {
         model.addAttribute("navItem", "logs");
 
-        DBSource source = sources.getSource(name);
+        Source source = Source.findByName(name);
 
         if (source.isCapped()) {
             return "sources/events_delete_capped";
@@ -69,7 +65,7 @@ public class EventsController {
 
     @RequestMapping(method = RequestMethod.DELETE)
     public String clear(@PathVariable String name) {
-        DBSource source = sources.getSource(name);
+        Source source = Source.findByName(name);
 
         if (source.isCapped()) {
             return "redirect:/sources/{name}/events";

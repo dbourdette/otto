@@ -24,10 +24,9 @@ import org.quartz.SchedulerException;
 import org.springframework.context.ApplicationContext;
 
 import com.github.dbourdette.otto.SpringConfig;
-import com.github.dbourdette.otto.source.DBSource;
-import com.github.dbourdette.otto.source.config.MailReportConfig;
 import com.github.dbourdette.otto.source.MailReports;
-import com.github.dbourdette.otto.source.Sources;
+import com.github.dbourdette.otto.source.Source;
+import com.github.dbourdette.otto.source.config.MailReportConfig;
 import com.github.dbourdette.otto.web.exception.SourceNotFound;
 
 /**
@@ -39,15 +38,14 @@ public class SendReportJob implements Job {
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         MailReports mailReports = getBean(jobExecutionContext, MailReports.class);
-        Sources sources = getBean(jobExecutionContext, Sources.class);
 
         String reportId = jobExecutionContext.getMergedJobDataMap().getString(MailReports.REPORT_ID);
         String sourceName = jobExecutionContext.getMergedJobDataMap().getString(MailReports.SOURCE_NAME);
 
-        DBSource source = null;
+        Source source = null;
 
         try {
-            source = sources.getSource(sourceName);
+            source = Source.findByName(sourceName);
         } catch (SourceNotFound e) {
             throw new JobExecutionException("No source found for name " + sourceName, e);
         }

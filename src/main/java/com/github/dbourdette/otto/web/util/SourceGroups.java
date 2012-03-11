@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import com.github.dbourdette.otto.source.DBSource;
+import com.github.dbourdette.otto.source.Source;
 
 /**
  * Used for jsp layout by group
@@ -18,12 +18,16 @@ import com.github.dbourdette.otto.source.DBSource;
 public class SourceGroups {
     Map<String, SourceGroup> groups = new HashMap<String, SourceGroup>();
 
-    public void addAll(Collection<DBSource> sources) {
-        for (DBSource source : sources) {
-            SourceGroup group = ensureExists(source.getDisplayGroup());
+    public static SourceGroups findAll() {
+        SourceGroups groups = new SourceGroups();
+
+        for (Source source : Source.findAll()) {
+            SourceGroup group = groups.ensureExists(source.getDisplayGroup());
 
             group.addSource(source);
         }
+
+        return groups;
     }
 
     public Set<SourceGroup> getGroups() {

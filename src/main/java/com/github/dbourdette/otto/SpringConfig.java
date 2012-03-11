@@ -42,12 +42,17 @@ import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
 import com.github.dbourdette.otto.quartz.OttoJobFactory;
 import com.github.dbourdette.otto.service.user.User;
+import com.github.dbourdette.otto.source.MailReports;
 import com.google.code.morphia.Datastore;
 import com.google.code.morphia.Morphia;
 import com.mongodb.DB;
 import com.mongodb.Mongo;
 import com.mongodb.MongoException;
 import com.mongodb.ServerAddress;
+
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.config.CacheConfiguration;
 
 /**
  * @author damien bourdette
@@ -78,9 +83,15 @@ public class SpringConfig {
     @Inject
     private ApplicationContext context;
 
+    @Inject
+    private MailReports mailReports;
+
     @PostConstruct
-    public void init() {
+    public void init() throws UnknownHostException {
         SpringConfig.staticContext = context;
+
+        Registry.mongoDb = mongoDb();
+        Registry.mailReports = mailReports;
     }
 
     @Bean

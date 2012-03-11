@@ -30,9 +30,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.github.dbourdette.otto.source.DBSource;
 import com.github.dbourdette.otto.source.Event;
-import com.github.dbourdette.otto.source.Sources;
+import com.github.dbourdette.otto.source.Source;
 import com.github.dbourdette.otto.web.form.BatchForm;
 import com.github.dbourdette.otto.web.form.BatchValuesType;
 import com.github.dbourdette.otto.web.service.RemoteEventsFacade;
@@ -45,9 +44,6 @@ import com.github.dbourdette.otto.web.util.FlashScope;
 @Controller
 public class BatchController {
 	@Inject
-	private Sources sources;
-
-	@Inject
 	private FlashScope flashScope;
 
     @Inject
@@ -55,7 +51,7 @@ public class BatchController {
 
 	@RequestMapping("/sources/{name}/events/batch")
 	public String form(@PathVariable String name, Model model) {
-        DBSource source = sources.getSource(name);
+        Source source = Source.findByName(name);
 
         model.addAttribute("source", source);
 		model.addAttribute("navItem", "batch");
@@ -71,7 +67,7 @@ public class BatchController {
 			return "sources/batch_form";
 		}
 		
-		DBSource source = sources.getSource(name);
+		Source source = Source.findByName(name);
 
 		for (int i = 0; i < form.getCount(); i++) {
 			Event event = null;

@@ -34,8 +34,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.github.dbourdette.otto.source.DBSource;
-import com.github.dbourdette.otto.source.Sources;
+import com.github.dbourdette.otto.source.Source;
 import com.github.dbourdette.otto.util.Page;
 import com.github.dbourdette.otto.web.service.RemoteEventsFacade;
 import com.mongodb.DBObject;
@@ -51,9 +50,6 @@ public class ApiController {
 
     @Inject
     private RemoteEventsFacade remoteEventsFacade;
-
-    @Inject
-    private Sources sources;
 
     private static final byte[] EMPTY_GIF;
 
@@ -74,7 +70,7 @@ public class ApiController {
 
     @RequestMapping(value = "/jsonapi/sources/{name}/events", method = RequestMethod.GET, headers = "Accept=application/json")
     public void eventsJson(@PathVariable String name, @RequestParam(required = false) Integer page, HttpServletResponse response) throws IOException {
-        DBSource source = sources.getSource(name);
+        Source source = Source.findByName(name);
         Page<DBObject> events = source.findEvents(page);
 
         ObjectMapper mapper = new ObjectMapper();

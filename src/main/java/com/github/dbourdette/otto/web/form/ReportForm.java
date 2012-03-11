@@ -26,7 +26,7 @@ import org.joda.time.Interval;
 
 import com.github.dbourdette.otto.report.Report;
 import com.github.dbourdette.otto.report.ReportPeriod;
-import com.github.dbourdette.otto.source.DBSource;
+import com.github.dbourdette.otto.source.Source;
 import com.github.dbourdette.otto.source.config.DefaultGraphParameters;
 import com.github.dbourdette.otto.source.config.ReportConfig;
 
@@ -62,7 +62,7 @@ public class ReportForm {
         this.reportConfigs = reportConfigs;
     }
 
-    public Report buildReport(DBSource source) {
+    public Report buildReport(Source source) {
         return source.buildReport(getReportConfig(), period);
     }
 
