@@ -20,7 +20,6 @@ import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.Date;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.mail.MessagingException;
 
@@ -68,7 +67,6 @@ public class MailReports {
     @Inject
     private Mailer mailer;
 
-    @PostConstruct
     public void initScheduler() throws SchedulerException, ParseException {
         JobDetail jobDetail = JobBuilder.newJob(SendReportJob.class)
                 .withIdentity(new JobKey(JOB_NAME, JOB_GROUP))

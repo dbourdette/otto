@@ -503,7 +503,7 @@
         <!-- cache -->
         <dependency>
             <groupId>net.sf.ehcache</groupId>
-            <artifactId>ehcache</artifactId>
+            <artifactId>ehcache-core</artifactId>
             <version>2.5.1</version>
         </dependency>
 

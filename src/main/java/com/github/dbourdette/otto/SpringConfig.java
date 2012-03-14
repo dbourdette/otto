@@ -17,6 +17,7 @@
 package com.github.dbourdette.otto;
 
 import java.net.UnknownHostException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -28,6 +29,7 @@ import javax.servlet.ServletContext;
 
 import org.apache.commons.lang.StringUtils;
 import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
 import org.quartz.simpl.RAMJobStore;
 import org.quartz.simpl.SimpleThreadPool;
 import org.springframework.context.ApplicationContext;
@@ -87,11 +89,13 @@ public class SpringConfig {
     private MailReports mailReports;
 
     @PostConstruct
-    public void init() throws UnknownHostException {
+    public void init() throws UnknownHostException, SchedulerException, ParseException {
         SpringConfig.staticContext = context;
 
         Registry.mongoDb = mongoDb();
         Registry.mailReports = mailReports;
+
+        mailReports.initScheduler();
     }
 
     @Bean
