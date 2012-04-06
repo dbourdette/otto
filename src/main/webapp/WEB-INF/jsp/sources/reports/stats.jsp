@@ -1,11 +1,12 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 
+<%@ taglib tagdir="/WEB-INF/tags/layout" prefix="layout" %>
 <%@ taglib tagdir="/WEB-INF/tags/widgets" prefix="widget" %>
 
 <%--
@@ -25,45 +26,46 @@
   --%>
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 
-<widget:head />
+<layout:head/>
 
 <body>
-	<widget:header />
-	
-	<article>
-		<widget:nav />
+<layout:header/>
 
-        <widget:reports_nav />
+<div class="container">
+    <widget:nav />
 
-        <div>
-            Mean event frequency for this period : <fmt:formatNumber value="${frequency.eventsPerMinute}" pattern="# ###.######"/> events per minute
+    <widget:reports_nav />
 
-            <br><br>
+    <span>Mean event frequency for this period : <fmt:formatNumber value="${frequency.eventsPerMinute}" pattern="# ###.######"/> events per minute</span>
 
-            <c:set var="count" value="0" />
+    <br><br>
+
+    <c:set var="count" value="0" />
+    <c:forEach var="value" items="${values}">
+        <c:set var="count" value="${value.value + count}" />
+    </c:forEach>
+
+    <h2>${form.reportConfig.title}</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <td style="width: 200px"><b>total</b></td>
+                <td><b>${count}</b></td>
+            </tr>
+        </thead>
+        <tbody>
             <c:forEach var="value" items="${values}">
-                <c:set var="count" value="${value.value + count}" />
-            </c:forEach>
-
-            <span>${form.reportConfig.title}</span><br/>
-            <table>
                 <tr>
-                    <td><b>total</b></td>
-                    <td id="total"><b>${count}</b></td>
+                    <td>${value.name}</td>
+                    <td>${value.value}</td>
                 </tr>
-                <c:forEach var="value" items="${values}">
-                    <tr>
-                        <td>${value.name}</td>
-                        <td>${value.value}</td>
-                    </tr>
-                </c:forEach>
-            </table>
-        </div>
+            </c:forEach>
+        </tbody>
+    </table>
+</div>
 
-	</article>
-	
-	<widget:footer />
+<layout:footer/>
 </body>
 </html>

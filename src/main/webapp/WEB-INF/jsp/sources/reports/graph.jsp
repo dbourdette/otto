@@ -1,11 +1,12 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 
+<%@ taglib tagdir="/WEB-INF/tags/layout" prefix="layout" %>
 <%@ taglib tagdir="/WEB-INF/tags/widgets" prefix="widget" %>
 
 <%--
@@ -25,30 +26,29 @@
   --%>
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 
-<widget:head />
+<layout:head/>
 
 <body>
-	<widget:header />
+<layout:header/>
 
-	<article>
-		<widget:nav />
+<div class="container">
+    <widget:nav />
 
-        <widget:reports_nav />
+    <widget:reports_nav />
 
-        <div>Top 30 items</div>
+    <div>Top 30 items</div>
 
-		${html}
+    ${html}
 
-        <div>
-            <c:forEach var="time" items="${times}">
-                ${time}<br/>
-            </c:forEach>
-        </div>
+    <div>
+        <c:forEach var="time" items="${times}">
+            ${time}<br/>
+        </c:forEach>
+    </div>
+</div>
 
-	</article>
-
-	<widget:footer />
+<layout:footer/>
 </body>
 </html>

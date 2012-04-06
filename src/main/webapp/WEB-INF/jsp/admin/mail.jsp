@@ -1,10 +1,12 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 
+<%@ taglib tagdir="/WEB-INF/tags/layout" prefix="layout" %>
 <%@ taglib tagdir="/WEB-INF/tags/widgets" prefix="widget" %>
 
 <%--
@@ -24,52 +26,45 @@
   --%>
 
 <!DOCTYPE html>
-<html lang="fr">
-
-<widget:head />
+<html lang="en">
+<layout:head/>
 
 <body>
-	<widget:header />
+<layout:header/>
 
-    <article>
-        <widget:admin_nav />
+<div class="container">
+    <widget:admin_nav />
 
-        <div>
-            <h2>configuration</h2>
-            <table>
-                <colgroup>
-                    <col class="label">
-                    <col>
-                </colgroup>
-                <tr>
-                    <td>smtp</td>
-                    <td>${configuration.smtp}</td>
-                </tr>
-				<tr>
-                    <td>port</td>
-                    <td>${configuration.port}</td>
-                </tr>
-				<tr>
-                    <td>user</td>
-                    <td>${configuration.user}</td>
-                </tr>
-				<tr>
-                    <td>password</td>
-                    <td>${configuration.password}</td>
-                </tr>
-				<tr>
-                    <td>sender</td>
-                    <td>${configuration.sender}</td>
-                </tr>
-            </table>
+    <h2>
+        Mail configuration
+        <a href="/mail/send"><button class="btn btn-primary pull-right">Send mail</button></a>
+        <a href="/mail/edit"><button class="btn btn-primary pull-right" style="margin-right: 10px;">Edit</button></a>
+    </h2>
+    <table class="table table-bordered">
+        <tr>
+            <td style="width: 200px">smtp</td>
+            <td>${configuration.smtp}</td>
+        </tr>
+        <tr>
+            <td>port</td>
+            <td>${configuration.port}</td>
+        </tr>
+        <tr>
+            <td>user</td>
+            <td>${configuration.user}</td>
+        </tr>
+        <tr>
+            <td>password</td>
+            <td>${configuration.password}</td>
+        </tr>
+        <tr>
+            <td>sender</td>
+            <td>${configuration.sender}</td>
+        </tr>
+    </table>
+</div>
 
-            <br/>
-
-            <a href="/mail/edit">Edit</a> - <a href="/mail/send">Send mail</a>
-        </div>
-	</article>
-
-	<widget:footer />
+<layout:footer/>
 </body>
 </html>
 

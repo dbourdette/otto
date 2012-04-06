@@ -27,21 +27,30 @@
 
 <!DOCTYPE html>
 <html lang="en">
-
 <layout:head/>
 
 <body>
 <layout:header/>
 
 <div class="container">
-    <div class="page-header">
-        <h1>An error occured</h1>
+    <div class="well">
+        <div class="row"><br><br><br></div>
+        <div class="row">
+            <div class="span6 offset3">Please log in...</div>
+        </div>
+        <div class="row">
+            <div class="span6 offset3">
+                <form class="form-inline" method="post" action="j_spring_security_check">
+                    <input name="j_username" value="" type="text" placeholder="Email"/>
+                    <input name="j_password" type="password" placeholder="Password"/>
+                    <button type="submit" class="btn">Submit</button>
+                </form>
+            </div>
+        </div>
+        <div class="row"><br><br><br></div>
     </div>
-
-    <pre>${stacktrace}</pre>
 </div>
 
 <layout:footer/>
 </body>
 </html>
-

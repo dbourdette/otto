@@ -16,8 +16,11 @@
 
 package com.github.dbourdette.otto.web.controller;
 
-import javax.inject.Inject;
-
+import com.github.dbourdette.otto.SpringConfig;
+import com.github.dbourdette.otto.service.config.Config;
+import com.github.dbourdette.otto.web.form.ConfigForm;
+import com.github.dbourdette.otto.web.util.FlashScope;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,10 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.github.dbourdette.otto.SpringConfig;
-import com.github.dbourdette.otto.service.config.Config;
-import com.github.dbourdette.otto.web.form.ConfigForm;
-import com.github.dbourdette.otto.web.util.FlashScope;
+import javax.inject.Inject;
 
 /**
  * @author damien bourdette
@@ -59,7 +59,11 @@ public class ConfigurationController {
     public String update(@ModelAttribute("form") ConfigForm form, BindingResult result, Model model) {
         config.set(Config.MONITORING_SOURCE, form.getMonitoringSource());
 
-        flashScope.message("config has been modified");
+        if (StringUtils.isEmpty(form.getMonitoringSource())) {
+            flashScope.message("Monitoring source has been deactivated");
+        } else {
+            flashScope.message("Monitoring source has been modified to " + form.getMonitoringSource());
+        }
 
         return "redirect:/configuration";
     }

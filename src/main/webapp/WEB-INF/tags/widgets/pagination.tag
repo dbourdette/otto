@@ -21,10 +21,20 @@
   ~ limitations under the License.
   --%>
 
-<div class="pagination">
-    <a href="${path}?page=${page.index - 1}">&lt; prev</a>
-    <form action="${path}" method="get">
-        <input type="text" name="page" size="3" value="${page.index}" /> / ${page.pageCount}
-    </form>
-    <a href="${path}?page=${page.index + 1}">next &gt;</a>
+<div class="row">
+    <div class="span4 offset4">
+        <ul class="pager">
+            <li class="previous" style="${page.index > 1 ? 'visibility:visible' : 'visibility:hidden'}">
+                <a href="${path}?page=${page.index - 1}">&larr; prev</a>
+            </li>
+            <li class="next">
+                <a href="${path}?page=${page.index + 1}">next &rarr;</a>
+            </li>
+            <li>
+                <form action="${path}" method="get" style="margin: 0">
+                    <input type="text" name="page" class="input-mini" value="${page.index}" /> / ${page.pageCount}
+                </form>
+            </li>
+        </ul>
+    </div>
 </div>

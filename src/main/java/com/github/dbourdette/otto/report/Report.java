@@ -16,14 +16,8 @@
 
 package com.github.dbourdette.otto.report;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
+import com.github.dbourdette.otto.web.util.Pair;
+import com.google.common.base.Objects;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
@@ -31,8 +25,7 @@ import org.joda.time.Interval;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import com.github.dbourdette.otto.web.util.Pair;
-import com.google.common.base.Objects;
+import java.util.*;
 
 /**
  * Class containing graph data.
@@ -356,7 +349,7 @@ public class Report {
         builder.append("var chart = new google.visualization.LineChart(document.getElementById('" + elementId
                 + "'));\n");
         builder.append("chart.draw(data, {width: " + (width == null ? DEFAULT_WIDTH : width) + ", height: "
-                + (height == null ? DEFAULT_HEIGHT : height) + ", backgroundColor:'#FAFAFA'});");
+                + (height == null ? DEFAULT_HEIGHT : height) + ", backgroundColor:'white'});");
 
         return builder.toString();
     }
@@ -388,7 +381,7 @@ public class Report {
 
         builder.append("var chart = new google.visualization.PieChart(document.getElementById('" + elementId + "'));\n");
         builder.append("chart.draw(data, {width: " + (width == null ? DEFAULT_WIDTH : width) + ", height: "
-                + (height == null ? DEFAULT_HEIGHT : height) + ", backgroundColor:'#FAFAFA'});");
+                + (height == null ? DEFAULT_HEIGHT : height) + ", backgroundColor:'white'});");
 
         return builder.toString();
     }
@@ -425,7 +418,7 @@ public class Report {
         params.put("chxr", "1,0," + maxValue);
         params.put("chds", "0," + maxValue);
         params.put("chs", width + "x" + height);
-        params.put("chf", "bg,s,FAFAFA");
+        params.put("chf", "bg,s,FFFFFF");
 
         int columnIndex = 0;
         String colors = "";

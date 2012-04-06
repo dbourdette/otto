@@ -1,10 +1,12 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 
+<%@ taglib tagdir="/WEB-INF/tags/layout" prefix="layout" %>
 <%@ taglib tagdir="/WEB-INF/tags/widgets" prefix="widget" %>
 
 <%--
@@ -24,62 +26,52 @@
   --%>
 
 <!DOCTYPE html>
-<html lang="fr">
-
-<widget:head />
+<html lang="en">
+<layout:head/>
 
 <body>
-	<widget:header />
+<layout:header/>
 
-    <article>
-        <widget:admin_nav />
+<div class="container">
+    <widget:admin_nav />
 
-        <div>
-            <h2>mongo db</h2>
-            <table>
-                <colgroup>
-                    <col class="label">
-                    <col>
-                </colgroup>
-                <tr>
-                    <td>url</td>
-                    <td>${config.mongoUrl}</td>
-                </tr>
-                <tr>
-                    <td>db name</td>
-                    <td>${config.mongoDbName}</td>
-                </tr>
-                <tr>
-                    <td>username</td>
-                    <td>${config.mongoUsername}</td>
-                </tr>
-            </table>
-            <h2>security</h2>
-            <table>
-                <colgroup>
-                    <col class="label">
-                    <col>
-                </colgroup>
-                <tr>
-                    <td>default username</td>
-                    <td>${config.securityDefaultUsername}</td>
-                </tr>
-                <tr>
-                    <td>default password</td>
-                    <td>*****</td>
-                </tr>
-            </table>
-            <h2>config</h2>
-            <form:form action="/configuration" commandName="form" method="post">
-                <p>
-                    monitoring source : <form:input path="monitoringSource"/>
-                    <form:errors path="monitoringSource" />
-                </p>
-                <input type="submit" value="Save" />
-            </form:form>
-        </div>
-	</article>
+    <h2>mongo db</h2>
+    <table class="table table-bordered">
+        <tbody>
+            <tr>
+                <td style="width: 200px">url</td>
+                <td>${config.mongoUrl}</td>
+            </tr>
+            <tr>
+                <td>db name</td>
+                <td>${config.mongoDbName}</td>
+            </tr>
+            <tr>
+                <td>username</td>
+                <td>${config.mongoUsername}</td>
+            </tr>
+        </tbody>
+    </table>
 
-	<widget:footer />
+    <h2>security</h2>
+    <table class="table table-bordered">
+        <tr>
+            <td style="width: 200px">default username</td>
+            <td>${config.securityDefaultUsername}</td>
+        </tr>
+        <tr>
+            <td>default password</td>
+            <td>*****</td>
+        </tr>
+    </table>
+    <h2>config</h2>
+    <form:form action="/configuration" commandName="form" method="post" cssClass="form-inline">
+        monitoring source : <form:input path="monitoringSource"/>
+        <form:errors path="monitoringSource" />
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form:form>
+</div>
+
+<layout:footer/>
 </body>
 </html>

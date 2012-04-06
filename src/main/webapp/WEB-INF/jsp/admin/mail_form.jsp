@@ -1,10 +1,12 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 
+<%@ taglib tagdir="/WEB-INF/tags/layout" prefix="layout" %>
 <%@ taglib tagdir="/WEB-INF/tags/widgets" prefix="widget" %>
 
 <%--
@@ -24,45 +26,47 @@
   --%>
 
 <!DOCTYPE html>
-<html lang="fr">
-
-<widget:head />
+<html lang="en">
+<layout:head/>
 
 <body>
-	<widget:header />
-	
-	<article>
-		<widget:admin_nav />
-	
-		<h2>Mail configuration</h2>
+<layout:header/>
 
-        <div>
-            <form:form action="/mail/edit" commandName="form" method="post">
-                <p>
-                    smtp : <form:input path="smtp"/>
-                    <form:errors path="smtp" />
-                </p>
-				<p>
-                    port : <form:input path="port"/>
-                    <form:errors path="port" />
-                </p>
-				<p>
-                    user : <form:input path="user"/> (leave blank for no auth)
-                    <form:errors path="user" />
-                </p>
-				<p>
-                    password : <form:input path="password"/>
-                    <form:errors path="password" />
-                </p>
-				<p>
-                    sender : <form:input path="sender"/>
-                    <form:errors path="sender" />
-                </p>
-                <input type="submit" value="Save" />
-            </form:form>
-        </div>
-	</article>
-	
-	<widget:footer />
+<div class="container">
+    <widget:admin_nav/>
+
+    <h2>Mail configuration</h2>
+
+    <form:form action="/mail/edit" commandName="form" method="post" cssClass="form-horizontal">
+        <fieldset>
+            <div class="control-group">
+                <label class="control-label" for="smtp">smtp</label>
+                <div class="controls"><form:input path="smtp" id="smtp"/><form:errors path="smtp"/></div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="port">port</label>
+                <div class="controls"><form:input path="port" id="port"/><form:errors path="port"/></div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="user">user</label>
+                <div class="controls"><form:input path="user" id="user"/> (leave blank for no auth)<form:errors path="user"/></div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="password">password</label>
+                <div class="controls"><form:input path="password" id="password"/><form:errors path="password"/></div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="sender">sender</label>
+                <div class="controls"><form:input path="sender" id="sender"/><form:errors path="sender"/></div>
+            </div>
+            <div class="span6 offset5">
+                <button type="submit" class="btn btn-primary">Update</button>
+                <a href="/mail"><button type="submit" class="btn">Cancel</button></a>
+            </div>
+        </fieldset>
+    </form:form>
+</div>
+
+<layout:footer/>
 </body>
 </html>

@@ -16,9 +16,10 @@
 
 package com.github.dbourdette.otto.web.controller;
 
-import javax.inject.Inject;
-import javax.validation.Valid;
-
+import com.github.dbourdette.otto.service.mail.Mail;
+import com.github.dbourdette.otto.service.mail.MailConfiguration;
+import com.github.dbourdette.otto.service.mail.Mailer;
+import com.github.dbourdette.otto.web.util.FlashScope;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,10 +28,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.github.dbourdette.otto.service.mail.Mail;
-import com.github.dbourdette.otto.service.mail.MailConfiguration;
-import com.github.dbourdette.otto.service.mail.Mailer;
-import com.github.dbourdette.otto.web.util.FlashScope;
+import javax.inject.Inject;
+import javax.validation.Valid;
 
 /**
  * Edition of mail configuration
@@ -55,6 +54,7 @@ public class MailController {
 
     @RequestMapping("/mail/edit")
     public String edit(Model model) {
+        model.addAttribute("navItem", "mail");
         model.addAttribute("form", mailer.findConfiguration());
 
         return "admin/mail_form";
@@ -92,14 +92,14 @@ public class MailController {
         try {
             mailer.send(form);
 
-            flashScope.message("mail has been sent");
+            flashScope.message("Mail has been sent to " + form.getTo());
         } catch (Exception e) {
             model.addAttribute("stacktrace", ExceptionUtils.getFullStackTrace(e));
 
             return "error";
         }
 
-        return "redirect:/mail/sent";
+        return "redirect:/mail/send";
     }
 
     @RequestMapping("/mail/sent")

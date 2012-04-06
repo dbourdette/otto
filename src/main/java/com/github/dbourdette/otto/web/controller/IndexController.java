@@ -16,17 +16,15 @@
 
 package com.github.dbourdette.otto.web.controller;
 
-import java.io.IOException;
-import java.io.Writer;
-
-import javax.servlet.http.HttpServletResponse;
-
+import com.github.dbourdette.otto.source.Source;
+import com.github.dbourdette.otto.web.util.SourceGroups;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.github.dbourdette.otto.source.Source;
-import com.github.dbourdette.otto.web.util.SourceGroups;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.Writer;
 
 /**
  * @author damien bourdette
@@ -40,6 +38,11 @@ public class IndexController {
         model.addAttribute("groups", SourceGroups.findAll());
         
         return "index";
+    }
+
+    @RequestMapping("/login")
+    public String login(Model model) {
+        return "login";
     }
 
     @RequestMapping("/state")

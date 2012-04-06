@@ -23,25 +23,23 @@
   ~ limitations under the License.
   --%>
 
-<div>
-    <form:form action="" commandName="form" method="GET">
-        <p style="float: left">
-            Period <form:select path="period" items="${form.periods}"></form:select>
-        </p>
+<form:form action="" commandName="form" method="GET">
+    <p style="float: left">
+        Period <form:select path="period" items="${form.periods}"></form:select>
+    </p>
 
-        <p style="float: right">
-            <input type="submit" value="display" tabindex="7"/>
-        </p>
+    <p style="float: right">
+        <button type="submit" tabindex="7" class="btn btn-primary">display</button>
+    </p>
 
-        <p style="float: right;margin-right: 20px;">
-            <c:forEach var="reportConfig" items="${form.reportConfigs}">
-                <form:radiobutton path="reportId" value="${reportConfig.id}" label="${reportConfig.title}"/>
-            </c:forEach>
-        </p>
+    <p style="float: right;margin-right: 20px;">
+        <c:forEach var="reportConfig" items="${form.reportConfigs}">
+            <form:radiobutton path="reportId" value="${reportConfig.id}" label="${reportConfig.title}"/>
+        </c:forEach>
+    </p>
 
-        <p style="clear:both;"/>
-    </form:form>
-</div>
+    <p style="clear:both;"/>
+</form:form>
 
 <c:set var="query" value="period=${form.period}&amp;reportId=${form.reportId}"/>
 

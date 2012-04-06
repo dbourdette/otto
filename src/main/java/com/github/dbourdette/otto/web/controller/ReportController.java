@@ -16,15 +16,9 @@
 
 package com.github.dbourdette.otto.web.controller;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-
+import com.github.dbourdette.otto.report.Report;
+import com.github.dbourdette.otto.source.Source;
+import com.github.dbourdette.otto.web.form.ReportForm;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -41,9 +35,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.github.dbourdette.otto.report.Report;
-import com.github.dbourdette.otto.source.Source;
-import com.github.dbourdette.otto.web.form.ReportForm;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author damien bourdette
@@ -91,7 +89,7 @@ public class ReportController {
 
         Long t2 = System.currentTimeMillis();
 
-        String html = report.toGoogleChartHtml(1080, 750);
+        String html = report.toGoogleChartHtml(1170, 750);
 
         Long t3 = System.currentTimeMillis();
 

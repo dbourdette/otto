@@ -1,10 +1,12 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 
+<%@ taglib tagdir="/WEB-INF/tags/layout" prefix="layout" %>
 <%@ taglib tagdir="/WEB-INF/tags/widgets" prefix="widget" %>
 
 <%--
@@ -24,55 +26,53 @@
   --%>
 
 <!DOCTYPE html>
-<html lang="fr">
-
-<widget:head />
+<html lang="en">
+<layout:head/>
 
 <body>
-	<widget:header />
-	
-	<article>
-		<widget:admin_nav />
-	
-		<h2>User form</h2>
+<layout:header/>
 
-        <div>
-            <form:form action="/users" commandName="form" method="post">
-                <form:hidden path="id" />
-                <p>
-                    username : <form:input path="username"/>
-                    <form:errors path="username" />
-                </p>
-                <p>
-                    password : <form:password path="password" showPassword="true"/> (leave blank for external auth)
-                    <form:errors path="password" />
-                </p>
-                <p>
-                    admin : <form:checkbox path="admin"/>
-                    <form:errors path="admin" />
-                </p>
-                <p>
-                    sources : <form:input path="sources" size="80"/> (comma separated allowed sources)
-                    <form:errors path="sources" />
-                </p>
-                <input type="submit" value="Save" />
-            </form:form>
+<div class="container">
+    <widget:admin_nav />
+
+    <h2>User form</h2>
+
+    <form:form action="/users" commandName="form" method="post" cssClass="form-horizontal">
+        <form:hidden path="id" />
+        <div class="control-group">
+            <label class="control-label" for="username">username</label>
+            <div class="controls"><form:input path="username" id="username"/><form:errors path="username" /></div>
         </div>
+        <div class="control-group">
+            <label class="control-label" for="password">password</label>
+            <div class="controls"><form:password path="password" showPassword="true" id="password"/> (leave blank for external auth)<form:errors path="password" /></div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="admin">admin</label>
+            <div class="controls"><form:checkbox path="admin" id="admin"/><form:errors path="admin" /></div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="sources">sources</label>
+            <div class="controls"><form:input path="sources" size="80" id="sources"/> (comma separated allowed sources)<form:errors path="sources" /></div>
+        </div>
+        <div class="span6 offset5">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a href="/users"><button type="submit" class="btn">Cancel</button></a>
+        </div>
+    </form:form>
 
-        <c:if test="${not empty form.id}">
-            <br><br>
+    <c:if test="${not empty form.id}">
 
-            <h2>Delete this user</h2>
+        <h2>
+            Delete this user
+            <form:form id="deleteForm" action="/users" commandName="form" method="delete">
+                <form:hidden path="id" />
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form:form>
+        </h2>
+    </c:if>
+</div>
 
-            <div>
-                <form:form id="deleteForm" action="/users" commandName="form" method="delete">
-                    <form:hidden path="id" />
-                    <input type="submit" value="delete" />
-                </form:form>
-            </div>
-        </c:if>
-	</article>
-	
-	<widget:footer />
+<layout:footer/>
 </body>
 </html>

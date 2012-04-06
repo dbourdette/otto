@@ -1,10 +1,12 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 
+<%@ taglib tagdir="/WEB-INF/tags/layout" prefix="layout" %>
 <%@ taglib tagdir="/WEB-INF/tags/widgets" prefix="widget" %>
 
 <%--
@@ -24,30 +26,37 @@
   --%>
 
 <!DOCTYPE html>
-<html lang="fr">
-
-<widget:head />
+<html lang="en">
+<layout:head/>
 
 <body>
-	<widget:header />
+<layout:header/>
 
-	<article>
-        <widget:admin_nav />
+<div class="container">
+    <widget:admin_nav />
 
-        <div>
-            <c:forEach var="user" items="${users}">
-                <a href="/users/form?id=${user.id}">${fn:escapeXml(user.username)}</a>
-                <c:if test="${user.admin}">(admin)</c:if>
-                sources : ${user.sources}
-                <br/>
-            </c:forEach>
+    <h2>All users<a href="/users/form"><button class="btn btn-primary pull-right">Add user</button></a></h2>
 
-            <br/>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <td>user</td>
+                <td>admin</td>
+                <td>sources</td>
+            </tr>
+        </thead>
+        <tbody>
+        <c:forEach var="user" items="${users}">
+            <tr>
+                <td><a href="/users/form?id=${user.id}">${fn:escapeXml(user.username)}</a></td>
+                <td>${user.admin ? "yes" : "no"}</td>
+                <td>${user.sources}</td>
+            </tr>
+        </c:forEach>
+        </tbody>
+    </table>
+</div>
 
-            <a href="/users/form">Add user</a>
-        </div>
-	</article>
-
-	<widget:footer />
+<layout:footer/>
 </body>
 </html>

@@ -19,7 +19,9 @@
   ~ limitations under the License.
   --%>
 
-<h1>Configuration</h1>
+<div class="page-header">
+    <h1>Configuration</h1>
+</div>
 
 <div class="nav">
 	<c:if test="${navItem eq 'configuration'}">configuration</c:if>

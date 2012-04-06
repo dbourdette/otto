@@ -1,10 +1,12 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 
+<%@ taglib tagdir="/WEB-INF/tags/layout" prefix="layout" %>
 <%@ taglib tagdir="/WEB-INF/tags/widgets" prefix="widget" %>
 
 <%--
@@ -24,37 +26,37 @@
   --%>
 
 <!DOCTYPE html>
-<html lang="fr">
-
-<widget:head />
+<html lang="en">
+<layout:head/>
 
 <body>
-	<widget:header />
+<layout:header/>
 
-	<article>
-		<widget:admin_nav />
+<div class="container">
+    <widget:admin_nav/>
 
-		<h2>Mail configuration</h2>
+    <h2>Send mail</h2>
 
-        <div>
-            <form:form action="/mail/send" commandName="form" method="post">
-                <p>
-                    to : <form:input path="to" size="50"/> (comma separated values)
-                    <form:errors path="to" />
-                </p>
-                <p>
-                    subject : <form:input path="subject" size="80"/>
-                    <form:errors path="subject" />
-                </p>
-                <p>
-                    html : <form:textarea path="html" rows="20" cols="100"/>
-                    <form:errors path="html" />
-                </p>
-                <input type="submit" value="Send" />
-            </form:form>
+    <form:form action="/mail/send" commandName="form" method="post" cssClass="form-horizontal">
+        <div class="control-group">
+            <label class="control-label" for="to">to</label>
+            <div class="controls"><form:input path="to" id="to" style="width:500px"/> (comma separated values)<form:errors path="to" /></div>
         </div>
-	</article>
+        <div class="control-group">
+            <label class="control-label" for="subject">subject</label>
+            <div class="controls"><form:input path="subject" id="subject" style="width:500px"/><form:errors path="subject" /></div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="html">html</label>
+            <div class="controls"><form:textarea path="html" rows="20" style="width:500px" id="html"/><form:errors path="html" /></div>
+        </div>
+        <div class="span6 offset5">
+            <button type="submit" class="btn btn-danger">Send</button>
+            <a href="/mail"><button type="submit" class="btn">Cancel</button></a>
+        </div>
+    </form:form>
+</div>
 
-	<widget:footer />
+<layout:footer/>
 </body>
 </html>

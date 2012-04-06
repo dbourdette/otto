@@ -1,8 +1,5 @@
 <%@ tag language="java" pageEncoding="UTF-8"%>
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-
 <%--
   ~ Copyright 2011 Damien Bourdette
   ~
@@ -19,11 +16,9 @@
   ~ limitations under the License.
   --%>
 
-<c:if test="${not empty message}">
-    <div class="container">
-        <div class="alert">
-            <a class="close" data-dismiss="alert">×</a>
-            ${fn:escapeXml(message)}
-        </div>
+<br>
+<footer class="container">
+    <div class="well">
+        <a href="https://github.com/dbourdette/otto" target="_blank" style="float: right">oTTo on GitHub</a>
     </div>
-</c:if>
+</footer>

@@ -6,6 +6,7 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 
+<%@ taglib tagdir="/WEB-INF/tags/layout" prefix="layout" %>
 <%@ taglib tagdir="/WEB-INF/tags/widgets" prefix="widget" %>
 
 <%--
@@ -25,35 +26,35 @@
   --%>
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 
-<widget:head/>
+<layout:head/>
 
 <body>
-<widget:header/>
+<layout:header/>
 
-<article>
-    <widget:nav/>
+<div class="container">
+    <widget:nav />
 
-    <div>
-        <span>${events.totalCount} events</span>
+    <div class="well">${events.totalCount} events</div>
 
-        <widget:pagination path="/sources/${name}/events" page="${events}"/>
+    <widget:pagination path="/sources/${name}/events" page="${events}"/>
 
-        <div class="logs">
-            <c:forEach var="event" items="${events.items}">
-                ${event}<br/>
-            </c:forEach>
-        </div>
+    <table class="table table-condensed">
+        <c:forEach var="event" items="${events.items}">
+            <tr>
+                <td>${event}</td>
+            </tr>
+        </c:forEach>
+    </table>
 
-        <widget:pagination path="/sources/${name}/events" page="${events}"/>
+    <widget:pagination path="/sources/${name}/events" page="${events}"/>
 
-        <sec:authorize access="hasRole('ROLE_ADMIN')">
-            <a href="/sources/${name}/events/delete">Delete events</a>
-        </sec:authorize>
-    </div>
-</article>
+    <sec:authorize access="hasRole('ROLE_ADMIN')">
+        <a href="/sources/${name}/events/delete">Delete events</a>
+    </sec:authorize>
+</div>
 
-<widget:footer/>
+<layout:footer/>
 </body>
 </html>

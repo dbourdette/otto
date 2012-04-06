@@ -6,6 +6,7 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 
+<%@ taglib tagdir="/WEB-INF/tags/layout" prefix="layout" %>
 <%@ taglib tagdir="/WEB-INF/tags/widgets" prefix="widget" %>
 
 <%--
@@ -25,37 +26,38 @@
   --%>
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 
-<widget:head/>
+<layout:head/>
 
 <body>
-<widget:header/>
+<layout:header/>
 
-<article>
-    <h1>Existing event sources</h1>
-
-    <div>
-        <ul>
-            <c:forEach var="group" items="${groups.groups}">
-                <h2>${group.name}</h2>
-                <c:forEach var="source" items="${group.sources}">
-                    <sec:authorize access="T(com.github.dbourdette.otto.security.Security).hasSource('${source.name}')">
-                        <li><a href="/sources/${source.name}">
-                            <c:if test="${not empty source.displayName}">${fn:escapeXml(source.displayName)}</c:if>
-                            <c:if test="${empty source.displayName}">${fn:escapeXml(source.name)}</c:if>
-                        </a></li>
-                    </sec:authorize>
-                </c:forEach>
-            </c:forEach>
-        </ul>
-
+<div class="container">
+    <div class="page-header">
         <sec:authorize access="hasRole('ROLE_ADMIN')">
-            <a href="/sources/form">create a new event source</a>
+            <a href="/sources/form" style="float: right">
+                <button class="btn btn-primary">new source</button>
+            </a>
         </sec:authorize>
+        <h1>Existing event sources</h1>
     </div>
-</article>
 
-<widget:footer/>
+    <ul class="nav nav-tabs nav-stacked">
+        <c:forEach var="group" items="${groups.groups}">
+            <h2>${group.name}</h2>
+            <c:forEach var="source" items="${group.sources}">
+                <sec:authorize access="T(com.github.dbourdette.otto.security.Security).hasSource('${source.name}')">
+                    <li><a href="/sources/${source.name}">
+                        <c:if test="${not empty source.displayName}">${fn:escapeXml(source.displayName)}</c:if>
+                        <c:if test="${empty source.displayName}">${fn:escapeXml(source.name)}</c:if>
+                    </a></li>
+                </sec:authorize>
+            </c:forEach>
+        </c:forEach>
+    </ul>
+</div>
+
+<layout:footer/>
 </body>
 </html>

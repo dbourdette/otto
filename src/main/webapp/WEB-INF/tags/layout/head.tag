@@ -1,8 +1,5 @@
 <%@ tag language="java" pageEncoding="UTF-8"%>
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-
 <%--
   ~ Copyright 2011 Damien Bourdette
   ~
@@ -19,11 +16,19 @@
   ~ limitations under the License.
   --%>
 
-<c:if test="${not empty message}">
-    <div class="container">
-        <div class="alert">
-            <a class="close" data-dismiss="alert">×</a>
-            ${fn:escapeXml(message)}
-        </div>
-    </div>
-</c:if>
+<head>
+    <meta charset="utf-8">
+    <title>Otto event server</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+
+    <script src="/bootstrap/js/jquery-1.7.2.min.js"></script>
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>

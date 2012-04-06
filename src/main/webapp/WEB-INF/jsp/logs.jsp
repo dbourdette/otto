@@ -1,11 +1,12 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 
+<%@ taglib tagdir="/WEB-INF/tags/layout" prefix="layout" %>
 <%@ taglib tagdir="/WEB-INF/tags/widgets" prefix="widget" %>
 
 <%--
@@ -25,31 +26,46 @@
   --%>
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 
-<widget:head />
+<layout:head/>
 
 <body>
-	<widget:header />
-	
-	<article>
-		<h1>Recent activity</h1>
+<layout:header/>
 
-        <div>
-            <span>${logs.totalCount} log entries</span>
+<div class="container">
+    <div class="page-header">
+        <h1>Recent activity</h1>
+    </div>
 
-            <widget:pagination path="/logs" page="${logs}" />
+    <div class="row">
+        <span class="span12">${logs.totalCount} log entries</span>
+    </div>
 
-            <ul>
-                <c:forEach var="log" items="${logs.items}">
-                    <li><fmt:formatDate value="${log.date}" pattern="yyyy-MM-dd HH:mm:ss" /> <b>${log.user}</b> - ${log.message}</li>
-                </c:forEach>
-            </ul>
+    <widget:pagination path="/logs" page="${logs}"/>
 
-            <widget:pagination path="/logs" page="${logs}" />
-        </div>
-	</article>
-	
-	<widget:footer />
+    <table class="table table-striped table-condensed">
+        <thead>
+        <tr>
+            <th>date</th>
+            <th>user</th>
+            <th>message</th>
+        </tr>
+        </thead>
+        <tbody>
+        <c:forEach var="log" items="${logs.items}">
+            <tr>
+                <td><fmt:formatDate value="${log.date}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+                <td>${log.user}</td>
+                <td>${log.message}</td>
+            </tr>
+        </c:forEach>
+        </tbody>
+    </table>
+
+    <widget:pagination path="/logs" page="${logs}"/>
+</div>
+
+<layout:footer/>
 </body>
 </html>

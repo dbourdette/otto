@@ -2,13 +2,11 @@
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 
-<%@ taglib uri="http://github.com/dbourdette/otto/quartz" prefix="quartz" %>
-
+<%@ taglib tagdir="/WEB-INF/tags/layout" prefix="layout" %>
 <%@ taglib tagdir="/WEB-INF/tags/widgets" prefix="widget" %>
 
 <%--
@@ -28,82 +26,67 @@
   --%>
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 
-<widget:head/>
+<layout:head/>
 
 <body>
-<widget:header/>
+<layout:header/>
 
-<article>
-    <widget:nav/>
+<div class="container">
+    <widget:nav />
 
-    <div>
-        Event count in db : ${source.count} <br/>
+    <div class="well">Event count in db : ${source.count}</div>
 
-        <h3>Event frequency</h3>
-        <table>
-            <colgroup>
-                <col class="label">
-                <col>
-            </colgroup>
+    <h3>Event frequency</h3>
+    <table class="table table-bordered">
+        <tr>
+            <td style="width: 200px;">today</td>
+            <td><fmt:formatNumber value="${todayFrequency.eventsPerMinute}" pattern="# ###.######"/> events per minute</td>
+        </tr>
+        <tr>
+            <td>yesterday</td>
+            <td><fmt:formatNumber value="${yesterdayFrequency.eventsPerMinute}" pattern="# ###.######"/> events per minute</td>
+        </tr>
+        <tr>
+            <td>last week</td>
+            <td><fmt:formatNumber value="${lastWeekFrequency.eventsPerMinute}" pattern="# ###.######"/> events per minute</td>
+        </tr>
+    </table>
+
+    <h3>Mongodb collections</h3>
+    <table class="table table-bordered">
+        <tr>
+            <td style="width: 200px;">events</td>
+            <td>${source.collectionName}</td>
+        </tr>
+        <tr>
+            <td>configuration</td>
+            <td>${source.configCollectionName}</td>
+        </tr>
+        <tr>
+            <td>report configuration</td>
+            <td>${source.reportsCollectionName}</td>
+        </tr>
+        <tr>
+            <td>mail report configuration</td>
+            <td>${source.mailReportsCollectionName}</td>
+        </tr>
+    </table>
+
+    <h3>Statistics</h3>
+    <table class="table table-bordered">
+        <c:forEach var="stat" items="${source.stats}">
             <tr>
-                <td>today</td>
-                <td><fmt:formatNumber value="${todayFrequency.eventsPerMinute}" pattern="# ###.######"/> events per minute</td>
+                <td style="width: 200px;">${stat.key}</td>
+                <td>${stat.value}</td>
             </tr>
-            <tr>
-                <td>yesterday</td>
-                <td><fmt:formatNumber value="${yesterdayFrequency.eventsPerMinute}" pattern="# ###.######"/> events per minute</td>
-            </tr>
-            <tr>
-                <td>last week</td>
-                <td><fmt:formatNumber value="${lastWeekFrequency.eventsPerMinute}" pattern="# ###.######"/> events per minute</td>
-            </tr>
-        </table>
+        </c:forEach>
+    </table>
 
-        <h3>Mongodb collections</h3>
-        <table>
-            <colgroup>
-                <col class="label">
-                <col>
-            </colgroup>
-            <tr>
-                <td>events</td>
-                <td>${source.collectionName}</td>
-            </tr>
-            <tr>
-                <td>configuration</td>
-                <td>${source.configCollectionName}</td>
-            </tr>
-            <tr>
-                <td>report configuration</td>
-                <td>${source.reportsCollectionName}</td>
-            </tr>
-            <tr>
-                <td>mail report configuration</td>
-                <td>${source.mailReportsCollectionName}</td>
-            </tr>
-        </table>
+    <br/><br/>
+</div>
 
-        <h3>Statistics</h3>
-        <table>
-            <colgroup>
-                <col class="label">
-                <col>
-            </colgroup>
-            <c:forEach var="stat" items="${source.stats}">
-                <tr>
-                    <td>${stat.key}</td>
-                    <td>${stat.value}</td>
-                </tr>
-            </c:forEach>
-        </table>
-
-        <br/><br/>
-
-    </div>
-</article>
-
-<widget:footer/>
+<layout:footer/>
 </body>
 </html>
