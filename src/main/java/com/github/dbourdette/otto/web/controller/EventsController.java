@@ -44,7 +44,6 @@ public class EventsController {
         Source source = Source.findByName(name);
 
         model.addAttribute("source", source);
-        model.addAttribute("navItem", "logs");
         model.addAttribute("events", source.findEvents(page));
 
         return "sources/events";
@@ -52,8 +51,6 @@ public class EventsController {
 
     @RequestMapping("/delete")
     public String clearForm(@PathVariable String name, Model model) {
-        model.addAttribute("navItem", "logs");
-
         Source source = Source.findByName(name);
 
         if (source.isCapped()) {

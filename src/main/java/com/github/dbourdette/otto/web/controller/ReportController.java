@@ -16,9 +16,15 @@
 
 package com.github.dbourdette.otto.web.controller;
 
-import com.github.dbourdette.otto.report.Report;
-import com.github.dbourdette.otto.source.Source;
-import com.github.dbourdette.otto.web.form.ReportForm;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -35,13 +41,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import com.github.dbourdette.otto.report.Report;
+import com.github.dbourdette.otto.source.Source;
+import com.github.dbourdette.otto.web.form.ReportForm;
 
 /**
  * @author damien bourdette
@@ -60,7 +62,6 @@ public class ReportController {
         form.setReportConfigs(source.getReportConfigs());
 
         model.addAttribute("source", source);
-        model.addAttribute("navItem", "reports");
         model.addAttribute("subNavItem", "stats");
         model.addAttribute("frequency", source.findEventsFrequency(form.getInterval()));
         model.addAttribute("form", form);
@@ -77,7 +78,6 @@ public class ReportController {
         form.setReportConfigs(source.getReportConfigs());
 
         model.addAttribute("source", source);
-        model.addAttribute("navItem", "reports");
         model.addAttribute("subNavItem", "graph");
         model.addAttribute("form", form);
 
@@ -111,7 +111,6 @@ public class ReportController {
         form.setReportConfigs(source.getReportConfigs());
 
         model.addAttribute("source", source);
-        model.addAttribute("navItem", "reports");
         model.addAttribute("subNavItem", "pie");
         model.addAttribute("form", form);
 
@@ -187,17 +186,5 @@ public class ReportController {
         report.sortBySum();
 
         response.getWriter().write(report.toCsv());
-    }
-
-    @RequestMapping({"/sources/{name}/reports/table"})
-    public String table(@PathVariable String name, ReportForm form, HttpServletRequest request, Model model) throws IOException {
-        Source source = Source.findByName(name);
-
-        form.fillWithDefault(source.getDefaultGraphParameters(), request);
-        form.setReportConfigs(source.getReportConfigs());
-
-        model.addAttribute("table", form.buildReport(source).toHtmlTable());
-
-        return "sources/reports/table";
     }
 }

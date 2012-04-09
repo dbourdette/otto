@@ -43,9 +43,9 @@
         <h1>Existing event sources</h1>
     </div>
 
-    <ul class="nav nav-tabs nav-stacked">
+    <ul class="nav nav-list">
         <c:forEach var="group" items="${groups.groups}">
-            <h2>${group.name}</h2>
+            <li class="nav-header">${group.name}</li>
             <c:forEach var="source" items="${group.sources}">
                 <sec:authorize access="T(com.github.dbourdette.otto.security.Security).hasSource('${source.name}')">
                     <li><a href="/sources/${source.name}">

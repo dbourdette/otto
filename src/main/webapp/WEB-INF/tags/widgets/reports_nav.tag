@@ -25,7 +25,7 @@
 
 <form:form action="" commandName="form" method="GET">
     <p style="float: left">
-        Period <form:select path="period" items="${form.periods}"></form:select>
+        Period <form:select path="period" items="${form.periods}" />
     </p>
 
     <p style="float: right">
@@ -34,7 +34,9 @@
 
     <p style="float: right;margin-right: 20px;">
         <c:forEach var="reportConfig" items="${form.reportConfigs}">
-            <form:radiobutton path="reportId" value="${reportConfig.id}" label="${reportConfig.title}"/>
+            <label class="radio inline">
+            <form:radiobutton path="reportId" value="${reportConfig.id}"/> ${reportConfig.title}
+            </label>
         </c:forEach>
     </p>
 
@@ -50,11 +52,8 @@
     <c:if test="${subNavItem eq 'pie'}">- pie</c:if>
     <c:if test="${not (subNavItem eq 'pie')}">- <a href="/sources/${name}/reports/pie?${query}">pie</a></c:if>
 
-    <c:if test="${subNavItem eq 'stats'}">- stats</c:if>
-    <c:if test="${not (subNavItem eq 'stats')}">- <a href="/sources/${name}/reports/stats?${query}">stats</a></c:if>
+    <c:if test="${subNavItem eq 'stats'}">- table</c:if>
+    <c:if test="${not (subNavItem eq 'stats')}">- <a href="/sources/${name}/reports/stats?${query}">table</a></c:if>
 
-    <c:if test="${subNavItem eq 'table'}">- table</c:if>
-    <c:if test="${not (subNavItem eq 'table')}">- <a href="/sources/${name}/reports/table?${query}">table</a></c:if>
-
-    - <a href="/sources/${name}/reports/csv?${query}">csv</a>
+    - <a href="/sources/${name}/reports/csv?${query}">csv <i class="icon-download"></i></a>
 </div>

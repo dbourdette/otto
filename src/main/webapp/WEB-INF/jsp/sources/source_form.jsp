@@ -1,11 +1,6 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-
-<%@ taglib tagdir="/WEB-INF/tags/widgets" prefix="widget" %>
+<%@include file="../directives.jsp"%>
 
 <%--
   ~ Copyright 2011 Damien Bourdette
@@ -24,45 +19,41 @@
   --%>
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 
-<widget:head />
+<layout:head/>
 
 <body>
-	<widget:header />
-	
-	<article>
-		<widget:nav />
-	
-		<h2>New source</h2>
+<layout:header/>
 
-        <div>
-            <form:form action="/sources" commandName="form" method="post">
-                <p>
-                    name : <form:input path="name"/>
-                    <form:errors path="name" />
-                </p>
-                <p>
-                    display group : <form:input path="displayGroup"/>
-                    <form:errors path="displayGroup" />
-                </p>
-                <p>
-                    display name : <form:input path="displayName"/>
-                    <form:errors path="displayName" />
-                </p>
-                <p>
-                    size : <form:input path="size"/> (ex : 100M)
-                    <form:errors path="size" />
-                </p>
-                <p>
-                    max events : <form:input path="maxEvents"/> events
-                    <form:errors path="maxEvents" />
-                </p>
-                <input type="submit" value="Create" />
-            </form:form>
-        </div>
-	</article>
-	
-	<widget:footer />
+<div class="container">
+    <h2>New source</h2>
+
+    <div>
+        <form:form action="/sources" commandName="form" method="post" cssClass="form-horizontal">
+            <bootstrap:control path="name" label="Name">
+                <form:input path="name"/> Technical name used by apis
+            </bootstrap:control>
+            <bootstrap:control path="displayGroup" label="Display group">
+                <form:input path="displayGroup"/> For web ui
+            </bootstrap:control>
+            <bootstrap:control path="displayName" label="Display name">
+                <form:input path="displayName"/> For web ui
+            </bootstrap:control>
+            <fieldset>
+                <legend>Capping (optional)</legend>
+                <bootstrap:control path="size" label="Size">
+                    <div class="input-append"><form:input path="size" cssClass="input-small" cssStyle="text-align: right"/><span class="add-on">ex : 100M</span> Only size is required for capping</div>
+                </bootstrap:control>
+                <bootstrap:control path="maxEvents" label="Max">
+                    <form:input path="maxEvents" cssClass="input-small" cssStyle="text-align: right"/> events (max can only be enforced at creation time)
+                </bootstrap:control>
+            </fieldset>
+            <bootstrap:submit label="Create" cancelUrl="/sources" />
+        </form:form>
+    </div>
+</div>
+
+<layout:footer/>
 </body>
 </html>

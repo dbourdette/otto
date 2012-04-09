@@ -1,11 +1,6 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-
-<%@ taglib tagdir="/WEB-INF/tags/widgets" prefix="widget" %>
+<%@include file="../directives.jsp"%>
 
 <%--
   ~ Copyright 2011 Damien Bourdette
@@ -24,27 +19,28 @@
   --%>
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 
-<widget:head />
+<layout:head/>
 
 <body>
-	<widget:header />
-	
-	<article>
-		<widget:nav />
+<layout:header/>
 
-        <div>
-            <p>You are about to delete ${name} source</p>
+<div class="container">
+    <widget:nav />
 
-            <br/>
-
-            <form:form id="deleteForm" action="/sources/${name}" commandName="form" method="delete">
-                <input type="submit" value="delete source" />
+    <div class="row">
+        <h2 class="span6 offset2">You are about to delete ${name} source</h2>
+        <div class="span2">
+            <form:form id="deleteForm" action="/sources/${name}" commandName="form" method="delete" cssClass="form-inline">
+                <button type="submit" class="btn btn-danger">Confirm</button>
+                <a href="/sources/${name}/configuration"><button type="submit" class="btn">Cancel</button></a>
             </form:form>
         </div>
-	</article>
-	
-	<widget:footer />
+    </div>
+
+</div>
+
+<layout:footer/>
 </body>
 </html>

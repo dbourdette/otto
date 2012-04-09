@@ -1,11 +1,6 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-
-<%@ taglib tagdir="/WEB-INF/tags/widgets" prefix="widget" %>
+<%@include file="../directives.jsp"%>
 
 <%--
   ~ Copyright 2011 Damien Bourdette
@@ -24,34 +19,29 @@
   --%>
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 
-<widget:head />
+<layout:head/>
 
 <body>
-	<widget:header />
+<layout:header/>
 
-	<article>
-		<widget:nav />
+<div class="container">
+    <widget:nav />
 
-		<h2>Transform operation</h2>
+    <h2>Transform operation</h2>
 
-        <div>
-            <form:form action="/sources/${name}/transform" commandName="form" method="post">
-                <p>
-                    name : <form:input path="parameter"/>
-                    <form:errors path="parameter" />
-                </p>
-                <p>
-                    operations : <form:input path="operations" size="50"/> (comma separated values)
-                    <form:errors path="operations" />
-                </p>
-                <input type="submit" value="Save" />
-            </form:form>
-        </div>
+    <form:form action="/sources/${name}/transform" commandName="form" method="post" cssClass="form-horizontal">
+        <bootstrap:control path="parameter" label="Parameter">
+            <form:input path="parameter"/>
+        </bootstrap:control>
+        <bootstrap:control path="operations" label="Operations">
+            <form:input path="operations" size="50"/> (comma separated values)
+        </bootstrap:control>
+        <bootstrap:submit cancelUrl="/sources/${name}/configuration" />
+    </form:form>
+</div>
 
-	</article>
-
-	<widget:footer />
+<layout:footer/>
 </body>
 </html>

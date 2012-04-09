@@ -1,13 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
-<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
-
-<%@ taglib tagdir="/WEB-INF/tags/layout" prefix="layout" %>
-<%@ taglib tagdir="/WEB-INF/tags/widgets" prefix="widget" %>
+<%@include file="../directives.jsp"%>
 
 <%--
   ~ Copyright 2011 Damien Bourdette
@@ -38,32 +31,22 @@
     <h2>Mail configuration</h2>
 
     <form:form action="/mail/edit" commandName="form" method="post" cssClass="form-horizontal">
-        <fieldset>
-            <div class="control-group">
-                <label class="control-label" for="smtp">smtp</label>
-                <div class="controls"><form:input path="smtp" id="smtp"/><form:errors path="smtp"/></div>
-            </div>
-            <div class="control-group">
-                <label class="control-label" for="port">port</label>
-                <div class="controls"><form:input path="port" id="port"/><form:errors path="port"/></div>
-            </div>
-            <div class="control-group">
-                <label class="control-label" for="user">user</label>
-                <div class="controls"><form:input path="user" id="user"/> (leave blank for no auth)<form:errors path="user"/></div>
-            </div>
-            <div class="control-group">
-                <label class="control-label" for="password">password</label>
-                <div class="controls"><form:input path="password" id="password"/><form:errors path="password"/></div>
-            </div>
-            <div class="control-group">
-                <label class="control-label" for="sender">sender</label>
-                <div class="controls"><form:input path="sender" id="sender"/><form:errors path="sender"/></div>
-            </div>
-            <div class="span6 offset5">
-                <button type="submit" class="btn btn-primary">Update</button>
-                <a href="/mail"><button type="submit" class="btn">Cancel</button></a>
-            </div>
-        </fieldset>
+        <bootstrap:control path="smtp" label="Stmp">
+            <form:input path="smtp" id="smtp"/>
+        </bootstrap:control>
+        <bootstrap:control path="port" label="Port">
+            <form:input path="port" id="port"/>
+        </bootstrap:control>
+        <bootstrap:control path="user" label="User">
+            <form:input path="user" id="user"/> (leave blank for no auth)
+        </bootstrap:control>
+        <bootstrap:control path="password" label="Password">
+            <form:input path="password" id="password"/>
+        </bootstrap:control>
+        <bootstrap:control path="sender" label="Sender">
+            <form:input path="sender" id="sender"/>
+        </bootstrap:control>
+        <bootstrap:submit label="Update" cancelUrl="/mail" />
     </form:form>
 </div>
 

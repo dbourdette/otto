@@ -64,8 +64,6 @@ public class SourcesController {
 
     @RequestMapping({"/sources/{name}/configuration"})
     public String source(@PathVariable String name, Model model) {
-        model.addAttribute("navItem", "configuration");
-
         Source source = Source.findByName(name);
 
         model.addAttribute("source", source);
@@ -81,8 +79,6 @@ public class SourcesController {
 
     @RequestMapping({"/sources/{name}/statistics"})
     public String statistics(@PathVariable String name, Model model) {
-        model.addAttribute("navItem", "statistics");
-
         Source source = Source.findByName(name);
 
         model.addAttribute("source", source);
@@ -108,6 +104,10 @@ public class SourcesController {
             } catch (Exception e) {
                 result.rejectValue("size", "size.invalidPattern");
             }
+        }
+
+        if (Source.exists(form.getName())) {
+            result.rejectValue("name", "source.alreadyExists");
         }
 
         if (result.hasErrors()) {
@@ -171,6 +171,8 @@ public class SourcesController {
             return "sources/aggregation_form";
         }
 
+        flashScope.message("Aggregation has been added to source " + name);
+
         Source.findByName(name).saveAggregation(form);
 
         return "redirect:/sources/{name}/configuration";
@@ -191,6 +193,8 @@ public class SourcesController {
 
             return "sources/default_graph_params_form";
         }
+
+        flashScope.message("Default graph parameters have been set for source " + name);
 
         Source.findByName(name).setDefaultGraphParameters(form);
 
@@ -217,6 +221,8 @@ public class SourcesController {
         if (result.hasErrors()) {
             return "sources/capping_form";
         }
+
+        flashScope.message("Source " + name + " has been capped");
 
         Source.findByName(name).cap(form);
 

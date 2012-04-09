@@ -1,11 +1,6 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-
-<%@ taglib tagdir="/WEB-INF/tags/widgets" prefix="widget" %>
+<%@include file="../directives.jsp" %>
 
 <%--
   ~ Copyright 2011 Damien Bourdette
@@ -24,29 +19,26 @@
   --%>
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 
-<widget:head />
+<layout:head/>
 
 <body>
-	<widget:header />
+<layout:header/>
 
-	<article>
-		<widget:nav />
+<div class="container">
+    <widget:nav/>
 
-		<h2>Default graph parameters</h2>
+    <h2>Default graph parameters</h2>
 
-        <div>
-            <form:form action="/sources/${name}/default-graph-params" commandName="form" method="post">
-                <p>
-                    Period <form:select path="period" items="${periods}" />
-                    <form:errors path="period" />
-                </p>
-                <input type="submit" value="Save" />
-            </form:form>
-        </div>
-	</article>
+    <form:form action="/sources/${name}/default-graph-params" commandName="form" method="post" cssClass="form-horizontal">
+        <bootstrap:control path="period" label="Period">
+            <form:select path="period" items="${periods}" id="period"/>
+        </bootstrap:control>
+        <bootstrap:submit cancelUrl="/sources/${name}/configuration"/>
+    </form:form>
+</div>
 
-	<widget:footer />
+<layout:footer/>
 </body>
 </html>

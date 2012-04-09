@@ -54,7 +54,6 @@ public class BatchController {
         Source source = Source.findByName(name);
 
         model.addAttribute("source", source);
-		model.addAttribute("navItem", "batch");
 		model.addAttribute("form", new BatchForm());
 
 		return "sources/batch_form";

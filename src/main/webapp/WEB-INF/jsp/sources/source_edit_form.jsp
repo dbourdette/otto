@@ -1,11 +1,6 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-
-<%@ taglib tagdir="/WEB-INF/tags/widgets" prefix="widget" %>
+<%@include file="../directives.jsp"%>
 
 <%--
   ~ Copyright 2011 Damien Bourdette
@@ -24,37 +19,33 @@
   --%>
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 
-<widget:head />
+<layout:head/>
 
 <body>
-	<widget:header />
-	
-	<article>
-		<widget:nav />
-	
-		<h2>Edit source</h2>
+<layout:header/>
 
-        <div>
-            <form:form action="/sources/edit" commandName="form" method="post">
-                <p>
-                    name : ${form.name}
-                    <form:hidden path="name" />
-                </p>
-                <p>
-                    display group : <form:input path="displayGroup"/>
-                    <form:errors path="displayGroup" />
-                </p>
-                <p>
-                    display name : <form:input path="displayName"/>
-                    <form:errors path="displayName" />
-                </p>
-                <input type="submit" value="Save" />
-            </form:form>
-        </div>
-	</article>
-	
-	<widget:footer />
+<div class="container">
+    <widget:nav />
+
+    <h2>Edit source</h2>
+
+    <form:form action="/sources/edit" commandName="form" method="post" cssClass="form-horizontal">
+        <bootstrap:control path="name" label="Name">
+            <div style="padding-top: 5px">${form.name}</div>
+            <form:hidden path="name" />
+        </bootstrap:control>
+        <bootstrap:control path="displayGroup" label="Display group">
+            <form:input path="displayGroup"/> For web ui
+        </bootstrap:control>
+        <bootstrap:control path="displayName" label="Display name">
+            <form:input path="displayName"/> For web ui
+        </bootstrap:control>
+        <bootstrap:submit cancelUrl="/sources/${name}/configuration" />
+    </form:form>
+</div>
+
+<layout:footer/>
 </body>
 </html>

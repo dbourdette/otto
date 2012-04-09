@@ -1,11 +1,6 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-
-<%@ taglib tagdir="/WEB-INF/tags/widgets" prefix="widget" %>
+<%@include file="../directives.jsp"%>
 
 <%--
   ~ Copyright 2011 Damien Bourdette
@@ -24,37 +19,32 @@
   --%>
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 
-<widget:head />
+<layout:head/>
 
 <body>
-	<widget:header />
+<layout:header/>
 
-	<article>
-		<widget:nav />
+<div class="container">
+    <widget:nav />
 
-		<h2>Add an index</h2>
+    <h2>Add an index</h2>
 
-        <div>
-            <form:form action="/sources/${name}/indexes" commandName="form" method="post">
-                <p>
-                    key : <form:input path="key"/> (ex : date)
-                    <form:errors path="key" />
-                </p>
-                <p>
-                    ascending : <form:checkbox path="ascending"/> (should be descending for date key)
-                    <form:errors path="ascending" />
-                </p>
-                <p>
-                    background : <form:checkbox path="background"/> (build index without blocking database)
-                    <form:errors path="background" />
-                </p>
-                <input type="submit" value="Create" />
-            </form:form>
-        </div>
-	</article>
+    <form:form action="/sources/${name}/indexes" commandName="form" method="post" cssClass="form-horizontal">
+        <bootstrap:control path="key" label="Key">
+            <form:input path="key"/> (ex : date)
+        </bootstrap:control>
+        <bootstrap:control path="ascending" label="Ascending">
+            <form:checkbox path="ascending"/> (should be descending for date key)
+        </bootstrap:control>
+        <bootstrap:control path="background" label="Background">
+            <form:checkbox path="background"/> (build index without blocking database)
+        </bootstrap:control>
+        <bootstrap:submit label="Create" cancelUrl="/sources/${name}/configuration" />
+    </form:form>
+</div>
 
-	<widget:footer />
+<layout:footer/>
 </body>
 </html>

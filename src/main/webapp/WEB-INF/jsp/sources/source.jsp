@@ -1,15 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
-<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
-
-<%@ taglib uri="http://github.com/dbourdette/otto/quartz" prefix="quartz" %>
-
-<%@ taglib tagdir="/WEB-INF/tags/widgets" prefix="widget" %>
+<%@include file="../directives.jsp"%>
 
 <%--
   ~ Copyright 2011 Damien Bourdette
@@ -28,60 +19,100 @@
   --%>
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 
-<widget:head/>
+<layout:head/>
 
 <body>
-<widget:header/>
+<layout:header/>
 
-<article>
-    <widget:nav/>
+<div class="container">
+    <widget:nav />
 
-    <div>
-        <sec:authorize access="hasRole('ROLE_ADMIN')">
-            <br/>
-            Capping : ${source.capped ? 'yes' : 'no'}
-            <c:if test="${source.capped}">
-                (size : ${source.size}, max : <fmt:formatNumber value="${source.max}" type="number"/>)
-            </c:if>
-            <c:if test="${not source.capped}">
-                (<a href="/sources/${name}/capping/form">add capping</a>)
-            </c:if>
-            <br/><br/>
-            <a href="/sources/${name}/aggregation/form">Aggregation</a> :
-            <c:if test="${aggregation.timeFrame eq 'MILLISECOND'}">none</c:if>
-            <c:if test="${not (aggregation.timeFrame eq 'MILLISECOND')}">${aggregation.timeFrame} on attribute ${aggregation.attributeName}</c:if>
-            <br/><br/>
-            <a href="/sources/${name}/default-graph-params/form">Default gragh parameters</a> :
-            <c:if test="${not empty defaultGraphParameters.period}">period <b>${defaultGraphParameters.period}</b></c:if>
+    <sec:authorize access="hasRole('ROLE_ADMIN')">
 
-            <h3>Reports</h3>
-            <table>
+        <div class="row">
+            <div class="span2">
+                <strong>Group and name</strong>
+            </div>
+            <div class="span2">
+                <a href="/sources/${name}/edit">
+                    <c:if test="${not empty source.displayGroup}">${fn:escapeXml(source.displayGroup)} /</c:if>
+                    <c:if test="${not empty source.displayName}">${fn:escapeXml(source.displayName)}</c:if>
+                    <c:if test="${empty source.displayName}">${fn:escapeXml(name)}</c:if>
+                </a>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="span2">
+                <strong>Capping</strong>
+            </div>
+            <div class="span4">
+                <c:if test="${source.capped}">
+                    size : ${source.size}, max : <fmt:formatNumber value="${source.max}" type="number"/>
+                </c:if>
+                <c:if test="${not source.capped}">
+                    <a href="/sources/${name}/capping/form">no capping</a>
+                </c:if>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="span2">
+                <strong>Aggregation</strong>
+            </div>
+            <div class="span2">
+                <a href="/sources/${name}/aggregation/form">
+                    <c:if test="${aggregation.timeFrame eq 'MILLISECOND'}">none</c:if>
+                    <c:if test="${not (aggregation.timeFrame eq 'MILLISECOND')}">${aggregation.timeFrame} on attribute ${aggregation.attributeName}</c:if>
+                </a>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="span2"><strong>Default gragh parameters</strong></div>
+            <div class="span2">
+                <a href="/sources/${name}/default-graph-params/form">
+                    <c:if test="${empty defaultGraphParameters.period}">
+                        none
+                    </c:if>
+                    <c:if test="${not empty defaultGraphParameters.period}">
+                        period <b>${defaultGraphParameters.period}</b>
+                    </c:if>
+                </a>
+            </div>
+        </div>
+
+        <br>
+
+        <div class="row">
+            <div class="span2"><strong>Reports</strong></div>
+            <table class="table table-bordered table-striped span9">
                 <thead>
                 <tr>
                     <th>title</th>
                 </tr>
                 </thead>
                 <tbody>
-                <c:forEach var="report" items="${reports}">
-                    <tr>
-                        <td>${report.title}</td>
-                    </tr>
-                    <tr>
-                        <td colspan="4">
-                            <a href="/sources/${name}/report/${report.id}">edit</a>
-                            - <a href="/sources/${name}/report/${report.id}/delete">delete</a>
-                        </td>
-                    </tr>
-                </c:forEach>
+                    <c:forEach var="report" items="${reports}">
+                        <tr>
+                            <td><a href="/sources/${name}/report/${report.id}">${report.title}</a></td>
+                        </tr>
+                    </c:forEach>
                 </tbody>
             </table>
+            <div class="span1">
+                <a href="/sources/${name}/report" class="btn btn-primary pull-right">Add</a>
+            </div>
+        </div>
 
-            <a href="/sources/${name}/report">add a report</a>
+        <br>
 
-            <h3>Mail reports</h3>
-            <table>
+        <div class="row">
+            <div class="span2"><strong>Mail reports</strong></div>
+            <table class="table table-bordered table-striped span9">
                 <thead>
                 <tr>
                     <th>report</th>
@@ -92,29 +123,34 @@
                 </tr>
                 </thead>
                 <tbody>
-                <c:forEach var="mailReport" items="${mailReports}">
-                    <tr>
-                        <td>${mailReport.reportTitle}</td>
-                        <td>${mailReport.title}</td>
-                        <td>${mailReport.cronExpression}</td>
-                        <td>${quartz:previousFiretime(mailReport)}</td>
-                        <td>${quartz:nextFiretime(mailReport)}</td>
-                    </tr>
-                    <tr>
-                        <td colspan="4">
-                            <a href="/sources/${name}/mailreport/${mailReport.id}">edit</a>
-                            - <a href="/sources/${name}/mailreport/${mailReport.id}/send">send now</a>
-                            - <a href="/sources/${name}/mailreport/${mailReport.id}/delete">delete</a>
-                        </td>
-                    </tr>
-                </c:forEach>
+                    <c:forEach var="mailReport" items="${mailReports}">
+                        <tr>
+                            <td>${mailReport.reportTitle}</td>
+                            <td>${mailReport.title}</td>
+                            <td>${mailReport.cronExpression}</td>
+                            <td>${quartz:previousFiretime(mailReport)}</td>
+                            <td>${quartz:nextFiretime(mailReport)}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="5">
+                                <a href="/sources/${name}/mailreport/${mailReport.id}">edit</a>
+                                - <a href="/sources/${name}/mailreport/${mailReport.id}/send">send now</a>
+                                - <a href="/sources/${name}/mailreport/${mailReport.id}/delete">delete</a>
+                            </td>
+                        </tr>
+                    </c:forEach>
                 </tbody>
             </table>
+            <div class="span1">
+                <a href="/sources/${name}/mailreport" class="btn btn-primary pull-right">Add</a>
+            </div>
+        </div>
 
-            <a href="/sources/${name}/mailreport">add a mail report</a>
+        <br>
 
-            <h3>Transform operations</h3>
-            <table>
+        <div class="row">
+            <div class="span2"><strong>Transform operations</strong></div>
+            <table class="table table-bordered table-striped span9">
                 <thead>
                 <tr>
                     <th>parameter</th>
@@ -122,49 +158,67 @@
                 </tr>
                 </thead>
                 <tbody>
-                <c:forEach var="parameter" items="${transform.config}">
-                    <tr>
-                        <td>${parameter.name}</td>
-                        <td>${parameter.operations}</td>
-                    </tr>
-                    <tr>
-                        <td colspan="4">
-                            <a href="/sources/${name}/transform/${parameter.name}">edit</a>
-                        </td>
-                    </tr>
-                </c:forEach>
-                </tbody>
-            </table>
-
-            <a href="/sources/${name}/transform">add a transform operation</a>
-
-            <h3>Indexes</h3>
-            <table>
-                <colgroup>
-                    <col>
-                </colgroup>
-                <c:forEach var="index" items="${indexes}">
-                    <tr>
-                        <td>${index}</td>
-                    </tr>
-                    <c:if test="${not (index.name eq '_id_')}">
+                    <c:forEach var="parameter" items="${transform.config}">
                         <tr>
-                            <td>
-                                <a href="/sources/${name}/indexes/${index.name}/drop">drop</a>
+                            <td>${parameter.name}</td>
+                            <td>${parameter.operations}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <a href="/sources/${name}/transform/${parameter.name}">edit</a>
                             </td>
                         </tr>
-                    </c:if>
-                </c:forEach>
+                    </c:forEach>
+                </tbody>
             </table>
-            <a href="/sources/${name}/indexes/form">add index</a>
+            <div class="span1">
+                <a href="/sources/${name}/transform/${parameter.name}" class="btn btn-primary pull-right">Add</a>
+            </div>
+        </div>
 
-            <br/><br/>
+        <br>
 
-            <a href="/sources/${name}/delete">delete source</a>
-        </sec:authorize>
-    </div>
-</article>
+        <div class="row">
+            <div class="span2"><strong>Mongodb indexes</strong></div>
+            <table class="table table-bordered table-striped span9">
+                <thead>
+                <tr>
+                    <th>name</th>
+                    <th>definition</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <c:forEach var="index" items="${indexes}">
+                        <tr>
+                            <td>${fn:escapeXml(index.name)}</td>
+                            <td>${index}</td>
+                        </tr>
+                        <c:if test="${not (index.name eq '_id_')}">
+                            <tr>
+                                <td>
+                                    <a href="/sources/${name}/indexes/${index.name}/drop">drop</a>
+                                </td>
+                            </tr>
+                        </c:if>
+                    </c:forEach>
+                </tbody>
+            </table>
+            <div class="span1">
+                <a href="/sources/${name}/indexes/form" class="btn btn-primary pull-right">Add</a>
+            </div>
+        </div>
 
-<widget:footer/>
+        <div class="row">
+            <div class="span2">
+                <strong>Delete source</strong>
+            </div>
+            <div class="span1">
+                <a href="/sources/${name}/delete" class="btn btn-danger">Delete</a>
+            </div>
+        </div>
+    </sec:authorize>
+</div>
+
+<layout:footer/>
 </body>
 </html>

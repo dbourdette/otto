@@ -1,13 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
-<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
-
-<%@ taglib tagdir="/WEB-INF/tags/layout" prefix="layout" %>
-<%@ taglib tagdir="/WEB-INF/tags/widgets" prefix="widget" %>
+<%@include file="../directives.jsp"%>
 
 <%--
   ~ Copyright 2011 Damien Bourdette
@@ -36,11 +29,19 @@
 <div class="container">
     <widget:nav />
 
-    <div class="well">${events.totalCount} events</div>
+    <div class="well">
+        <h3 class="span4"><strong>${events.totalCount} events</strong></h3>
+        <div class="span1 offset6">
+            <sec:authorize access="hasRole('ROLE_ADMIN')">
+                <a href="/sources/${name}/events/delete">
+                    <button class="btn btn-danger">Clear</button></a>
+            </sec:authorize>
+        </div>
+    </div>
 
     <widget:pagination path="/sources/${name}/events" page="${events}"/>
 
-    <table class="table table-condensed">
+    <table class="table table-bordered table-condensed">
         <c:forEach var="event" items="${events.items}">
             <tr>
                 <td>${event}</td>
@@ -49,10 +50,6 @@
     </table>
 
     <widget:pagination path="/sources/${name}/events" page="${events}"/>
-
-    <sec:authorize access="hasRole('ROLE_ADMIN')">
-        <a href="/sources/${name}/events/delete">Delete events</a>
-    </sec:authorize>
 </div>
 
 <layout:footer/>

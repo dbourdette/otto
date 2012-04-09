@@ -1,11 +1,6 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-
-<%@ taglib tagdir="/WEB-INF/tags/widgets" prefix="widget" %>
+<%@include file="../directives.jsp"%>
 
 <%--
   ~ Copyright 2011 Damien Bourdette
@@ -24,33 +19,29 @@
   --%>
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 
-<widget:head />
+<layout:head/>
 
 <body>
-	<widget:header />
-	
-	<article>
-		<widget:nav />
-	
-		<h2>Aggregation configuration</h2>
+<layout:header/>
 
-        <div>
-            <form:form action="/sources/${name}/aggregation" commandName="form" method="post">
-                <p>
-                    time frame : <form:select path="timeFrame" items="${timeFrames}" />
-                    <form:errors path="timeFrame" />
-                </p>
-                <p>
-                    attribute name : <form:input path="attributeName" />
-                    <form:errors path="attributeName" />
-                </p>
-                <input type="submit" value="Save" />
-            </form:form>
-        </div>
-	</article>
-	
-	<widget:footer />
+<div class="container">
+    <widget:nav />
+
+    <h2>Aggregation configuration</h2>
+
+    <form:form action="/sources/${name}/aggregation" commandName="form" method="post" cssClass="form-horizontal">
+        <bootstrap:control path="timeFrame" label="Time frame">
+            <form:select path="timeFrame" id="timeFrame" items="${timeFrames}" />
+        </bootstrap:control>
+        <bootstrap:control path="attributeName" label="Attribute name">
+            <form:input path="attributeName" id="attributeName"/>
+        </bootstrap:control>
+        <bootstrap:submit cancelUrl="/sources/${name}/configuration" />
+    </form:form>
+</div>
+
+<layout:footer/>
 </body>
 </html>

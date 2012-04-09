@@ -17,6 +17,8 @@
 package com.github.dbourdette.otto.web.form;
 
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.validator.constraints.NotEmpty;
+
 import com.github.dbourdette.otto.web.util.SizeInBytes;
 
 /**
@@ -25,6 +27,7 @@ import com.github.dbourdette.otto.web.util.SizeInBytes;
  */
 public class CappingForm {
 
+    @NotEmpty
     private String size;
 
     public SizeInBytes getSizeInBytes() {

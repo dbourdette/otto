@@ -1,11 +1,6 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-
-<%@ taglib tagdir="/WEB-INF/tags/widgets" prefix="widget" %>
+<%@include file="../directives.jsp"%>
 
 <%--
   ~ Copyright 2011 Damien Bourdette
@@ -24,29 +19,26 @@
   --%>
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 
-<widget:head />
+<layout:head/>
 
 <body>
-	<widget:header />
+<layout:header/>
 
-	<article>
-		<widget:nav />
+<div class="container">
+    <widget:nav />
 
-		<h2>Source capping</h2>
+    <h2>Capping configuration</h2>
 
-        <div>
-            <form:form action="/sources/${name}/capping" commandName="form" method="post">
-                <p>
-                    size : <form:input path="size"/> (ex : 100M)
-                    <form:errors path="size" />
-                </p>
-                <input type="submit" value="Apply" />
-            </form:form>
-        </div>
-	</article>
+    <form:form action="/sources/${name}/capping" commandName="form" method="post" cssClass="form-horizontal">
+        <bootstrap:control path="size" label="Size">
+            <div class="input-append"><form:input path="size" cssClass="input-small" cssStyle="text-align: right"/><span class="add-on">ex : 100M</span></div>
+        </bootstrap:control>
+        <bootstrap:submit label="Apply" cancelUrl="/sources/${name}/configuration" />
+    </form:form>
+</div>
 
-	<widget:footer />
+<layout:footer/>
 </body>
 </html>

@@ -1,13 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
-<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
-
-<%@ taglib tagdir="/WEB-INF/tags/layout" prefix="layout" %>
-<%@ taglib tagdir="/WEB-INF/tags/widgets" prefix="widget" %>
+<%@include file="../directives.jsp"%>
 
 <%--
   ~ Copyright 2011 Damien Bourdette
@@ -39,26 +32,19 @@
 
     <form:form action="/users" commandName="form" method="post" cssClass="form-horizontal">
         <form:hidden path="id" />
-        <div class="control-group">
-            <label class="control-label" for="username">username</label>
-            <div class="controls"><form:input path="username" id="username"/><form:errors path="username" /></div>
-        </div>
-        <div class="control-group">
-            <label class="control-label" for="password">password</label>
-            <div class="controls"><form:password path="password" showPassword="true" id="password"/> (leave blank for external auth)<form:errors path="password" /></div>
-        </div>
-        <div class="control-group">
-            <label class="control-label" for="admin">admin</label>
-            <div class="controls"><form:checkbox path="admin" id="admin"/><form:errors path="admin" /></div>
-        </div>
-        <div class="control-group">
-            <label class="control-label" for="sources">sources</label>
-            <div class="controls"><form:input path="sources" size="80" id="sources"/> (comma separated allowed sources)<form:errors path="sources" /></div>
-        </div>
-        <div class="span6 offset5">
-            <button type="submit" class="btn btn-primary">Save</button>
-            <a href="/users"><button type="submit" class="btn">Cancel</button></a>
-        </div>
+        <bootstrap:control path="username" label="Username">
+            <form:input path="username" id="username"/>
+        </bootstrap:control>
+        <bootstrap:control path="password" label="Password">
+            <form:password path="password" showPassword="true" id="password"/> (leave blank for external auth)
+        </bootstrap:control>
+        <bootstrap:control path="admin" label="Admin">
+            <form:checkbox path="admin" id="admin"/>
+        </bootstrap:control>
+        <bootstrap:control path="sources" label="Sources">
+            <form:input path="sources" size="80" id="sources"/> (comma separated allowed sources)
+        </bootstrap:control>
+        <bootstrap:submit cancelUrl="/users" />
     </form:form>
 
     <c:if test="${not empty form.id}">

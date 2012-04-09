@@ -361,6 +361,22 @@ public class Source {
         reports.remove(new BasicDBObject("_id", new ObjectId(id)));
     }
 
+    public void cap(CappingForm form) {
+        SizeInBytes sizeInBytes = form.getSizeInBytes();
+
+        if (sizeInBytes == null) {
+            return;
+        }
+
+        BasicDBObject capping = new BasicDBObject();
+
+        capping.put("convertToCapped", qualifiedName(name));
+        capping.put("capped", true);
+        capping.put("size", sizeInBytes.getValue());
+
+        Registry.mongoDb.command(capping);
+    }
+
     public DefaultGraphParameters getDefaultGraphParameters() {
         DBObject dbObject = findConfigItem("defaultGraphParameters");
 
@@ -385,22 +401,6 @@ public class Source {
         values.put("period", params.getPeriod().name());
 
         config.update(filter, values, true, false);
-    }
-
-    public void cap(CappingForm form) {
-        SizeInBytes sizeInBytes = form.getSizeInBytes();
-
-        if (sizeInBytes == null) {
-            return;
-        }
-
-        BasicDBObject capping = new BasicDBObject();
-
-        capping.put("convertToCapped", qualifiedName(name));
-        capping.put("capped", true);
-        capping.put("size", sizeInBytes.getValue());
-
-        Registry.mongoDb.command(capping);
     }
 
     public List<MailReportConfig> getMailReports() {

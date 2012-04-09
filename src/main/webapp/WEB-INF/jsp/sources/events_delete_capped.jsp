@@ -1,11 +1,6 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-
-<%@ taglib tagdir="/WEB-INF/tags/widgets" prefix="widget" %>
+<%@include file="../directives.jsp"%>
 
 <%--
   ~ Copyright 2011 Damien Bourdette
@@ -24,25 +19,23 @@
   --%>
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 
-<widget:head />
+<layout:head/>
 
 <body>
-	<widget:header />
-	
-	<article>
-		<widget:nav />
+<layout:header/>
 
-        <div>
-            <p>You can not delete events from a capped source.</p>
+<div class="container">
+    <widget:nav />
 
-            <br/>
+    <p>You can not delete events from a capped source.</p>
 
-            <a href="/sources/${name}/events">go back to logs</a>
-        </div>
-	</article>
-	
-	<widget:footer />
+    <br/>
+
+    <a href="/sources/${name}/events">go back to logs</a>
+</div>
+
+<layout:footer/>
 </body>
 </html>

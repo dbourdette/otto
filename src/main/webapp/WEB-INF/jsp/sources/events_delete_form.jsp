@@ -1,11 +1,6 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-
-<%@ taglib tagdir="/WEB-INF/tags/widgets" prefix="widget" %>
+<%@include file="../directives.jsp"%>
 
 <%--
   ~ Copyright 2011 Damien Bourdette
@@ -24,27 +19,25 @@
   --%>
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 
-<widget:head />
+<layout:head/>
 
 <body>
-	<widget:header />
-	
-	<article>
-		<widget:nav />
+<layout:header/>
 
-        <div>
-            <p>You are about to delete all events for source ${name}</p>
+<div class="container">
+    <widget:nav />
 
-            <br/>
+    <p>You are about to delete all events for source ${name}</p>
 
-            <form:form action="/sources/${name}/events" commandName="form" method="delete">
-                <input type="submit" value="delete events" />
-            </form:form>
-        </div>
-	</article>
-	
-	<widget:footer />
+    <br/>
+
+    <form:form action="/sources/${name}/events" commandName="form" method="delete">
+        <input type="submit" value="delete events" />
+    </form:form>
+</div>
+
+<layout:footer/>
 </body>
 </html>

@@ -24,7 +24,7 @@
     <div class="navbar">
         <div class="navbar-inner">
             <div class="container">
-                <a class="brand" href="/" style="font-weight: bold;color: black;text-shadow: 0 1px 0 rgba(255, 255, 255, .1), 0 0 30px rgba(255, 255, 255, .125);">oTTo</a>
+                <a class="brand" href="/" style="font-weight: bold;color: white;">oTTo</a>
                 <sec:authorize access="isAuthenticated()">
                     <ul class="nav pull-right">
                         <sec:authorize access="hasRole('ROLE_ADMIN')">
