@@ -1,20 +1,16 @@
 package com.github.dbourdette.otto.source.config;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.bson.types.ObjectId;
-
 import com.github.dbourdette.otto.report.Report;
-import com.github.dbourdette.otto.report.filler.LowerCaseOperation;
-import com.github.dbourdette.otto.report.filler.NoAccentOperation;
-import com.github.dbourdette.otto.report.filler.NoPunctuationOperation;
-import com.github.dbourdette.otto.report.filler.OperationChain;
-import com.github.dbourdette.otto.report.filler.TokenizeOperation;
+import com.github.dbourdette.otto.report.filler.*;
 import com.github.dbourdette.otto.web.form.Sort;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCursor;
+import org.apache.commons.lang.StringUtils;
+import org.bson.types.ObjectId;
+import org.hibernate.validator.constraints.NotEmpty;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author damien bourdette
@@ -23,6 +19,7 @@ import com.mongodb.DBCursor;
 public class ReportConfig {
     private String id;
 
+    @NotEmpty
     private String title;
 
     private String labelAttributes;

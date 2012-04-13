@@ -20,13 +20,16 @@ import org.apache.commons.lang.StringUtils;
 
 import com.github.dbourdette.otto.source.TimeFrame;
 
+import javax.validation.constraints.Pattern;
+
 /**
  * @author damien bourdette
  * @version \$Revision$
  */
 public class AggregationConfig {
-	private TimeFrame timeFrame = TimeFrame.MILLISECOND;
+    private TimeFrame timeFrame = TimeFrame.MILLISECOND;
 
+    @Pattern(regexp = "^[A-Za-z0-9-_]+$")
     private String attributeName = "count";
 
     public boolean isAggregating() {

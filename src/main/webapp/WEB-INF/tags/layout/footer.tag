@@ -19,6 +19,6 @@
 <br>
 <footer class="container">
     <div class="well">
-        <a href="https://github.com/dbourdette/otto" target="_blank" style="float: right">oTTo on GitHub</a>
+        <a href="https://github.com/dbourdette/otto" target="_blank" class="pull-right">oTTo on GitHub <i class="icon-share"></i></a>
     </div>
 </footer>

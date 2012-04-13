@@ -27,6 +27,8 @@
 
 <div class="container">
     <div class="well">
+        <div class="row"><br></div>
+        <div class="row"><h1 class="span12">Welcome to oTTo, the event server</h1></div>
         <div class="row"><br><br><br></div>
         <div class="row">
             <div class="span6 offset3">Please log in...</div>

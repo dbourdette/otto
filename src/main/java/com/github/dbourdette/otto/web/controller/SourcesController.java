@@ -16,13 +16,16 @@
 
 package com.github.dbourdette.otto.web.controller;
 
-import java.io.UnsupportedEncodingException;
-import java.text.ParseException;
-
-import javax.inject.Inject;
-import javax.mail.MessagingException;
-import javax.validation.Valid;
-
+import com.github.dbourdette.otto.report.ReportPeriod;
+import com.github.dbourdette.otto.service.mail.Mailer;
+import com.github.dbourdette.otto.source.*;
+import com.github.dbourdette.otto.source.config.*;
+import com.github.dbourdette.otto.web.form.CappingForm;
+import com.github.dbourdette.otto.web.form.IndexForm;
+import com.github.dbourdette.otto.web.form.SourceForm;
+import com.github.dbourdette.otto.web.form.TransformForm;
+import com.github.dbourdette.otto.web.util.FlashScope;
+import com.github.dbourdette.otto.web.util.IntervalUtils;
 import org.apache.commons.lang.StringUtils;
 import org.quartz.SchedulerException;
 import org.springframework.stereotype.Controller;
@@ -33,21 +36,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.github.dbourdette.otto.report.ReportPeriod;
-import com.github.dbourdette.otto.source.MailReports;
-import com.github.dbourdette.otto.source.Source;
-import com.github.dbourdette.otto.source.TimeFrame;
-import com.github.dbourdette.otto.source.config.AggregationConfig;
-import com.github.dbourdette.otto.source.config.DefaultGraphParameters;
-import com.github.dbourdette.otto.source.config.MailReportConfig;
-import com.github.dbourdette.otto.source.config.ReportConfig;
-import com.github.dbourdette.otto.source.config.TransformConfig;
-import com.github.dbourdette.otto.web.form.CappingForm;
-import com.github.dbourdette.otto.web.form.IndexForm;
-import com.github.dbourdette.otto.web.form.SourceForm;
-import com.github.dbourdette.otto.web.form.TransformForm;
-import com.github.dbourdette.otto.web.util.FlashScope;
-import com.github.dbourdette.otto.web.util.IntervalUtils;
+import javax.inject.Inject;
+import javax.mail.MessagingException;
+import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
 
 /**
  * @author damien bourdette
@@ -62,6 +55,9 @@ public class SourcesController {
     @Inject
     private MailReports mailReports;
 
+    @Inject
+    private Mailer mailer;
+
     @RequestMapping({"/sources/{name}/configuration"})
     public String source(@PathVariable String name, Model model) {
         Source source = Source.findByName(name);
@@ -70,9 +66,12 @@ public class SourcesController {
         model.addAttribute("aggregation", source.getAggregationConfig());
         model.addAttribute("transform", source.getTransformConfig());
         model.addAttribute("defaultGraphParameters", source.getDefaultGraphParameters());
-        model.addAttribute("reports", source.getReportConfigs());
+        model.addAttribute("reports", SourceReports.forSource(source).getReportConfigs());
+        model.addAttribute("schedules", SourceSchedules.forSource(Source.findByName(name)).getSchedules());
         model.addAttribute("mailReports", source.getMailReports());
         model.addAttribute("indexes", source.getIndexes());
+
+
 
         return "sources/source";
     }
@@ -171,9 +170,9 @@ public class SourcesController {
             return "sources/aggregation_form";
         }
 
-        flashScope.message("Aggregation has been added to source " + name);
-
         Source.findByName(name).saveAggregation(form);
+
+        flashScope.message("Aggregation has been modified for source " + name);
 
         return "redirect:/sources/{name}/configuration";
     }
@@ -242,21 +241,70 @@ public class SourcesController {
             return "sources/report_form";
         }
 
-        Source.findByName(name).saveReportConfig(form);
+        SourceReports.forSource(Source.findByName(name)).saveReportConfig(form);
 
         return "redirect:/sources/{name}/configuration";
     }
 
     @RequestMapping("/sources/{name}/report/{id}")
     public String report(@PathVariable String name, @PathVariable String id, Model model) {
-        model.addAttribute("form", Source.findByName(name).getReportConfig(id));
+        model.addAttribute("form", SourceReports.forSource(Source.findByName(name)).getReportConfig(id));
 
         return "sources/report_form";
     }
 
     @RequestMapping("/sources/{name}/report/{id}/delete")
     public String deleteReport(@PathVariable String name, @PathVariable String id, Model model) {
-        Source.findByName(name).deleteReportConfig(id);
+        SourceReports.forSource(Source.findByName(name)).deleteReportConfig(id);
+
+        return "redirect:/sources/{name}/configuration";
+    }
+
+    @RequestMapping("/sources/{name}/schedule")
+    public String schedule(@PathVariable String name, Model model) {
+        model.addAttribute("reports", SourceReports.forSource(Source.findByName(name)).getReportConfigs());
+        model.addAttribute("form", new MailSchedule());
+
+        return "sources/schedule_form";
+    }
+
+    @RequestMapping(value = "/sources/{name}/schedule", method = RequestMethod.POST)
+    public String schedule(@PathVariable String name, @Valid @ModelAttribute("form") MailSchedule form, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("reports", SourceReports.forSource(Source.findByName(name)).getReportConfigs());
+
+            return "sources/schedule_form";
+        }
+
+        SourceSchedules.forSource(Source.findByName(name)).schedule(form);
+
+        return "redirect:/sources/{name}/configuration";
+    }
+
+    @RequestMapping("/sources/{name}/schedule/{id}")
+    public String schedule(@PathVariable String name, @PathVariable String id, Model model) {
+        model.addAttribute("reports", SourceReports.forSource(Source.findByName(name)).getReportConfigs());
+        model.addAttribute("form", SourceSchedules.forSource(Source.findByName(name)).getSchedule(id));
+
+        return "sources/schedule_form";
+    }
+
+    @RequestMapping("/sources/{name}/schedule/{id}/delete")
+    public String deleteSchedule(@PathVariable String name, @PathVariable String id, Model model) throws SchedulerException {
+        SourceSchedules.forSource(Source.findByName(name)).deleteSchedule(id);
+
+        return "redirect:/sources/{name}/configuration";
+    }
+
+    @RequestMapping("/sources/{name}/schedule/{id}/send")
+    public String sendScheduledMailReport(@PathVariable String name, @PathVariable String id, Model model) throws MessagingException, UnsupportedEncodingException {
+        Source source = Source.findByName(name);
+
+        MailSchedule mailSchedule = SourceSchedules.forSource(source).getSchedule(id);
+
+        mailer.send(mailSchedule.buildMail(source));
+
+        flashScope.message("your email report has been sent");
 
         return "redirect:/sources/{name}/configuration";
     }

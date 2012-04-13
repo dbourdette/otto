@@ -44,7 +44,7 @@
     <table class="table table-bordered">
         <thead>
             <tr>
-                <td style="width: 200px"><b>total</b></td>
+                <td><b>total</b></td>
                 <td><b>${count}</b></td>
             </tr>
         </thead>

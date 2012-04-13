@@ -16,15 +16,10 @@
 
 package com.github.dbourdette.otto.web.controller;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-
+import com.github.dbourdette.otto.report.Report;
+import com.github.dbourdette.otto.source.Source;
+import com.github.dbourdette.otto.source.SourceReports;
+import com.github.dbourdette.otto.web.form.ReportForm;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -41,9 +36,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.github.dbourdette.otto.report.Report;
-import com.github.dbourdette.otto.source.Source;
-import com.github.dbourdette.otto.web.form.ReportForm;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author damien bourdette
@@ -59,7 +58,7 @@ public class ReportController {
         Source source = Source.findByName(name);
 
         form.fillWithDefault(source.getDefaultGraphParameters(), request);
-        form.setReportConfigs(source.getReportConfigs());
+        form.setReportConfigs(SourceReports.forSource(source).getReportConfigs());
 
         model.addAttribute("source", source);
         model.addAttribute("subNavItem", "stats");
@@ -75,7 +74,7 @@ public class ReportController {
         Source source = Source.findByName(name);
 
         form.fillWithDefault(source.getDefaultGraphParameters(), request);
-        form.setReportConfigs(source.getReportConfigs());
+        form.setReportConfigs(SourceReports.forSource(source).getReportConfigs());
 
         model.addAttribute("source", source);
         model.addAttribute("subNavItem", "graph");
@@ -108,7 +107,7 @@ public class ReportController {
         Source source = Source.findByName(name);
 
         form.fillWithDefault(source.getDefaultGraphParameters(), request);
-        form.setReportConfigs(source.getReportConfigs());
+        form.setReportConfigs(SourceReports.forSource(source).getReportConfigs());
 
         model.addAttribute("source", source);
         model.addAttribute("subNavItem", "pie");
@@ -141,7 +140,7 @@ public class ReportController {
         Source source = Source.findByName(name);
 
         form.fillWithDefault(source.getDefaultGraphParameters(), request);
-        form.setReportConfigs(source.getReportConfigs());
+        form.setReportConfigs(SourceReports.forSource(source).getReportConfigs());
 
         Report report = form.buildReport(source);
         report.top(TOP_COUNT);
@@ -179,7 +178,7 @@ public class ReportController {
         Source source = Source.findByName(name);
 
         form.fillWithDefault(source.getDefaultGraphParameters(), request);
-        form.setReportConfigs(source.getReportConfigs());
+        form.setReportConfigs(SourceReports.forSource(source).getReportConfigs());
 
         Report report = form.buildReport(source);
         report.top(TOP_COUNT);

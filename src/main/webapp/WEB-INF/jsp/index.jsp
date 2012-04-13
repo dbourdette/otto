@@ -43,6 +43,8 @@
         <h1>Existing event sources</h1>
     </div>
 
+    <div>A source is a bucket for incoming events. It stores events and helps to create reports and graphs.</div>
+
     <ul class="nav nav-list">
         <c:forEach var="group" items="${groups.groups}">
             <li class="nav-header">${group.name}</li>

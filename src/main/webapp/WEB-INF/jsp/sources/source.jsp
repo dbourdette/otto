@@ -35,7 +35,7 @@
             <div class="span2">
                 <strong>Group and name</strong>
             </div>
-            <div class="span2">
+            <div class="span10">
                 <a href="/sources/${name}/edit">
                     <c:if test="${not empty source.displayGroup}">${fn:escapeXml(source.displayGroup)} /</c:if>
                     <c:if test="${not empty source.displayName}">${fn:escapeXml(source.displayName)}</c:if>
@@ -49,7 +49,7 @@
             <div class="span2">
                 <strong>Capping</strong>
             </div>
-            <div class="span4">
+            <div class="span10">
                 <c:if test="${source.capped}">
                     size : ${source.size}, max : <fmt:formatNumber value="${source.max}" type="number"/>
                 </c:if>
@@ -63,7 +63,7 @@
             <div class="span2">
                 <strong>Aggregation</strong>
             </div>
-            <div class="span2">
+            <div class="span10">
                 <a href="/sources/${name}/aggregation/form">
                     <c:if test="${aggregation.timeFrame eq 'MILLISECOND'}">none</c:if>
                     <c:if test="${not (aggregation.timeFrame eq 'MILLISECOND')}">${aggregation.timeFrame} on attribute ${aggregation.attributeName}</c:if>
@@ -73,7 +73,7 @@
 
         <div class="row">
             <div class="span2"><strong>Default gragh parameters</strong></div>
-            <div class="span2">
+            <div class="span10">
                 <a href="/sources/${name}/default-graph-params/form">
                     <c:if test="${empty defaultGraphParameters.period}">
                         none
@@ -105,6 +105,35 @@
             </table>
             <div class="span1">
                 <a href="/sources/${name}/report" class="btn btn-primary pull-right">Add</a>
+            </div>
+        </div>
+
+        <br>
+
+        <div class="row">
+            <div class="span2"><strong>Schedules</strong></div>
+            <table class="table table-bordered table-striped span9">
+                <thead>
+                <tr>
+                    <th>report</th>
+                    <th>subject</th>
+                    <th>cron expression</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <c:forEach var="schedule" items="${schedules}">
+                    <tr>
+                        <td>${schedule.report}</td>
+                        <td><i class="icon-envelope"></i> <a href="/sources/${name}/schedule/${schedule.id}">${schedule.title}</a></td>
+                        <td>${schedule.cronExpression}</td>
+                        <td style="width: 80px;padding: 2px"><a href="/sources/${name}/schedule/${schedule.id}/send" class="btn">send now</a></td>
+                    </tr>
+                </c:forEach>
+                </tbody>
+            </table>
+            <div class="span1">
+                <a href="/sources/${name}/schedule" class="btn btn-primary pull-right">Add</a>
             </div>
         </div>
 
@@ -160,13 +189,8 @@
                 <tbody>
                     <c:forEach var="parameter" items="${transform.config}">
                         <tr>
-                            <td>${parameter.name}</td>
+                            <td><a href="/sources/${name}/transform/${parameter.name}">${parameter.name}</a></td>
                             <td>${parameter.operations}</td>
-                        </tr>
-                        <tr>
-                            <td colspan="4">
-                                <a href="/sources/${name}/transform/${parameter.name}">edit</a>
-                            </td>
                         </tr>
                     </c:forEach>
                 </tbody>

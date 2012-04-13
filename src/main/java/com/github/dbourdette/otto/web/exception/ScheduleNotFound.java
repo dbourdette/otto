@@ -14,32 +14,28 @@
  * limitations under the License.
  */
 
-package com.github.dbourdette.otto.web.form;
-
-import org.hibernate.validator.constraints.NotEmpty;
+package com.github.dbourdette.otto.web.exception;
 
 /**
  * @author damien bourdette
  */
-public class TransformForm {
-    @NotEmpty
-    private String parameter;
+public class ScheduleNotFound extends RuntimeException {
 
-    private String operations;
+    private static final long serialVersionUID = 1L;
 
-    public String getParameter() {
-        return parameter;
+    public ScheduleNotFound() {
+        super();
     }
 
-    public void setParameter(String parameter) {
-        this.parameter = parameter;
+    public ScheduleNotFound(String arg0, Throwable arg1) {
+        super(arg0, arg1);
     }
 
-    public String getOperations() {
-        return operations;
+    public ScheduleNotFound(String arg0) {
+        super(arg0);
     }
 
-    public void setOperations(String operations) {
-        this.operations = operations;
+    public ScheduleNotFound(Throwable arg0) {
+        super(arg0);
     }
 }

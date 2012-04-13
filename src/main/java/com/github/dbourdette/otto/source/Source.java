@@ -16,25 +16,11 @@
 
 package com.github.dbourdette.otto.source;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.bson.types.ObjectId;
-import org.joda.time.Interval;
-import org.quartz.SchedulerException;
-
 import com.github.dbourdette.otto.Registry;
 import com.github.dbourdette.otto.report.Report;
 import com.github.dbourdette.otto.report.ReportPeriod;
 import com.github.dbourdette.otto.report.filler.OperationChain;
-import com.github.dbourdette.otto.source.config.AggregationConfig;
-import com.github.dbourdette.otto.source.config.DefaultGraphParameters;
-import com.github.dbourdette.otto.source.config.MailReportConfig;
-import com.github.dbourdette.otto.source.config.ReportConfig;
-import com.github.dbourdette.otto.source.config.TransformConfig;
+import com.github.dbourdette.otto.source.config.*;
 import com.github.dbourdette.otto.util.Page;
 import com.github.dbourdette.otto.web.exception.SourceAlreadyExists;
 import com.github.dbourdette.otto.web.exception.SourceNotFound;
@@ -46,13 +32,17 @@ import com.github.dbourdette.otto.web.util.Constants;
 import com.github.dbourdette.otto.web.util.Frequency;
 import com.github.dbourdette.otto.web.util.IntervalUtils;
 import com.github.dbourdette.otto.web.util.SizeInBytes;
-import com.mongodb.BasicDBObject;
-import com.mongodb.CommandResult;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-
+import com.mongodb.*;
 import net.sf.ehcache.Element;
+import org.apache.commons.lang.StringUtils;
+import org.bson.types.ObjectId;
+import org.joda.time.Interval;
+import org.quartz.SchedulerException;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author damien bourdette
@@ -70,8 +60,6 @@ public class Source {
     private DBCollection events;
 
     private DBCollection config;
-
-    private DBCollection reports;
 
     private DBCollection mailReports;
 
@@ -93,6 +81,10 @@ public class Source {
 
     public static String qualifiedReportsName(String name) {
         return Constants.SOURCES + name + "." + Constants.REPORTS;
+    }
+
+    public static String qualifiedSchedulesName(String name) {
+        return Constants.SOURCES + name + "." + Constants.SCHEDULES;
     }
 
     public static Source create(String name) {
@@ -161,7 +153,6 @@ public class Source {
         source.events = Registry.mongoDb.getCollection(qualifiedName(name));
         source.config = Registry.mongoDb.getCollection(qualifiedConfigName(name));
         source.mailReports = Registry.mongoDb.getCollection(qualifiedMailReportsName(name));
-        source.reports = Registry.mongoDb.getCollection(qualifiedReportsName(name));
 
         source.loadAggregation();
         source.loadDisplay();
@@ -201,7 +192,7 @@ public class Source {
 
         events.drop();
         config.drop();
-        reports.drop();
+        Registry.mongoDb.getCollection(qualifiedReportsName(name)).drop();
         mailReports.drop();
 
         Registry.sourceCache.remove(name);
@@ -212,8 +203,8 @@ public class Source {
 
         BasicDBObject values = new BasicDBObject("name", "display");
 
-        values.put("displayGroup", group);
-        values.put("displayName", name);
+        values.put("displayGroup", group.trim());
+        values.put("displayName", name.trim());
 
         config.update(filter, values, true, false);
 
@@ -331,34 +322,6 @@ public class Source {
         config.update(filter, transformConfig.toDBObject(), true, false);
 
         loadTransformConfig();
-    }
-
-    public void saveReportConfig(ReportConfig reportConfig) {
-        if (StringUtils.isEmpty(reportConfig.getId())) {
-            BasicDBObject object = reportConfig.toDBObject();
-
-            reports.save(object);
-
-            reportConfig.setId(((ObjectId) object.get("_id")).toString());
-        } else {
-            reports.update(new BasicDBObject("_id", new ObjectId(reportConfig.getId())), reportConfig.toDBObject());
-        }
-    }
-
-    public List<ReportConfig> getReportConfigs() {
-        return ReportConfig.readAll(reports.find().sort(new BasicDBObject("name", 1)));
-    }
-
-    public ReportConfig getReportConfig(String id) {
-        return ReportConfig.read((BasicDBObject) reports.findOne(new BasicDBObject("_id", new ObjectId(id))));
-    }
-
-    public ReportConfig getReportConfigByTitle(String title) {
-        return ReportConfig.read((BasicDBObject) reports.findOne(new BasicDBObject("title", title)));
-    }
-
-    public void deleteReportConfig(String id) {
-        reports.remove(new BasicDBObject("_id", new ObjectId(id)));
     }
 
     public void cap(CappingForm form) {
@@ -591,7 +554,7 @@ public class Source {
     }
 
     public String getReportsCollectionName() {
-        return reports.getName();
+        return qualifiedReportsName(name);
     }
 
     public String getMailReportsCollectionName() {

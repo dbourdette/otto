@@ -31,12 +31,20 @@
 
     <h2>Transform operation</h2>
 
+    <div class="row">
+        <div class="span12">
+            <br>
+            Modify an attribute of incoming events before they are saved in database.
+            <br><br>
+        </div>
+    </div>
+
     <form:form action="/sources/${name}/transform" commandName="form" method="post" cssClass="form-horizontal">
-        <bootstrap:control path="parameter" label="Parameter">
+        <bootstrap:control path="parameter" label="Attribute">
             <form:input path="parameter"/>
         </bootstrap:control>
         <bootstrap:control path="operations" label="Operations">
-            <form:input path="operations" size="50"/> (comma separated values)
+            <form:input path="operations" size="50"/> available operations are : lower, noaccent and nopunct (comma separated values)
         </bootstrap:control>
         <bootstrap:submit cancelUrl="/sources/${name}/configuration" />
     </form:form>

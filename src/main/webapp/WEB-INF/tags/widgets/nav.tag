@@ -22,37 +22,19 @@
   --%>
 
 <div class="page-header">
-    <sec:authorize access="hasRole('ROLE_ADMIN')">
-        <div class="pull-right">
-            <div class="btn-group">
-                <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                    Navigate
-                    <span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu">
-                    <li>
-                        <a href="/sources/${name}/reports">Reports</a>
-                    </li>
-                    <li>
-                        <a href="/sources/${name}/configuration">Configuration</a>
-                    </li>
-                    <li>
-                        <a href="/sources/${name}/statistics">Statistics</a>
-                    </li>
-                    <li>
-                        <a href="/sources/${name}/events">Raw logs</a>
-                    </li>
-                    <li>
-                        <a href="/sources/${name}/events/batch">Batch</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </sec:authorize>
     <h1>
         Source
         <c:if test="${not empty source.displayGroup}">${fn:escapeXml(source.displayGroup)} /</c:if>
         <c:if test="${not empty source.displayName}">${fn:escapeXml(source.displayName)}</c:if>
         <c:if test="${empty source.displayName}">${fn:escapeXml(name)}</c:if>
     </h1>
+    <sec:authorize access="hasRole('ROLE_ADMIN')">
+        <div class="pull-right">
+            <a href="/sources/${name}/reports" style="margin-right: 10px">Reports</a>
+            <a href="/sources/${name}/configuration" style="margin-right: 10px">Configuration</a>
+            <a href="/sources/${name}/statistics" style="margin-right: 10px">Statistics</a>
+            <a href="/sources/${name}/events" style="margin-right: 10px">Raw logs</a>
+            <a href="/sources/${name}/events/batch">Batch</a>
+        </div>
+    </sec:authorize>
 </div>

@@ -31,11 +31,23 @@
 
     <h2>Aggregation configuration</h2>
 
+    <div class="row">
+        <div class="span12">
+            <br>
+            Aggregation allows events to be merged if they holds the exact same attributes.
+            <br>
+            Date attribute is rounded according to configured time frame (MILLISECOND means no rounding).
+            <br>
+            For all aggregated event, sum attribute is increased and available in reports.
+            <br><br>
+        </div>
+    </div>
+
     <form:form action="/sources/${name}/aggregation" commandName="form" method="post" cssClass="form-horizontal">
         <bootstrap:control path="timeFrame" label="Time frame">
             <form:select path="timeFrame" id="timeFrame" items="${timeFrames}" />
         </bootstrap:control>
-        <bootstrap:control path="attributeName" label="Attribute name">
+        <bootstrap:control path="attributeName" label="Sum attribute">
             <form:input path="attributeName" id="attributeName"/>
         </bootstrap:control>
         <bootstrap:submit cancelUrl="/sources/${name}/configuration" />

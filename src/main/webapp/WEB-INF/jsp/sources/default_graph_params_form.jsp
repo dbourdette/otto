@@ -31,6 +31,14 @@
 
     <h2>Default graph parameters</h2>
 
+    <div class="row">
+        <div class="span12">
+            <br>
+            Configures selected period by default for graphs.
+            <br><br>
+        </div>
+    </div>
+
     <form:form action="/sources/${name}/default-graph-params" commandName="form" method="post" cssClass="form-horizontal">
         <bootstrap:control path="period" label="Period">
             <form:select path="period" items="${periods}" id="period"/>

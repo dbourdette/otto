@@ -32,10 +32,7 @@
     <h2>Edit source</h2>
 
     <form:form action="/sources/edit" commandName="form" method="post" cssClass="form-horizontal">
-        <bootstrap:control path="name" label="Name">
-            <div style="padding-top: 5px">${form.name}</div>
-            <form:hidden path="name" />
-        </bootstrap:control>
+        <form:hidden path="name" />
         <bootstrap:control path="displayGroup" label="Display group">
             <form:input path="displayGroup"/> For web ui
         </bootstrap:control>
