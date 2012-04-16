@@ -35,7 +35,7 @@ public class IndexController {
 
     @RequestMapping({"/", "/index", "/sources"})
     public String index(Model model) {
-        model.addAttribute("groups", SourceGroups.findAll());
+        model.addAttribute("groups", SourceGroups.findAllAutorized());
         
         return "index";
     }

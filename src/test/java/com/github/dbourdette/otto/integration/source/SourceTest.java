@@ -2,15 +2,14 @@ package com.github.dbourdette.otto.integration.source;
 
 import com.github.dbourdette.otto.Registry;
 import com.github.dbourdette.otto.source.Source;
-import com.github.dbourdette.otto.source.reports.SourceReports;
 import com.github.dbourdette.otto.source.reports.ReportConfig;
+import com.github.dbourdette.otto.source.reports.SourceReports;
 import com.github.dbourdette.otto.web.exception.SourceAlreadyExists;
 import com.github.dbourdette.otto.web.exception.SourceNotFound;
 import com.mongodb.Mongo;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.quartz.SchedulerException;
 
 import java.net.UnknownHostException;
 
@@ -95,7 +94,7 @@ public class SourceTest {
     }
 
     @Test
-    public void drop() throws SchedulerException {
+    public void drop() {
         Source source = Source.create("test");
 
         source.drop();

@@ -1,13 +1,9 @@
 package com.github.dbourdette.otto.web.util;
 
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-
+import com.github.dbourdette.otto.security.Security;
 import com.github.dbourdette.otto.source.Source;
+
+import java.util.*;
 
 /**
  * Used for jsp layout by group
@@ -19,15 +15,11 @@ public class SourceGroups {
     Map<String, SourceGroup> groups = new HashMap<String, SourceGroup>();
 
     public static SourceGroups findAll() {
-        SourceGroups groups = new SourceGroups();
+        return findAll(false);
+    }
 
-        for (Source source : Source.findAll()) {
-            SourceGroup group = groups.ensureExists(source.getDisplayGroup());
-
-            group.addSource(source);
-        }
-
-        return groups;
+    public static SourceGroups findAllAutorized() {
+        return findAll(true);
     }
 
     public Set<SourceGroup> getGroups() {
@@ -59,5 +51,21 @@ public class SourceGroups {
         }
 
         return sourceGroup;
+    }
+
+    private static SourceGroups findAll(boolean onlyAuthorized) {
+        SourceGroups groups = new SourceGroups();
+
+        for (Source source : Source.findAll()) {
+            if (onlyAuthorized && !Security.hasSource(source.getName())) {
+                continue;
+            }
+
+            SourceGroup group = groups.ensureExists(source.getDisplayGroup());
+
+            group.addSource(source);
+        }
+
+        return groups;
     }
 }

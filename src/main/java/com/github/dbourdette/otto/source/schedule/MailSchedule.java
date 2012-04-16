@@ -116,9 +116,11 @@ public class MailSchedule {
 
         Report report = source.buildReport(config, period);
 
+        html += "<div style=\"font-family: Helvetica Neue, Helvetica, Arial, sans-serif;\">";
+
         html += "<h1 style=\"font-size: 24px;line-height: 36px;font-weight: bold;display: block;\">" + config.getTitle() + "</h1>";
 
-        html += "<table style=\"border: 1px solid #DDD;border-collapse: separate;border-radius: 4px;width: 100%;margin-bottom: 18px;border-spacing: 0;\">";
+        html += "<table style=\"font-size: 13px;line-height:18px;border: 1px solid #DDD;border-collapse: separate;border-radius: 4px;width: 100%;margin-bottom: 18px;border-spacing: 0;\">";
 
         int count = 0;
 
@@ -127,24 +129,26 @@ public class MailSchedule {
         }
 
         html += "<thead style=\"font-weight:bold\"><tr>";
-        html += "<td style=\"border-top: 0;border-left: 1px solid #DDD;padding: 8px;line-height: 18px;text-align: left;vertical-align: top;\">total count</td>";
-        html += "<td style=\"border-top: 0;border-left: 1px solid #DDD;padding: 8px;line-height: 18px;text-align: left;vertical-align: top;\">";
+        html += "<td style=\"border-top: 0;border-left: 1px solid #DDD;padding: 4px;line-height: 18px;text-align: left;vertical-align: top;\">total count</td>";
+        html += "<td style=\"border-top: 0;border-left: 1px solid #DDD;padding: 4px;line-height: 18px;text-align: left;vertical-align: top;\">";
         html += count;
         html += "</td>";
         html += "</tr></thead>";
 
         for (Pair pair : report.getSums()) {
             html += "<tbody><tr>";
-            html += "<td style=\"border-radius: 0 0 0 4px;border-left: 1px solid #DDD;padding: 8px;line-height: 18px;text-align: left;vertical-align: top;border-top: 1px solid #DDD;\">";
+            html += "<td style=\"border-radius: 0 0 0 4px;border-left: 1px solid #DDD;padding: 4px;line-height: 18px;text-align: left;vertical-align: top;border-top: 1px solid #DDD;\">";
             html += pair.getName();
             html += "</td>";
-            html += "<td style=\"border-radius: 0 0 4px 0;border-left: 1px solid #DDD;padding: 8px;line-height: 18px;text-align: left;vertical-align: top;border-top: 1px solid #DDD;\">";
+            html += "<td style=\"border-radius: 0 0 4px 0;border-left: 1px solid #DDD;padding: 4px;line-height: 18px;text-align: left;vertical-align: top;border-top: 1px solid #DDD;\">";
             html += pair.getValue();
             html += "</td>";
             html += "</tr></tbody>";
         }
 
         html += "</table>";
+
+        html += "</div>";
 
         return html;
     }

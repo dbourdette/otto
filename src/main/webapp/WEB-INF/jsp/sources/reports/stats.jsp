@@ -41,7 +41,7 @@
     </c:forEach>
 
     <h2>${form.reportConfig.title}</h2>
-    <table class="table table-bordered">
+    <table class="table table-bordered table-condensed">
         <thead>
             <tr>
                 <td><b>total</b></td>

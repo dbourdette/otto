@@ -139,44 +139,6 @@
         <br>
 
         <div class="row">
-            <div class="span2"><strong>Mail reports</strong></div>
-            <table class="table table-bordered table-striped span9">
-                <thead>
-                <tr>
-                    <th>report</th>
-                    <th>title</th>
-                    <th>planification</th>
-                    <th>previous firetime</th>
-                    <th>next firetime</th>
-                </tr>
-                </thead>
-                <tbody>
-                    <c:forEach var="mailReport" items="${mailReports}">
-                        <tr>
-                            <td>${mailReport.reportTitle}</td>
-                            <td>${mailReport.title}</td>
-                            <td>${mailReport.cronExpression}</td>
-                            <td>${quartz:previousFiretime(mailReport)}</td>
-                            <td>${quartz:nextFiretime(mailReport)}</td>
-                        </tr>
-                        <tr>
-                            <td colspan="5">
-                                <a href="/sources/${name}/mailreport/${mailReport.id}">edit</a>
-                                - <a href="/sources/${name}/mailreport/${mailReport.id}/send">send now</a>
-                                - <a href="/sources/${name}/mailreport/${mailReport.id}/delete">delete</a>
-                            </td>
-                        </tr>
-                    </c:forEach>
-                </tbody>
-            </table>
-            <div class="span1">
-                <a href="/sources/${name}/mailreport" class="btn btn-primary pull-right">Add</a>
-            </div>
-        </div>
-
-        <br>
-
-        <div class="row">
             <div class="span2"><strong>Transform operations</strong></div>
             <table class="table table-bordered table-striped span9">
                 <thead>

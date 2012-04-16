@@ -17,8 +17,11 @@
 package com.github.dbourdette.otto.web.controller;
 
 import com.github.dbourdette.otto.report.ReportPeriod;
-import com.github.dbourdette.otto.source.*;
-import com.github.dbourdette.otto.source.config.*;
+import com.github.dbourdette.otto.source.Source;
+import com.github.dbourdette.otto.source.TimeFrame;
+import com.github.dbourdette.otto.source.config.AggregationConfig;
+import com.github.dbourdette.otto.source.config.DefaultGraphParameters;
+import com.github.dbourdette.otto.source.config.TransformConfig;
 import com.github.dbourdette.otto.source.reports.ReportConfig;
 import com.github.dbourdette.otto.source.reports.SourceReports;
 import com.github.dbourdette.otto.source.schedule.MailSchedule;
@@ -31,7 +34,6 @@ import com.github.dbourdette.otto.web.form.TransformForm;
 import com.github.dbourdette.otto.web.util.FlashScope;
 import com.github.dbourdette.otto.web.util.IntervalUtils;
 import org.apache.commons.lang.StringUtils;
-import org.quartz.SchedulerException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -44,7 +46,6 @@ import javax.inject.Inject;
 import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
-import java.text.ParseException;
 
 /**
  * @author damien bourdette
@@ -55,9 +56,6 @@ public class SourcesController {
 
     @Inject
     private FlashScope flashScope;
-
-    @Inject
-    private MailReports mailReports;
 
     @Inject
     private SourceScheduleExecutor scheduleExecutor;
@@ -72,10 +70,7 @@ public class SourcesController {
         model.addAttribute("defaultGraphParameters", source.getDefaultGraphParameters());
         model.addAttribute("reports", SourceReports.forSource(source).getReportConfigs());
         model.addAttribute("schedules", SourceSchedules.forSource(Source.findByName(name)).getSchedules());
-        model.addAttribute("mailReports", source.getMailReports());
         model.addAttribute("indexes", source.getIndexes());
-
-
 
         return "sources/source";
     }
@@ -150,7 +145,7 @@ public class SourcesController {
     }
 
     @RequestMapping(value = "/sources/{name}", method = RequestMethod.DELETE)
-    public String dropSource(@PathVariable String name) throws SchedulerException {
+    public String dropSource(@PathVariable String name) {
         Source.findByName(name).drop();
 
         flashScope.message("source " + name + " has just been deleted");
@@ -240,7 +235,7 @@ public class SourcesController {
     }
 
     @RequestMapping(value = "/sources/{name}/report", method = RequestMethod.POST)
-    public String report(@PathVariable String name, @Valid @ModelAttribute("form") ReportConfig form, BindingResult result, Model model) throws SchedulerException, ParseException {
+    public String report(@PathVariable String name, @Valid @ModelAttribute("form") ReportConfig form, BindingResult result, Model model) {
         if (result.hasErrors()) {
             return "sources/report_form";
         }
@@ -269,7 +264,7 @@ public class SourcesController {
         model.addAttribute("reports", SourceReports.forSource(Source.findByName(name)).getReportConfigs());
         model.addAttribute("form", new MailSchedule());
 
-        return "sources/schedule_form";
+        return "sources/schedule/edit";
     }
 
     @RequestMapping(value = "/sources/{name}/schedule", method = RequestMethod.POST)
@@ -277,7 +272,7 @@ public class SourcesController {
         if (result.hasErrors()) {
             model.addAttribute("reports", SourceReports.forSource(Source.findByName(name)).getReportConfigs());
 
-            return "sources/schedule_form";
+            return "sources/schedule/edit";
         }
 
         SourceSchedules.forSource(Source.findByName(name)).schedule(form);
@@ -290,74 +285,24 @@ public class SourcesController {
         model.addAttribute("reports", SourceReports.forSource(Source.findByName(name)).getReportConfigs());
         model.addAttribute("form", SourceSchedules.forSource(Source.findByName(name)).getSchedule(id));
 
-        return "sources/schedule_form";
+        return "sources/schedule/edit";
     }
 
     @RequestMapping("/sources/{name}/schedule/{id}/delete")
-    public String deleteSchedule(@PathVariable String name, @PathVariable String id, Model model) throws SchedulerException {
+    public String deleteSchedule(@PathVariable String name, @PathVariable String id, Model model) {
         SourceSchedules.forSource(Source.findByName(name)).deleteSchedule(id);
 
         return "redirect:/sources/{name}/configuration";
     }
 
     @RequestMapping("/sources/{name}/schedule/{id}/send")
-    public String sendScheduledMailReport(@PathVariable String name, @PathVariable String id, Model model) throws MessagingException, UnsupportedEncodingException {
+    public String sendSchedule(@PathVariable String name, @PathVariable String id, Model model) throws MessagingException, UnsupportedEncodingException {
         Source source = Source.findByName(name);
+        MailSchedule schedule = SourceSchedules.forSource(source).getSchedule(id);
 
-        scheduleExecutor.execute(source, SourceSchedules.forSource(source).getSchedule(id));
+        scheduleExecutor.execute(source, schedule);
 
-        flashScope.message("your email report has been sent");
-
-        return "redirect:/sources/{name}/configuration";
-    }
-
-    @RequestMapping("/sources/{name}/mailreport")
-    public String mailreport(@PathVariable String name, Model model) {
-        model.addAttribute("form", new MailReportConfig());
-
-        return "sources/mail_report_form";
-    }
-
-    @RequestMapping(value = "/sources/{name}/mailreport", method = RequestMethod.POST)
-    public String mailreport(@PathVariable String name, @Valid @ModelAttribute("form") MailReportConfig form, BindingResult result, Model model) throws SchedulerException, ParseException {
-        if (result.hasErrors()) {
-            return "sources/mail_report_form";
-        }
-
-        Source.findByName(name).saveMailReport(form);
-
-        mailReports.onReportChange(form);
-
-        return "redirect:/sources/{name}/configuration";
-    }
-
-    @RequestMapping("/sources/{name}/mailreport/{id}")
-    public String mailreport(@PathVariable String name, @PathVariable String id, Model model) {
-        model.addAttribute("form", Source.findByName(name).getMailReport(id));
-
-        return "sources/mail_report_form";
-    }
-
-    @RequestMapping("/sources/{name}/mailreport/{id}/delete")
-    public String delete(@PathVariable String name, @PathVariable String id, Model model) throws SchedulerException {
-        MailReportConfig mailReportConfig = Source.findByName(name).deleteMailReport(id);
-
-        if (mailReportConfig != null) {
-            mailReports.onReportDeleted(mailReportConfig);
-        }
-
-        return "redirect:/sources/{name}/configuration";
-    }
-
-    @RequestMapping("/sources/{name}/mailreport/{id}/send")
-    public String sendMailReport(@PathVariable String name, @PathVariable String id, Model model) throws MessagingException, UnsupportedEncodingException {
-        Source source = Source.findByName(name);
-
-        MailReportConfig mailReport = source.getMailReport(id);
-
-        mailReports.sendReport(mailReport);
-
-        flashScope.message("your email report has been sent");
+        flashScope.message(scheduleExecutor.executionMessage(source, schedule));
 
         return "redirect:/sources/{name}/configuration";
     }

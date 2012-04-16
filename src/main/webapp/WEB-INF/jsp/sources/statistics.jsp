@@ -62,8 +62,8 @@
             <td>${source.reportsCollectionName}</td>
         </tr>
         <tr>
-            <td>mail report configuration</td>
-            <td>${source.mailReportsCollectionName}</td>
+            <td>schedule configuration</td>
+            <td>${source.schedulesCollectionName}</td>
         </tr>
     </table>
 

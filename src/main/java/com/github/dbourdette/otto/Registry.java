@@ -1,8 +1,6 @@
 package com.github.dbourdette.otto;
 
-import com.github.dbourdette.otto.source.MailReports;
 import com.mongodb.DB;
-
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.config.CacheConfiguration;
@@ -18,8 +16,6 @@ public class Registry {
     public static DB mongoDb;
 
     public static Cache sourceCache;
-
-    public static MailReports mailReports;
 
     static {
         CacheManager cacheManager = new CacheManager();

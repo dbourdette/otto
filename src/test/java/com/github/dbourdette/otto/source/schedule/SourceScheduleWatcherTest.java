@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package com.github.dbourdette.otto.source;
+package com.github.dbourdette.otto.source.schedule;
 
-import com.github.dbourdette.otto.source.schedule.SourceScheduleWatcher;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.junit.Test;
@@ -46,8 +45,13 @@ public class SourceScheduleWatcherTest {
     }
 
     @Test
-    public void isEligibleNicknames() throws ParseException {
+    public void isEligibleNicknames() {
         assertThat(watcher.isEligible("@monthly", startOfMonth())).isTrue();
+    }
+
+    @Test
+    public void parseCronExpression() throws ParseException {
+        assertThat(watcher.parse("30 0 * * MON")).isNotNull();
     }
 
     private DateTime anyDateWithMinutesAt(int minute) {

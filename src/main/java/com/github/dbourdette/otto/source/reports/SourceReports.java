@@ -73,4 +73,11 @@ public class SourceReports {
     public void deleteReportConfig(String id) {
         reports.remove(new BasicDBObject("_id", new ObjectId(id)));
     }
+
+    /**
+     * Drop underlying mongodb collection
+     */
+    public void dropCollection() {
+        reports.drop();
+    }
 }

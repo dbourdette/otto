@@ -36,11 +36,23 @@ public class SourceScheduleExecutorImpl implements SourceScheduleExecutor {
     private Logs logs;
 
     @Async
+    @Override
     public void execute(Source source, MailSchedule schedule) {
         try {
             mailer.send(schedule.buildMail(source));
+
+            logs.trace("Schedule " + messageCore(source, schedule) + " has just been executed");
         } catch (Exception e) {
             logs.error("Failed to execute schedule, reason : " + e.getMessage(), e);
         }
+    }
+
+    @Override
+    public String executionMessage(Source source, MailSchedule schedule) {
+        return "Executing schedule " + messageCore(source, schedule);
+    }
+
+    public String messageCore(Source source, MailSchedule schedule) {
+        return schedule.getTitle() + " for source " + source.getName();
     }
 }

@@ -20,8 +20,12 @@ import com.github.dbourdette.otto.Registry;
 import com.github.dbourdette.otto.report.Report;
 import com.github.dbourdette.otto.report.ReportPeriod;
 import com.github.dbourdette.otto.report.filler.OperationChain;
-import com.github.dbourdette.otto.source.config.*;
+import com.github.dbourdette.otto.source.config.AggregationConfig;
+import com.github.dbourdette.otto.source.config.DefaultGraphParameters;
+import com.github.dbourdette.otto.source.config.TransformConfig;
 import com.github.dbourdette.otto.source.reports.ReportConfig;
+import com.github.dbourdette.otto.source.reports.SourceReports;
+import com.github.dbourdette.otto.source.schedule.SourceSchedules;
 import com.github.dbourdette.otto.util.Page;
 import com.github.dbourdette.otto.web.exception.SourceAlreadyExists;
 import com.github.dbourdette.otto.web.exception.SourceNotFound;
@@ -36,9 +40,7 @@ import com.github.dbourdette.otto.web.util.SizeInBytes;
 import com.mongodb.*;
 import net.sf.ehcache.Element;
 import org.apache.commons.lang.StringUtils;
-import org.bson.types.ObjectId;
 import org.joda.time.Interval;
-import org.quartz.SchedulerException;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -62,8 +64,6 @@ public class Source {
 
     private DBCollection config;
 
-    private DBCollection mailReports;
-
     private volatile AggregationConfig aggregationConfig;
 
     private volatile TransformConfig transformConfig;
@@ -74,10 +74,6 @@ public class Source {
 
     public static String qualifiedConfigName(String name) {
         return Constants.SOURCES + name + Constants.CONFIG;
-    }
-
-    public static String qualifiedMailReportsName(String name) {
-        return Constants.SOURCES + name + "." + Constants.MAIL_CONFIG;
     }
 
     public static String qualifiedReportsName(String name) {
@@ -153,7 +149,6 @@ public class Source {
         source.name = name;
         source.events = Registry.mongoDb.getCollection(qualifiedName(name));
         source.config = Registry.mongoDb.getCollection(qualifiedConfigName(name));
-        source.mailReports = Registry.mongoDb.getCollection(qualifiedMailReportsName(name));
 
         source.loadAggregation();
         source.loadDisplay();
@@ -186,15 +181,11 @@ public class Source {
         return sources;
     }
 
-    public void drop() throws SchedulerException {
-        for (MailReportConfig report : getMailReports()) {
-            Registry.mailReports.onReportDeleted(report);
-        }
-
+    public void drop() {
         events.drop();
         config.drop();
-        Registry.mongoDb.getCollection(qualifiedReportsName(name)).drop();
-        mailReports.drop();
+        SourceReports.forSource(this).dropCollection();
+        SourceSchedules.forSource(this).dropCollection();
 
         Registry.sourceCache.remove(name);
     }
@@ -367,65 +358,6 @@ public class Source {
         config.update(filter, values, true, false);
     }
 
-    public List<MailReportConfig> getMailReports() {
-        List<DBObject> objects = mailReports.find().toArray();
-
-        List<MailReportConfig> mailReports = new ArrayList<MailReportConfig>();
-
-        for (DBObject object : objects) {
-            mailReports.add(toMailReportConfig(object));
-        }
-
-        return mailReports;
-    }
-
-    public void saveMailReport(MailReportConfig mailReport) {
-        BasicDBObject object = new BasicDBObject();
-
-        if (StringUtils.isNotEmpty(mailReport.getId())) {
-            object.put("_id", new ObjectId(mailReport.getId()));
-        } else {
-            ObjectId objectId = new ObjectId();
-
-            object.put("_id", objectId);
-
-            mailReport.setId(objectId.toString());
-        }
-
-        mailReport.setSourceName(name);
-
-        object.put("sourceName", name);
-        object.put("cronExpression", mailReport.getCronExpression());
-        object.put("to", mailReport.getTo());
-        object.put("title", mailReport.getTitle());
-        object.put("period", mailReport.getPeriod().name());
-        object.put("reportTitle", mailReport.getReportTitle());
-
-        mailReports.save(object);
-    }
-
-    public MailReportConfig getMailReport(String id) {
-        DBObject object = mailReports.findOne(new BasicDBObject("_id", new ObjectId(id)));
-
-        if (object == null) {
-            return null;
-        }
-
-        return toMailReportConfig(object);
-    }
-
-    public MailReportConfig deleteMailReport(String id) {
-        MailReportConfig config = getMailReport(id);
-
-        if (config == null) {
-            return null;
-        }
-
-        mailReports.remove((new BasicDBObject("_id", new ObjectId(id))));
-
-        return config;
-    }
-
     public List<DBObject> getIndexes() {
         return events.getIndexInfo();
     }
@@ -456,20 +388,6 @@ public class Source {
         }
 
         return cursor.next();
-    }
-
-    private MailReportConfig toMailReportConfig(DBObject object) {
-        MailReportConfig mailReport = new MailReportConfig();
-
-        mailReport.setId(((ObjectId) object.get("_id")).toString());
-        mailReport.setSourceName((String) object.get("sourceName"));
-        mailReport.setCronExpression((String) object.get("cronExpression"));
-        mailReport.setTo((String) object.get("to"));
-        mailReport.setTitle((String) object.get("title"));
-        mailReport.setPeriod(ReportPeriod.valueOf((String) object.get("period")));
-        mailReport.setReportTitle((String) object.get("reportTitle"));
-
-        return mailReport;
     }
 
     public void loadAggregation() {
@@ -558,8 +476,8 @@ public class Source {
         return qualifiedReportsName(name);
     }
 
-    public String getMailReportsCollectionName() {
-        return mailReports.getName();
+    public String getSchedulesCollectionName() {
+        return qualifiedSchedulesName(name);
     }
 
     public CommandResult getStats() {

@@ -16,45 +16,30 @@
 
 package com.github.dbourdette.otto;
 
-import java.net.UnknownHostException;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Properties;
-
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.servlet.ServletContext;
-
-import org.apache.commons.lang.StringUtils;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.simpl.RAMJobStore;
-import org.quartz.simpl.SimpleThreadPool;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.support.ReloadableResourceBundleMessageSource;
-import org.springframework.scheduling.quartz.SchedulerFactoryBean;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.i18n.FixedLocaleResolver;
-import org.springframework.web.servlet.view.JstlView;
-import org.springframework.web.servlet.view.UrlBasedViewResolver;
-
-import com.github.dbourdette.otto.quartz.OttoJobFactory;
 import com.github.dbourdette.otto.service.user.User;
-import com.github.dbourdette.otto.source.MailReports;
 import com.google.code.morphia.Datastore;
 import com.google.code.morphia.Morphia;
 import com.mongodb.DB;
 import com.mongodb.Mongo;
 import com.mongodb.MongoException;
 import com.mongodb.ServerAddress;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.i18n.FixedLocaleResolver;
+import org.springframework.web.servlet.view.JstlView;
+import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.CacheManager;
-import net.sf.ehcache.config.CacheConfiguration;
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.servlet.ServletContext;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * @author damien bourdette
@@ -85,17 +70,11 @@ public class SpringConfig {
     @Inject
     private ApplicationContext context;
 
-    @Inject
-    private MailReports mailReports;
-
     @PostConstruct
-    public void init() throws UnknownHostException, SchedulerException, ParseException {
+    public void init() throws UnknownHostException {
         SpringConfig.staticContext = context;
 
         Registry.mongoDb = mongoDb();
-        Registry.mailReports = mailReports;
-
-        mailReports.initScheduler();
     }
 
     @Bean
@@ -120,33 +99,6 @@ public class SpringConfig {
         messageSource.setBasename("classpath:messages");
         messageSource.setDefaultEncoding("UTF-8");
         return messageSource;
-    }
-
-    @Bean
-    public Scheduler quartzScheduler(ApplicationContext context) throws Exception {
-        SchedulerFactoryBean factory = new SchedulerFactoryBean();
-
-        factory.setApplicationContext(context);
-        factory.setExposeSchedulerInRepository(true);
-        factory.setApplicationContextSchedulerContextKey(APPLICATION_CONTEXT_KEY);
-        factory.setJobFactory(new OttoJobFactory());
-
-        Properties properties = new Properties();
-        properties.setProperty("org.quartz.threadPool.class", SimpleThreadPool.class.getName());
-        properties.setProperty("org.quartz.threadPool.threadCount", "5");
-        properties.setProperty("org.quartz.threadPool.threadPriority", "4");
-
-        properties.setProperty("org.quartz.jobStore.class", RAMJobStore.class.getName());
-
-        factory.setQuartzProperties(properties);
-
-        factory.afterPropertiesSet();
-
-        Scheduler scheduler = factory.getObject();
-
-        scheduler.start();
-
-        return scheduler;
     }
 
     @Bean

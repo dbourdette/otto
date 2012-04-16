@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<%@include file="../directives.jsp"%>
+<%@include file="../../directives.jsp"%>
 
 <%--
   ~ Copyright 2011 Damien Bourdette
@@ -58,7 +58,7 @@
         <fieldset>
             <legend>Mail</legend>
             <bootstrap:control path="to" label="To">
-                <form:input path="to" size="50" cssClass="input-xxlarge"/> (comma separated values)
+                <form:textarea path="to" cssClass="input-xxlarge" rows="5"/> (comma separated values)
             </bootstrap:control>
             <bootstrap:control path="title" label="Subject">
                 <form:input path="title" size="80" cssClass="input-xxlarge" />

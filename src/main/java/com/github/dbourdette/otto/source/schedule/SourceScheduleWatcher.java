@@ -48,7 +48,7 @@ public class SourceScheduleWatcher {
         for (Source source : Source.findAll()) {
             for (MailSchedule schedule : SourceSchedules.forSource(source).getSchedules()) {
                 if (isEligible(schedule.getCronExpression(), now)) {
-                    logs.trace("Executing schedule " + schedule.getTitle() + " for source " + source.getName());
+                    logs.trace(executor.executionMessage(source, schedule));
 
                     executor.execute(source, schedule);
                 }
@@ -72,5 +72,9 @@ public class SourceScheduleWatcher {
             return false;
         }
 
+    }
+
+    public CronTabExpression parse(String cronExpression) throws ParseException {
+        return CronTabExpression.parse(cronExpression);
     }
 }

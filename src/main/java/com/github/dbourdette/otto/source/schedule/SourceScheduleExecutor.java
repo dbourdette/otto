@@ -26,4 +26,6 @@ import com.github.dbourdette.otto.source.Source;
 
 public interface SourceScheduleExecutor {
     public void execute(Source source, MailSchedule schedule);
+
+    public String executionMessage(Source source, MailSchedule schedule);
 }

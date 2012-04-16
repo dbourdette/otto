@@ -67,4 +67,11 @@ public class SourceSchedules {
     public void deleteSchedule(String id) {
         schedules.remove(new BasicDBObject("_id", new ObjectId(id)));
     }
+
+    /**
+     * Drop underlying mongodb collection
+     */
+    public void dropCollection() {
+        schedules.drop();
+    }
 }

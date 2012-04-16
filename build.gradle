@@ -95,8 +95,6 @@ dependencies {
     compile('net.jradius:jradius-extended:1.1.4') { exclude group: 'ipdr' }
     compile 'bouncycastle:bcprov-jdk16:140'
 
-    compile 'org.quartz-scheduler:quartz:2.0.2'
-
     compile 'taglibs:standard:1.1.2'
 
     compile 'joda-time:joda-time:1.6.2'
