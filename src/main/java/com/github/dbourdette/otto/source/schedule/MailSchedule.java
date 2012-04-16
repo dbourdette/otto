@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-package com.github.dbourdette.otto.source;
+package com.github.dbourdette.otto.source.schedule;
 
 import com.github.dbourdette.otto.report.Report;
 import com.github.dbourdette.otto.report.ReportPeriod;
 import com.github.dbourdette.otto.service.mail.Mail;
-import com.github.dbourdette.otto.source.config.ReportConfig;
+import com.github.dbourdette.otto.source.Source;
+import com.github.dbourdette.otto.source.reports.SourceReports;
+import com.github.dbourdette.otto.source.reports.ReportConfig;
 import com.github.dbourdette.otto.web.util.Pair;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCursor;
@@ -33,7 +35,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Send mail schedule operation for a {@link Source}
+ * Send mail schedule operation for a {@link com.github.dbourdette.otto.source.Source}
  *
  * @author damien bourdette
  */

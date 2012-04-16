@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<%@include file="../directives.jsp"%>
+<%@include file="../../directives.jsp"%>
 
 <%--
   ~ Copyright 2011 Damien Bourdette
@@ -30,6 +30,14 @@
     <widget:nav />
 
     <h2>Add an index</h2>
+
+    <div class="row">
+        <div class="span12">
+            <br>
+                See mongodb <a href="http://www.mongodb.org/display/DOCS/Indexes" target="_blank">index documentation <i class="icon-share"></i></a> for information
+            <br><br>
+        </div>
+    </div>
 
     <form:form action="/sources/${name}/indexes" commandName="form" method="post" cssClass="form-horizontal">
         <bootstrap:control path="key" label="Key">

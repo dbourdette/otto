@@ -28,7 +28,7 @@ import com.github.dbourdette.otto.report.Report;
 import com.github.dbourdette.otto.report.ReportPeriod;
 import com.github.dbourdette.otto.source.Source;
 import com.github.dbourdette.otto.source.config.DefaultGraphParameters;
-import com.github.dbourdette.otto.source.config.ReportConfig;
+import com.github.dbourdette.otto.source.reports.ReportConfig;
 
 /**
  * @author damien bourdette

@@ -1,18 +1,18 @@
 package com.github.dbourdette.otto.integration.source;
 
-import java.net.UnknownHostException;
-
+import com.github.dbourdette.otto.Registry;
+import com.github.dbourdette.otto.source.Source;
+import com.github.dbourdette.otto.source.reports.SourceReports;
+import com.github.dbourdette.otto.source.reports.ReportConfig;
+import com.github.dbourdette.otto.web.exception.SourceAlreadyExists;
+import com.github.dbourdette.otto.web.exception.SourceNotFound;
+import com.mongodb.Mongo;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.quartz.SchedulerException;
 
-import com.github.dbourdette.otto.Registry;
-import com.github.dbourdette.otto.source.Source;
-import com.github.dbourdette.otto.source.config.ReportConfig;
-import com.github.dbourdette.otto.web.exception.SourceAlreadyExists;
-import com.github.dbourdette.otto.web.exception.SourceNotFound;
-import com.mongodb.Mongo;
+import java.net.UnknownHostException;
 
 import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.fail;
@@ -111,19 +111,19 @@ public class SourceTest {
         config.setTitle("hits");
         config.setValueAttribute("hits");
 
-        source.saveReportConfig(config);
-        source.saveReportConfig(config);
+        SourceReports.forSource(source).saveReportConfig(config);
+        SourceReports.forSource(source).saveReportConfig(config);
 
-        Assert.assertEquals(1, source.getReportConfigs().size());
-        Assert.assertEquals("hits", source.getReportConfigs().get(0).getValueAttribute());
+        Assert.assertEquals(1, SourceReports.forSource(source).getReportConfigs().size());
+        Assert.assertEquals("hits", SourceReports.forSource(source).getReportConfigs().get(0).getValueAttribute());
 
-        config = source.getReportConfig(config.getId());
+        config = SourceReports.forSource(source).getReportConfig(config.getId());
 
         Assert.assertEquals("hits", config.getValueAttribute());
 
         config.setValueAttribute("slug");
-        source.saveReportConfig(config);
+        SourceReports.forSource(source).saveReportConfig(config);
 
-        Assert.assertEquals("slug", source.getReportConfigs().get(0).getValueAttribute());
+        Assert.assertEquals("slug", SourceReports.forSource(source).getReportConfigs().get(0).getValueAttribute());
     }
 }

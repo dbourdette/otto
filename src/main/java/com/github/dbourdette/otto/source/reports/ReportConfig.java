@@ -1,4 +1,4 @@
-package com.github.dbourdette.otto.source.config;
+package com.github.dbourdette.otto.source.reports;
 
 import com.github.dbourdette.otto.report.Report;
 import com.github.dbourdette.otto.report.filler.*;

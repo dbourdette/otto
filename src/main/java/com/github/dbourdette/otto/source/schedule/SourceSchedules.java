@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package com.github.dbourdette.otto.source;
+package com.github.dbourdette.otto.source.schedule;
 
 import com.github.dbourdette.otto.Registry;
+import com.github.dbourdette.otto.source.Source;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import org.apache.commons.lang.StringUtils;
@@ -25,6 +26,8 @@ import org.bson.types.ObjectId;
 import java.util.List;
 
 /**
+ * All schedules for a {@link com.github.dbourdette.otto.source.Source}
+ *
  * @author damien bourdette
  */
 public class SourceSchedules {

@@ -18,7 +18,7 @@ package com.github.dbourdette.otto.web.controller;
 
 import com.github.dbourdette.otto.report.Report;
 import com.github.dbourdette.otto.source.Source;
-import com.github.dbourdette.otto.source.SourceReports;
+import com.github.dbourdette.otto.source.reports.SourceReports;
 import com.github.dbourdette.otto.web.form.ReportForm;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;

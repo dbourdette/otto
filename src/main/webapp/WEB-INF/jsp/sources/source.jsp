@@ -117,8 +117,7 @@
                 <tr>
                     <th>report</th>
                     <th>subject</th>
-                    <th>cron expression</th>
-                    <th></th>
+                    <th colspan="2">cron expression</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -208,7 +207,7 @@
                 <thead>
                 <tr>
                     <th>name</th>
-                    <th>definition</th>
+                    <th colspan="2">definition</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -216,14 +215,13 @@
                         <tr>
                             <td>${fn:escapeXml(index.name)}</td>
                             <td>${index}</td>
+                            <td style="width: 80px;padding: 2px; text-align: center">
+                                <c:if test="${not (index.name eq '_id_')}">
+                                    <a href="/sources/${name}/indexes/${index.name}/drop" class="btn btn-danger">drop</a>
+                                </c:if>
+                            </td>
                         </tr>
-                        <c:if test="${not (index.name eq '_id_')}">
-                            <tr>
-                                <td>
-                                    <a href="/sources/${name}/indexes/${index.name}/drop">drop</a>
-                                </td>
-                            </tr>
-                        </c:if>
+
                     </c:forEach>
                 </tbody>
             </table>

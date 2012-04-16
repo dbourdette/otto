@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.github.dbourdette.otto.source;
+package com.github.dbourdette.otto.source.reports;
 
 import com.github.dbourdette.otto.Registry;
-import com.github.dbourdette.otto.source.config.ReportConfig;
+import com.github.dbourdette.otto.source.Source;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import org.apache.commons.lang.StringUtils;
@@ -26,7 +26,7 @@ import org.bson.types.ObjectId;
 import java.util.List;
 
 /**
- * All reports available for a source
+ * All reports available for a {@link com.github.dbourdette.otto.source.Source}
  *
  * @author damien bourdette
  */

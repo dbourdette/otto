@@ -16,17 +16,6 @@
 
 package com.github.dbourdette.otto.service.logs;
 
-import java.util.Date;
-
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
-
 import com.github.dbourdette.otto.service.user.User;
 import com.github.dbourdette.otto.util.Page;
 import com.github.dbourdette.otto.web.util.Constants;
@@ -34,6 +23,15 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import java.util.Date;
 
 /**
  * @author damien bourdette
@@ -64,25 +62,16 @@ public class Logs {
 	}
 
 	public void trace(String message) {
-		BasicDBObject log = new BasicDBObject();
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        Object principal = authentication.getPrincipal();
-
-        if (principal instanceof User) {
-            log.put("user", ((User) principal).getUsername());
-        } else {
-            log.put("user", authentication.getName());
-        }
-
-		log.put("date", new Date());
-		log.put("message", message);
-
-		logs().insert(log);
+        store(message);
 
         LOGGER.info(message);
 	}
+
+    public void error(String message, Throwable throwable) {
+        store(message + " (see logs for details)");
+
+        LOGGER.error(message, throwable);
+    }
 
 	public Page<DBObject> page(Integer page) {
         return Page.fromCursor(logs().find().sort(new BasicDBObject("date", -1)), page, PAGE_SIZE);
@@ -91,4 +80,27 @@ public class Logs {
 	private DBCollection logs() {
 		return mongoDb.getCollection(Constants.LOGS);
 	}
+
+    private void store(String message) {
+        BasicDBObject log = new BasicDBObject();
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null) {
+            log.put("user", "system");
+        } else {
+            Object principal = authentication.getPrincipal();
+
+            if (principal instanceof User) {
+                log.put("user", ((User) principal).getUsername());
+            } else {
+                log.put("user", authentication.getName());
+            }
+        }
+
+        log.put("date", new Date());
+        log.put("message", message);
+
+        logs().insert(log);
+    }
 }

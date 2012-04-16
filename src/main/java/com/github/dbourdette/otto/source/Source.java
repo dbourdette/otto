@@ -21,6 +21,7 @@ import com.github.dbourdette.otto.report.Report;
 import com.github.dbourdette.otto.report.ReportPeriod;
 import com.github.dbourdette.otto.report.filler.OperationChain;
 import com.github.dbourdette.otto.source.config.*;
+import com.github.dbourdette.otto.source.reports.ReportConfig;
 import com.github.dbourdette.otto.util.Page;
 import com.github.dbourdette.otto.web.exception.SourceAlreadyExists;
 import com.github.dbourdette.otto.web.exception.SourceNotFound;

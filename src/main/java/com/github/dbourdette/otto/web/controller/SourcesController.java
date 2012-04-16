@@ -17,9 +17,13 @@
 package com.github.dbourdette.otto.web.controller;
 
 import com.github.dbourdette.otto.report.ReportPeriod;
-import com.github.dbourdette.otto.service.mail.Mailer;
 import com.github.dbourdette.otto.source.*;
 import com.github.dbourdette.otto.source.config.*;
+import com.github.dbourdette.otto.source.reports.ReportConfig;
+import com.github.dbourdette.otto.source.reports.SourceReports;
+import com.github.dbourdette.otto.source.schedule.MailSchedule;
+import com.github.dbourdette.otto.source.schedule.SourceScheduleExecutor;
+import com.github.dbourdette.otto.source.schedule.SourceSchedules;
 import com.github.dbourdette.otto.web.form.CappingForm;
 import com.github.dbourdette.otto.web.form.IndexForm;
 import com.github.dbourdette.otto.web.form.SourceForm;
@@ -56,7 +60,7 @@ public class SourcesController {
     private MailReports mailReports;
 
     @Inject
-    private Mailer mailer;
+    private SourceScheduleExecutor scheduleExecutor;
 
     @RequestMapping({"/sources/{name}/configuration"})
     public String source(@PathVariable String name, Model model) {
@@ -300,9 +304,7 @@ public class SourcesController {
     public String sendScheduledMailReport(@PathVariable String name, @PathVariable String id, Model model) throws MessagingException, UnsupportedEncodingException {
         Source source = Source.findByName(name);
 
-        MailSchedule mailSchedule = SourceSchedules.forSource(source).getSchedule(id);
-
-        mailer.send(mailSchedule.buildMail(source));
+        scheduleExecutor.execute(source, SourceSchedules.forSource(source).getSchedule(id));
 
         flashScope.message("your email report has been sent");
 
@@ -401,13 +403,13 @@ public class SourcesController {
     public String indexes(@PathVariable String name, Model model) {
         model.addAttribute("form", new IndexForm());
 
-        return "sources/index_form";
+        return "sources/mongodb_index/add";
     }
 
     @RequestMapping(value = "/sources/{name}/indexes", method = RequestMethod.POST)
     public String indexes(@PathVariable String name, @Valid @ModelAttribute("form") IndexForm form, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            return "sources/index_form";
+            return "sources/mongodb_index/add";
         }
 
         Source source = Source.findByName(name);

@@ -125,8 +125,8 @@
     </reporting>
 
     <properties>
-        <spring.version>3.1.0.M2</spring.version>
-        <spring.security.version>3.1.0.M2</spring.security.version>
+        <spring.version>3.1.1.RELEASE</spring.version>
+        <spring.security.version>3.1.0.RELEASE</spring.security.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -533,6 +533,15 @@
             <groupId>bouncycastle</groupId>
             <artifactId>bcprov-jdk16</artifactId>
             <version>140</version>
+        </dependency>
+
+        <!-- crontab -->
+        <dependency>
+            <groupId>com.kenai.crontab-parser</groupId>
+            <artifactId>crontab-parser</artifactId>
+            <version>1.0.1</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/crontab-parser-1.0.1.jar</systemPath>
         </dependency>
 
         <!-- Quartz -->
