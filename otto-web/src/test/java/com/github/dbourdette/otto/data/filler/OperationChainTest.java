@@ -1,12 +1,12 @@
-package com.github.dbourdette.otto.report.filler;
+package com.github.dbourdette.otto.data.filler;
 
 import org.joda.time.DateMidnight;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.github.dbourdette.otto.report.Report;
-import com.github.dbourdette.otto.report.ReportPeriod;
+import com.github.dbourdette.otto.data.SimpleDataTable;
+import com.github.dbourdette.otto.data.DataTablePeriod;
 import com.mongodb.BasicDBObject;
 
 /**
@@ -14,33 +14,33 @@ import com.mongodb.BasicDBObject;
  * @version \$Revision$
  */
 public class OperationChainTest {
-    private Report report;
+    private SimpleDataTable table;
 
     @Before
     public void init() {
-        report = new Report();
-        report.createRows(ReportPeriod.TODAY);
+        table = new SimpleDataTable();
+        table.setupRows(DataTablePeriod.TODAY);
     }
 
     @Test
     public void nofiller() {
         chain().write(event());
 
-        Assert.assertEquals(1, report.getValue(OperationChain.DEFAULT_COLUMN, 0).intValue());
+        Assert.assertEquals(1, table.getValue(OperationChain.DEFAULT_COLUMN, 0).intValue());
     }
 
     @Test
     public void valueAttribute() {
         chain().valueAttribute("value").write(event());
 
-        Assert.assertEquals(10, report.getValue(OperationChain.DEFAULT_COLUMN, 0).intValue());
+        Assert.assertEquals(10, table.getValue(OperationChain.DEFAULT_COLUMN, 0).intValue());
     }
 
     @Test
     public void labelAttributes() {
         chain().labelAttributes("text,value").write(event());
 
-        Assert.assertEquals(1, report.getValue("this is a Dummy conTent - 10", 0).intValue());
+        Assert.assertEquals(1, table.getValue("this is a Dummy conTent - 10", 0).intValue());
     }
 
     @Test
@@ -50,8 +50,8 @@ public class OperationChainTest {
 
         chain(tokenize).labelAttributes("text").write(event());
 
-        Assert.assertEquals(1, report.getValue("Dummy", 0).intValue());
-        Assert.assertEquals(1, report.getValue("conTent", 0).intValue());
+        Assert.assertEquals(1, table.getValue("Dummy", 0).intValue());
+        Assert.assertEquals(1, table.getValue("conTent", 0).intValue());
     }
 
     @Test
@@ -63,8 +63,8 @@ public class OperationChainTest {
 
         chain(tokenize, lowerCase).labelAttributes("text").valueAttribute("value").write(event());
 
-        Assert.assertEquals(10, report.getValue("dummy", 0).intValue());
-        Assert.assertEquals(10, report.getValue("content", 0).intValue());
+        Assert.assertEquals(10, table.getValue("dummy", 0).intValue());
+        Assert.assertEquals(10, table.getValue("content", 0).intValue());
     }
 
     private BasicDBObject event() {
@@ -78,7 +78,7 @@ public class OperationChainTest {
     }
 
     private OperationChain chain(Operation... operations) {
-        OperationChain chain = OperationChain.forReport(report);
+        OperationChain chain = OperationChain.forTable(table);
 
         for (Operation operation : operations) {
             chain.add(operation);

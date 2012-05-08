@@ -16,8 +16,8 @@
 
 package com.github.dbourdette.otto.source.schedule;
 
-import com.github.dbourdette.otto.report.Report;
-import com.github.dbourdette.otto.report.ReportPeriod;
+import com.github.dbourdette.otto.data.SimpleDataTable;
+import com.github.dbourdette.otto.data.DataTablePeriod;
 import com.github.dbourdette.otto.service.mail.Mail;
 import com.github.dbourdette.otto.source.Source;
 import com.github.dbourdette.otto.source.reports.SourceReports;
@@ -46,7 +46,7 @@ public class MailSchedule {
     private String report;
 
     @NotNull
-    private ReportPeriod period;
+    private DataTablePeriod period;
 
     private String cronExpression;
 
@@ -71,7 +71,7 @@ public class MailSchedule {
 
         schedule.setId(((ObjectId) object.get("_id")).toString());
         schedule.setReport(object.getString("report"));
-        schedule.setPeriod(ReportPeriod.valueOf(object.getString("period")));
+        schedule.setPeriod(DataTablePeriod.valueOf(object.getString("period")));
         schedule.setTitle(object.getString("title"));
         schedule.setTo(object.getString("to"));
         schedule.setCronExpression(object.getString("cronExpression"));
@@ -114,7 +114,7 @@ public class MailSchedule {
             config = new ReportConfig();
         }
 
-        Report report = source.buildReport(config, period);
+        SimpleDataTable report = source.buildTable(config, period);
 
         html += "<div style=\"font-family: Helvetica Neue, Helvetica, Arial, sans-serif;\">";
 
@@ -153,8 +153,8 @@ public class MailSchedule {
         return html;
     }
 
-    public ReportPeriod[] getPeriods() {
-        return ReportPeriod.values();
+    public DataTablePeriod[] getPeriods() {
+        return DataTablePeriod.values();
     }
 
     public String getReport() {
@@ -197,11 +197,11 @@ public class MailSchedule {
         this.title = title;
     }
 
-    public ReportPeriod getPeriod() {
+    public DataTablePeriod getPeriod() {
         return period;
     }
 
-    public void setPeriod(ReportPeriod period) {
+    public void setPeriod(DataTablePeriod period) {
         this.period = period;
     }
 

@@ -1,16 +1,21 @@
 package com.github.dbourdette.otto.source.reports;
 
-import com.github.dbourdette.otto.report.Report;
-import com.github.dbourdette.otto.report.filler.*;
-import com.github.dbourdette.otto.web.form.Sort;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCursor;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.bson.types.ObjectId;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.github.dbourdette.otto.data.SimpleDataTable;
+import com.github.dbourdette.otto.data.filler.LowerCaseOperation;
+import com.github.dbourdette.otto.data.filler.NoAccentOperation;
+import com.github.dbourdette.otto.data.filler.NoPunctuationOperation;
+import com.github.dbourdette.otto.data.filler.OperationChain;
+import com.github.dbourdette.otto.data.filler.TokenizeOperation;
+import com.github.dbourdette.otto.web.form.Sort;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBCursor;
 
 /**
  * @author damien bourdette
@@ -95,8 +100,8 @@ public class ReportConfig {
         return object;
     }
 
-    public OperationChain buildChain(Report report) {
-        OperationChain chain = OperationChain.forReport(report);
+    public OperationChain buildChain(SimpleDataTable report) {
+        OperationChain chain = OperationChain.forTable(report);
 
         chain.setLabelAttributes(labelAttributes);
         chain.setValueAttribute(valueAttribute);

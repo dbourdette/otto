@@ -16,33 +16,27 @@
 
 package com.github.dbourdette.otto.web.controller;
 
-import com.github.dbourdette.otto.report.Report;
-import com.github.dbourdette.otto.source.Source;
-import com.github.dbourdette.otto.source.reports.SourceReports;
-import com.github.dbourdette.otto.web.form.ReportForm;
-import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import com.github.dbourdette.otto.data.DataTableCsvRenderer;
+import com.github.dbourdette.otto.data.DataTableGoogleChartRenderer;
+import com.github.dbourdette.otto.data.DataTableGooglePieRenderer;
+import com.github.dbourdette.otto.data.SimpleDataTable;
+import com.github.dbourdette.otto.source.Source;
+import com.github.dbourdette.otto.source.reports.SourceReports;
+import com.github.dbourdette.otto.web.form.ReportForm;
 
 /**
  * @author damien bourdette
@@ -64,7 +58,7 @@ public class ReportController {
         model.addAttribute("subNavItem", "stats");
         model.addAttribute("frequency", source.findEventsFrequency(form.getInterval()));
         model.addAttribute("form", form);
-        model.addAttribute("values", form.buildReport(source).getSums());
+        model.addAttribute("values", form.buildTable(source).getSums());
 
         return "sources/reports/stats";
     }
@@ -82,13 +76,15 @@ public class ReportController {
 
         Long t1 = System.currentTimeMillis();
 
-        Report report = form.buildReport(source);
-        report.top(TOP_COUNT);
-        report.sortBySum();
+        SimpleDataTable table = form.buildTable(source);
+        table.top(TOP_COUNT);
+        table.sortBySum();
 
         Long t2 = System.currentTimeMillis();
 
-        String html = report.toGoogleChartHtml(1170, 750);
+        DataTableGoogleChartRenderer renderer = new DataTableGoogleChartRenderer();
+
+        String html = renderer.render(table);
 
         Long t3 = System.currentTimeMillis();
 
@@ -115,13 +111,15 @@ public class ReportController {
 
         Long t1 = System.currentTimeMillis();
 
-        Report report = form.buildReport(source);
-        report.top(TOP_COUNT);
-        report.sortBySum();
+        SimpleDataTable table = form.buildTable(source);
+        table.top(TOP_COUNT);
+        table.sortBySum();
 
         Long t2 = System.currentTimeMillis();
 
-        String html = report.toGooglePieHtml(1080, 750);
+        DataTableGooglePieRenderer renderer = new DataTableGooglePieRenderer();
+
+        String html = renderer.render(table);
 
         Long t3 = System.currentTimeMillis();
 
@@ -135,42 +133,6 @@ public class ReportController {
         return "sources/reports/pie";
     }
 
-    @RequestMapping({"/sources/{name}/reports/graph.png"})
-    public void png(@PathVariable String name, ReportForm form, HttpServletRequest request, final HttpServletResponse response) throws IOException {
-        Source source = Source.findByName(name);
-
-        form.fillWithDefault(source.getDefaultGraphParameters(), request);
-        form.setReportConfigs(SourceReports.forSource(source).getReportConfigs());
-
-        Report report = form.buildReport(source);
-        report.top(TOP_COUNT);
-        report.sortBySum();
-
-        response.setContentType("image/png");
-
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
-        for (Map.Entry<String, String> entry : report.toGoogleImageParams(750, 400).entrySet()) {
-            params.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
-        }
-        UrlEncodedFormEntity entity = new UrlEncodedFormEntity(params, "UTF-8");
-
-        HttpPost post = new HttpPost("https://chart.googleapis.com/chart");
-        post.setEntity(entity);
-
-        HttpClient httpclient = new DefaultHttpClient();
-
-        httpclient.execute(post, new ResponseHandler<Void>() {
-            @Override
-            public Void handleResponse(HttpResponse httpResponse) throws IOException {
-                HttpEntity entity = httpResponse.getEntity();
-
-                IOUtils.copy(entity.getContent(), response.getOutputStream());
-
-                return null;
-            }
-        });
-    }
-
     @RequestMapping({"/sources/{name}/reports/csv"})
     public void csv(@PathVariable String name, ReportForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/csv");
@@ -180,10 +142,12 @@ public class ReportController {
         form.fillWithDefault(source.getDefaultGraphParameters(), request);
         form.setReportConfigs(SourceReports.forSource(source).getReportConfigs());
 
-        Report report = form.buildReport(source);
-        report.top(TOP_COUNT);
-        report.sortBySum();
+        SimpleDataTable table = form.buildTable(source);
+        table.top(TOP_COUNT);
+        table.sortBySum();
 
-        response.getWriter().write(report.toCsv());
+        DataTableCsvRenderer renderer = new DataTableCsvRenderer();
+
+        response.getWriter().write(renderer.render(table));
     }
 }

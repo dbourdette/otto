@@ -14,23 +14,26 @@
  * limitations under the License.
  */
 
-package com.github.dbourdette.otto.report;
+package com.github.dbourdette.otto.data;
 
-import org.joda.time.DateTime;
 import org.joda.time.Duration;
+import org.joda.time.Interval;
 
 /**
  * @author damien bourdette
  * @version \$Revision$
  */
-public class ReportUtils {
+public class DataTableUtils {
 
     private static final Duration ONE_DAY = Duration.standardDays(1);
 
     private static final Duration FIVE_DAYS = Duration.standardDays(5);
 
-    public static Duration findBest(DateTime start, DateTime end) {
-        Duration duration = new Duration(start, end);
+    /**
+     * Finds best Duration of rows for a {@link SimpleDataTable} based on given table interval
+     */
+    public static Duration findBest(Interval interval) {
+        Duration duration = new Duration(interval.getStart(), interval.getEnd());
 
         if (duration.isShorterThan(ONE_DAY) || duration.equals(ONE_DAY)) {
             return Duration.standardMinutes(5);

@@ -1,4 +1,4 @@
-package com.github.dbourdette.otto.report;
+package com.github.dbourdette.otto.data;
 
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
@@ -7,9 +7,11 @@ import org.joda.time.Duration;
 import org.joda.time.Interval;
 
 /**
+ * Predefined possible periods for {@link SimpleDataTable}s
+ *
  * @author damien bourdette
  */
-public enum ReportPeriod {
+public enum DataTablePeriod {
     RECENT(5), TODAY(60), YESTERDAY(60), THIS_WEEK(6 * 60), LAST_WEEK(6 * 60), THIS_MONTH(24 * 60), LAST_MONTH(24 * 60);
 
     private int stepInMinutes;
@@ -64,7 +66,7 @@ public enum ReportPeriod {
         return Duration.standardMinutes(stepInMinutes);
     }
 
-    private ReportPeriod(int stepInMinutes) {
+    private DataTablePeriod(int stepInMinutes) {
         this.stepInMinutes = stepInMinutes;
     }
 }

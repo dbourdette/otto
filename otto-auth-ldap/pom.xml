@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>otto-auth-ldap</artifactId>
-    <version>0.2.2-SNAPSHOT</version>
+    <version>0.2.0-SNAPSHOT</version>
     <name>otto-auth-ldap</name>
     <packaging>jar</packaging>
     <inceptionYear>2012</inceptionYear>

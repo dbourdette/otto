@@ -16,7 +16,7 @@
 
 package com.github.dbourdette.otto.source.config;
 
-import com.github.dbourdette.otto.report.ReportPeriod;
+import com.github.dbourdette.otto.data.DataTablePeriod;
 
 /**
  * Default values for graph form for a given source.
@@ -25,13 +25,13 @@ import com.github.dbourdette.otto.report.ReportPeriod;
  * @version \$Revision$
  */
 public class DefaultGraphParameters {
-    public ReportPeriod period;
+    public DataTablePeriod period;
 
-    public ReportPeriod getPeriod() {
+    public DataTablePeriod getPeriod() {
         return period;
     }
 
-    public void setPeriod(ReportPeriod period) {
+    public void setPeriod(DataTablePeriod period) {
         this.period = period;
     }
 }

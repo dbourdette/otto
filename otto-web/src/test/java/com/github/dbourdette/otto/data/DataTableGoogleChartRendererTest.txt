@@ -1,6 +1,6 @@
 var data = new google.visualization.DataTable();
 data.addColumn('date', 'Date');
-data.addColumn('number', 'user login');
+data.addColumn('number', 'login');
 data.addRows(3);
 data.setValue(0, 0, new Date(1286660700000));
 data.setValue(0, 1, 0);
@@ -11,4 +11,4 @@ data.setValue(2, 1, 10);
 var formatter = new google.visualization.DateFormat({pattern: 'dd MM yyyy HH:mm'});
 formatter.format(data, 0);
 var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-chart.draw(data, {width: 1200, height: 500, backgroundColor:'white'});
+chart.draw(data, {width: 1080, height: 750, backgroundColor:'white'});

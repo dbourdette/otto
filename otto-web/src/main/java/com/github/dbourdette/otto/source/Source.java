@@ -16,10 +16,18 @@
 
 package com.github.dbourdette.otto.source;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
+import org.joda.time.Interval;
+
 import com.github.dbourdette.otto.Registry;
-import com.github.dbourdette.otto.report.Report;
-import com.github.dbourdette.otto.report.ReportPeriod;
-import com.github.dbourdette.otto.report.filler.OperationChain;
+import com.github.dbourdette.otto.data.DataTablePeriod;
+import com.github.dbourdette.otto.data.SimpleDataTable;
+import com.github.dbourdette.otto.data.filler.OperationChain;
 import com.github.dbourdette.otto.source.config.AggregationConfig;
 import com.github.dbourdette.otto.source.config.DefaultGraphParameters;
 import com.github.dbourdette.otto.source.config.TransformConfig;
@@ -37,15 +45,13 @@ import com.github.dbourdette.otto.web.util.Constants;
 import com.github.dbourdette.otto.web.util.Frequency;
 import com.github.dbourdette.otto.web.util.IntervalUtils;
 import com.github.dbourdette.otto.web.util.SizeInBytes;
-import com.mongodb.*;
-import net.sf.ehcache.Element;
-import org.apache.commons.lang.StringUtils;
-import org.joda.time.Interval;
+import com.mongodb.BasicDBObject;
+import com.mongodb.CommandResult;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import net.sf.ehcache.Element;
 
 /**
  * @author damien bourdette
@@ -203,12 +209,12 @@ public class Source {
         loadDisplay();
     }
 
-    public Report buildReport(ReportConfig config, ReportPeriod period) {
-        Report report = new Report();
+    public SimpleDataTable buildTable(ReportConfig config, DataTablePeriod period) {
+        SimpleDataTable table = new SimpleDataTable();
 
-        report.createRows(period);
+        table.setupRows(period);
 
-        OperationChain chain = config.buildChain(report);
+        OperationChain chain = config.buildChain(table);
 
         Iterator<DBObject> events = findEvents(period.getInterval());
 
@@ -218,17 +224,17 @@ public class Source {
             chain.write(event);
         }
 
-        if (report.getColumnCount() == 0) {
-            report.ensureColumnExists("no data");
+        if (table.getColumnCount() == 0) {
+            table.ensureColumnExists("no data");
         }
 
         if (config.getSort() == Sort.ALPHABETICALLY) {
-            report.sortAlphabetically();
+            table.sortAlphabetically();
         } else if (config.getSort() == Sort.BY_SUM) {
-            report.sortBySum();
+            table.sortBySum();
         }
 
-        return report;
+        return table;
     }
 
     public Iterator<DBObject> findEvents(Interval interval) {
@@ -339,7 +345,7 @@ public class Source {
 
         if (dbObject != null) {
             try {
-                parameters.setPeriod(ReportPeriod.valueOf((String) dbObject.get("period")));
+                parameters.setPeriod(DataTablePeriod.valueOf((String) dbObject.get("period")));
             } catch (Exception e) {
                 // well, value was not correct in db
             }

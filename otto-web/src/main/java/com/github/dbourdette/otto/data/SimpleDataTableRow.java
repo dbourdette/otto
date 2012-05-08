@@ -14,25 +14,27 @@
  * limitations under the License.
  */
 
-package com.github.dbourdette.otto.report;
+package com.github.dbourdette.otto.data;
 
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 
 /**
+ * A row in a {@link SimpleDataTable}
+ *
  * @author damien bourdette
  * @version \$Revision$
  */
-public class ReportRow implements Comparable<ReportRow> {
+public class SimpleDataTableRow implements Comparable<SimpleDataTableRow> {
 
     private Interval interval;
 
-    public ReportRow() {
+    public SimpleDataTableRow(Interval interval) {
+        this.interval = interval;
     }
 
-    public ReportRow(Interval interval) {
-        super();
-        this.interval = interval;
+    public Interval getInterval() {
+        return interval;
     }
 
     public boolean contains(DateTime date) {
@@ -48,7 +50,7 @@ public class ReportRow implements Comparable<ReportRow> {
     }
 
     @Override
-    public int compareTo(ReportRow row) {
+    public int compareTo(SimpleDataTableRow row) {
         return getStartDate().compareTo(row.getStartDate());
     }
 
@@ -68,7 +70,7 @@ public class ReportRow implements Comparable<ReportRow> {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        ReportRow other = (ReportRow) obj;
+        SimpleDataTableRow other = (SimpleDataTableRow) obj;
         if (interval == null) {
             if (other.interval != null)
                 return false;

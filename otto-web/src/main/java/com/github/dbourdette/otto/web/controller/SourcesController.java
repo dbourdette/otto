@@ -16,7 +16,7 @@
 
 package com.github.dbourdette.otto.web.controller;
 
-import com.github.dbourdette.otto.report.ReportPeriod;
+import com.github.dbourdette.otto.data.DataTablePeriod;
 import com.github.dbourdette.otto.source.Source;
 import com.github.dbourdette.otto.source.TimeFrame;
 import com.github.dbourdette.otto.source.config.AggregationConfig;
@@ -179,7 +179,7 @@ public class SourcesController {
     @RequestMapping("/sources/{name}/default-graph-params/form")
     public String defaultGraphParameters(@PathVariable String name, Model model) {
         model.addAttribute("form", Source.findByName(name).getDefaultGraphParameters());
-        model.addAttribute("periods", ReportPeriod.values());
+        model.addAttribute("periods", DataTablePeriod.values());
 
         return "sources/default_graph_params_form";
     }
@@ -187,7 +187,7 @@ public class SourcesController {
     @RequestMapping(value = "/sources/{name}/default-graph-params", method = RequestMethod.POST)
     public String saveDefaultGraphParameters(@PathVariable String name, @Valid @ModelAttribute("form") DefaultGraphParameters form, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            model.addAttribute("periods", ReportPeriod.values());
+            model.addAttribute("periods", DataTablePeriod.values());
 
             return "sources/default_graph_params_form";
         }

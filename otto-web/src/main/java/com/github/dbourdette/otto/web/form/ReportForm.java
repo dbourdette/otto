@@ -24,8 +24,8 @@ import javax.validation.constraints.NotNull;
 
 import org.joda.time.Interval;
 
-import com.github.dbourdette.otto.report.Report;
-import com.github.dbourdette.otto.report.ReportPeriod;
+import com.github.dbourdette.otto.data.SimpleDataTable;
+import com.github.dbourdette.otto.data.DataTablePeriod;
 import com.github.dbourdette.otto.source.Source;
 import com.github.dbourdette.otto.source.config.DefaultGraphParameters;
 import com.github.dbourdette.otto.source.reports.ReportConfig;
@@ -36,14 +36,14 @@ import com.github.dbourdette.otto.source.reports.ReportConfig;
  */
 public class ReportForm {
     @NotNull
-    private ReportPeriod period;
+    private DataTablePeriod period;
 
     private String reportId;
 
     private List<ReportConfig> reportConfigs;
 
     public ReportForm() {
-        period = ReportPeriod.RECENT;
+        period = DataTablePeriod.RECENT;
     }
 
     public Interval getInterval() {
@@ -62,19 +62,19 @@ public class ReportForm {
         this.reportConfigs = reportConfigs;
     }
 
-    public Report buildReport(Source source) {
-        return source.buildReport(getReportConfig(), period);
+    public SimpleDataTable buildTable(Source source) {
+        return source.buildTable(getReportConfig(), period);
     }
 
-    public ReportPeriod[] getPeriods() {
-        return ReportPeriod.values();
+    public DataTablePeriod[] getPeriods() {
+        return DataTablePeriod.values();
     }
 
-    public ReportPeriod getPeriod() {
+    public DataTablePeriod getPeriod() {
         return period;
     }
 
-    public void setPeriod(ReportPeriod period) {
+    public void setPeriod(DataTablePeriod period) {
         this.period = period;
     }
 

@@ -14,29 +14,24 @@
  * limitations under the License.
  */
 
-package com.github.dbourdette.otto.report;
+package com.github.dbourdette.otto.data;
 
 /**
+ * A column in a {@link SimpleDataTable}
+ *
  * @author damien bourdette
  * @version \$Revision$
  */
-public class ReportColumn {
+public class SimpleDataTableColumn {
 
     private String title;
 
-    public ReportColumn() {
-    }
-
-    public ReportColumn(String title) {
+    public SimpleDataTableColumn(String title) {
         this.title = title;
     }
 
     public String getTitle() {
         return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     @Override
@@ -55,7 +50,7 @@ public class ReportColumn {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        ReportColumn other = (ReportColumn) obj;
+        SimpleDataTableColumn other = (SimpleDataTableColumn) obj;
         if (title == null) {
             if (other.title != null)
                 return false;
@@ -66,6 +61,6 @@ public class ReportColumn {
 
     @Override
     public String toString() {
-        return "ReportColumn [title=" + title + "]";
+        return title;
     }
 }

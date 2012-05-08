@@ -1,4 +1,4 @@
-package com.github.dbourdette.otto.report.filler;
+package com.github.dbourdette.otto.data.filler;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -8,7 +8,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 
-import com.github.dbourdette.otto.report.Report;
+import com.github.dbourdette.otto.data.SimpleDataTable;
 import com.mongodb.DBObject;
 
 /**
@@ -18,7 +18,7 @@ import com.mongodb.DBObject;
 public class OperationChain {
     public static final String DEFAULT_COLUMN = "default";
 
-    private Report report;
+    private SimpleDataTable table;
 
     private String labelAttributes;
 
@@ -26,10 +26,10 @@ public class OperationChain {
 
     private List<Operation> operations = new ArrayList<Operation>();
 
-    public static OperationChain forReport(Report report) {
+    public static OperationChain forTable(SimpleDataTable table) {
         OperationChain chain = new OperationChain();
 
-        chain.report = report;
+        chain.table = table;
 
         return chain;
     }
@@ -89,9 +89,9 @@ public class OperationChain {
     }
 
     private void doWrite(Date date, String column, int value) {
-        report.ensureColumnsExists(column);
+        table.ensureColumnExists(column);
 
-        report.increaseValue(column, new DateTime(date), value);
+        table.increaseValue(column, new DateTime(date), value);
     }
 
     private String readColumn(DBObject event) {
