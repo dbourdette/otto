@@ -3,6 +3,6 @@
 .settings
 target
 bin
-otto.iml
-.gradle
+*.iml
+*.gradle
 
