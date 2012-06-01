@@ -50,7 +50,7 @@
     <table class="table table-bordered">
         <tr>
             <td style="width: 200px">default username</td>
-            <td>${config.securityDefaultUsername}</td>
+            <td>${config.securityAdminUsername}</td>
         </tr>
         <tr>
             <td>default password</td>

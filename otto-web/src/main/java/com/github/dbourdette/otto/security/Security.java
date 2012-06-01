@@ -1,15 +1,20 @@
 package com.github.dbourdette.otto.security;
 
-import java.util.Set;
-
-import javax.inject.Inject;
-
+import com.github.dbourdette.otto.SpringConfig;
+import com.github.dbourdette.otto.service.logs.Logs;
+import com.github.dbourdette.otto.service.user.User;
+import com.google.code.morphia.Datastore;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import com.google.code.morphia.Datastore;
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import java.util.Set;
+
+import static org.apache.commons.lang.StringUtils.isEmpty;
 
 /**
  * Utility class to check authorizations.
@@ -22,10 +27,36 @@ public class Security {
     @Inject
     private Datastore datastore;
 
+    @Inject
+    private SpringConfig springConfig;
+
+    @Inject
+    private Logs logs;
+
+    /**
+     * Currently configured plugin
+     */
+    public static volatile AuthProviderPlugin plugin;
+
     public static boolean hasSource(String source) {
         Set<String> roles = getAuthoritySet();
 
         return roles.contains("ROLE_ADMIN") || roles.contains("ROLE_SOURCE_" + source.toUpperCase() + "_USER");
+    }
+
+    @PostConstruct
+    public void loadPlugin() {
+        SecurityConfig config = fromDb();
+
+        if (config == null || isEmpty(config.getAuthProviderClass())) {
+            return;
+        }
+
+        try {
+            plugin = config.instanciatePlugin();
+        } catch (Exception e) {
+            logs.error("Failed to load auth plugin", e);
+        }
     }
 
     public SecurityConfig fromDb() {
@@ -34,24 +65,42 @@ public class Security {
         return config == null ? new SecurityConfig() : config;
     }
 
-    public void save(SecurityConfig config) {
-        datastore.delete(datastore.find(SecurityConfig.class));
+    public void save(SecurityConfig config) throws Exception {
+        if (isEmpty(config.getAuthProviderClass())) {
+            datastore.delete(datastore.find(SecurityConfig.class));
+        } else {
+            plugin = config.instanciatePlugin();
 
-        datastore.save(config);
+            datastore.delete(datastore.find(SecurityConfig.class));
+
+            datastore.save(config);
+        }
     }
 
-    public AuthProviderPlugin instanciatePlugin() throws Exception {
-        SecurityConfig config = fromDb();
-
-        if (config == null) {
+    /**
+     * Reads admin user form spring config
+     */
+    public User getAdminUser() {
+        if (StringUtils.isEmpty(springConfig.getSecurityAdminUsername()) || StringUtils.isEmpty(springConfig.getSecurityAdminPassword())) {
             return null;
         }
 
-        AuthProviderPlugin plugin = (AuthProviderPlugin) Class.forName(config.getAuthProviderClass()).newInstance();
+        User user = new User();
 
-        plugin.configure(config.getProperties());
+        user.setAdmin(true);
+        user.setUsername(springConfig.getSecurityAdminUsername());
+        user.setPassword(springConfig.getSecurityAdminPassword());
 
-        return plugin;
+        return user;
+    }
+
+    /**
+     * If an admin account is specified, check for it.
+     */
+    public boolean isAdminAccount(String username, String password) {
+        User user = getAdminUser();
+
+        return user != null && user.getUsername().equals(username) && user.getPassword().equals(password);
     }
 
     private static Set<String> getAuthoritySet() {

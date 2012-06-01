@@ -1,18 +1,15 @@
 package com.github.dbourdette.otto.security;
 
-import javax.inject.Inject;
-
+import com.github.dbourdette.otto.service.user.User;
+import com.github.dbourdette.otto.service.user.Users;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 
-import com.github.dbourdette.otto.service.user.User;
-import com.github.dbourdette.otto.service.user.Users;
+import javax.inject.Inject;
 
 /**
  * Authenticate and load authorities from mongodb.
@@ -21,7 +18,6 @@ import com.github.dbourdette.otto.service.user.Users;
  * @author damien bourdette
  */
 public class OttoAuthenticationProvider implements AuthenticationProvider {
-    private static final Logger LOGGER = LoggerFactory.getLogger(OttoAuthenticationProvider.class);
 
     @Inject
     private Users users;
@@ -32,20 +28,25 @@ public class OttoAuthenticationProvider implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String username = authentication.getName();
-
-        User user = users.findUserByUsername(username);
-
-        if (user == null) {
-            throw new BadCredentialsException("Wrong username and / or password");
-        }
-
         String password = authentication.getCredentials().toString();
 
-        if (checkPassword(user, password)) {
-            return new UsernamePasswordAuthenticationToken(user, password, user.getAuthorities());
+        User user = null;
+
+        if (security.isAdminAccount(username, password)) {
+            user = security.getAdminUser();
         } else {
-            throw new BadCredentialsException("Wrong username and / or password");
+            user = users.findUserByUsername(username);
+
+            if (user == null) {
+                throw new BadCredentialsException("Wrong username and / or password");
+            }
+
+            if (!checkPassword(user, password)) {
+                throw new BadCredentialsException("Wrong username and / or password");
+            }
         }
+
+        return new UsernamePasswordAuthenticationToken(user, password, user.getAuthorities());
     }
 
     @Override
@@ -66,14 +67,6 @@ public class OttoAuthenticationProvider implements AuthenticationProvider {
     }
 
     private boolean checkPluginPassword(User user, String password) {
-        AuthProviderPlugin plugin = null;
-
-        try {
-            plugin = security.instanciatePlugin();
-        } catch (Exception e) {
-            LOGGER.error("Failed to instanciate auth plugin", e);
-        }
-
-        return plugin != null && plugin.authenticate(user.getUsername(), password);
+        return Security.plugin != null && Security.plugin.authenticate(user.getUsername(), password);
     }
 }

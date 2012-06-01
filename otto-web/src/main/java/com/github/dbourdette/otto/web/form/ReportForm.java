@@ -16,29 +16,34 @@
 
 package com.github.dbourdette.otto.web.form;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.constraints.NotNull;
-
-import org.joda.time.Interval;
-
-import com.github.dbourdette.otto.data.SimpleDataTable;
 import com.github.dbourdette.otto.data.DataTablePeriod;
+import com.github.dbourdette.otto.data.SimpleDataTable;
 import com.github.dbourdette.otto.source.Source;
 import com.github.dbourdette.otto.source.config.DefaultGraphParameters;
 import com.github.dbourdette.otto.source.reports.ReportConfig;
+import com.github.dbourdette.otto.web.editor.DatePropertyEditor;
+import org.joda.time.Duration;
+import org.joda.time.Interval;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author damien bourdette
  * @version \$Revision$
  */
 public class ReportForm {
-    @NotNull
     private DataTablePeriod period;
 
+    private boolean advanced;
+
     private String reportId;
+
+    private Date from;
+
+    private Date to;
 
     private List<ReportConfig> reportConfigs;
 
@@ -47,7 +52,13 @@ public class ReportForm {
     }
 
     public Interval getInterval() {
-        return period.getInterval();
+        if (advanced) {
+            fixAdvancedParams();
+
+            return new Interval(from.getTime(), to.getTime());
+        } else {
+            return period.getInterval();
+        }
     }
 
     public void fillWithDefault(DefaultGraphParameters defaultParameters, HttpServletRequest request) {
@@ -63,7 +74,11 @@ public class ReportForm {
     }
 
     public SimpleDataTable buildTable(Source source) {
-        return source.buildTable(getReportConfig(), period);
+        if (advanced) {
+            return source.buildTable(getReportConfig(), getInterval(), Duration.standardDays(1));
+        } else {
+            return source.buildTable(getReportConfig(), period);
+        }
     }
 
     public DataTablePeriod[] getPeriods() {
@@ -82,12 +97,54 @@ public class ReportForm {
         return reportId;
     }
 
+    public String getReportTitle() {
+        for (ReportConfig reportConfig : reportConfigs) {
+            if (reportConfig.getId().equals(reportId)) {
+                return reportConfig.getTitle();
+            }
+        }
+
+        return "";
+    }
+
     public void setReportId(String reportId) {
         this.reportId = reportId;
     }
 
     public List<ReportConfig> getReportConfigs() {
         return reportConfigs;
+    }
+
+    public boolean isAdvanced() {
+        return advanced;
+    }
+
+    public void setAdvanced(boolean advanced) {
+        this.advanced = advanced;
+    }
+
+    public Date getFrom() {
+        return from;
+    }
+
+    public void setFrom(Date from) {
+        this.from = from;
+    }
+
+    public String getFormattedFrom() {
+        return DatePropertyEditor.format(from);
+    }
+
+    public String getFormattedTo() {
+        return DatePropertyEditor.format(to);
+    }
+
+    public Date getTo() {
+        return to;
+    }
+
+    public void setTo(Date to) {
+        this.to = to;
     }
 
     public ReportConfig getReportConfig() {
@@ -105,5 +162,18 @@ public class ReportForm {
         }
 
         return new ReportConfig();
+    }
+
+    /**
+     * Ensures that from and to attributes are valid
+     */
+    private void fixAdvancedParams() {
+        if (from == null) {
+            from = DataTablePeriod.TODAY.getInterval().getStart().toDate();
+        }
+
+        if (to == null) {
+            to = DataTablePeriod.TODAY.getInterval().getEnd().toDate();
+        }
     }
 }

@@ -16,15 +16,14 @@
 
 package com.github.dbourdette.otto;
 
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.servlet.ServletContext;
-
+import com.github.dbourdette.otto.security.SecurityConfig;
+import com.github.dbourdette.otto.service.user.User;
+import com.google.code.morphia.Datastore;
+import com.google.code.morphia.Morphia;
+import com.mongodb.DB;
+import com.mongodb.Mongo;
+import com.mongodb.MongoException;
+import com.mongodb.ServerAddress;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -35,14 +34,13 @@ import org.springframework.web.servlet.i18n.FixedLocaleResolver;
 import org.springframework.web.servlet.view.JstlView;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
-import com.github.dbourdette.otto.security.SecurityConfig;
-import com.github.dbourdette.otto.service.user.User;
-import com.google.code.morphia.Datastore;
-import com.google.code.morphia.Morphia;
-import com.mongodb.DB;
-import com.mongodb.Mongo;
-import com.mongodb.MongoException;
-import com.mongodb.ServerAddress;
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.servlet.ServletContext;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * @author damien bourdette
@@ -55,10 +53,6 @@ public class SpringConfig {
     public static final String DEFAULT_DB_URL = "localhost";
 
     public static final String DEFAULT_DB_NAME = "otto";
-
-    public static final String DEFAULT_SECURITY_USERNAME = "letme";
-
-    public static final String DEFAULT_SECURITY_PASSWORD = "in";
 
     public static final String APPLICATION_CONTEXT_KEY = "applicationContext";
 
@@ -167,12 +161,12 @@ public class SpringConfig {
         return getInitParameter("mongo/password", "");
     }
 
-    public String getSecurityDefaultUsername() {
-        return getInitParameter("security/default.username", DEFAULT_SECURITY_USERNAME);
+    public String getSecurityAdminUsername() {
+        return getInitParameter("security/admin.username", null);
     }
 
-    public String getSecurityDefaultPassword() {
-        return getInitParameter("security/default.password", DEFAULT_SECURITY_PASSWORD);
+    public String getSecurityAdminPassword() {
+        return getInitParameter("security/admin.password", null);
     }
 
     public String getInitParameter(String name, String defaultValue) {

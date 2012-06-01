@@ -31,6 +31,14 @@
     <h2>Authorization provider</h2>
 
     <form:form action="/security" commandName="form" method="post" cssClass="form-horizontal">
+        <form:errors path="*">
+            <div class="container">
+                <div class="alert alert-danger">
+                    <a class="close" data-dismiss="alert">×</a>
+                        ${fn:escapeXml(messages[0])}
+                </div>
+            </div>
+        </form:errors>
         <bootstrap:control path="authProviderClass" label="Class">
             <form:input path="authProviderClass" id="authProviderClass" cssClass="input-xxlarge" /> fully qualified class name of AuthProviderPlugin implementation
         </bootstrap:control>

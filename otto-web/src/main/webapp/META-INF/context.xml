@@ -18,6 +18,6 @@
     <Parameter name="mongo/url" value="localhost"/>
     <Parameter name="mongo/dbName" value="otto"/>
 
-    <Parameter name="security/default.username" value="admin"/>
-    <Parameter name="security/default.password" value="tomlechat"/>
+    <Parameter name="security/admin.username" value="admin"/>
+    <Parameter name="security/admin.password" value="admin"/>
 </Context>

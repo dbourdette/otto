@@ -16,14 +16,6 @@
 
 package com.github.dbourdette.otto.source;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.joda.time.Interval;
-
 import com.github.dbourdette.otto.Registry;
 import com.github.dbourdette.otto.data.DataTablePeriod;
 import com.github.dbourdette.otto.data.SimpleDataTable;
@@ -45,13 +37,16 @@ import com.github.dbourdette.otto.web.util.Constants;
 import com.github.dbourdette.otto.web.util.Frequency;
 import com.github.dbourdette.otto.web.util.IntervalUtils;
 import com.github.dbourdette.otto.web.util.SizeInBytes;
-import com.mongodb.BasicDBObject;
-import com.mongodb.CommandResult;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-
+import com.mongodb.*;
 import net.sf.ehcache.Element;
+import org.apache.commons.lang.StringUtils;
+import org.joda.time.Duration;
+import org.joda.time.Interval;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author damien bourdette
@@ -210,13 +205,17 @@ public class Source {
     }
 
     public SimpleDataTable buildTable(ReportConfig config, DataTablePeriod period) {
+        return buildTable(config, period.getInterval(), period.getStepDuration());
+    }
+
+    public SimpleDataTable buildTable(ReportConfig config, Interval interval, Duration step) {
         SimpleDataTable table = new SimpleDataTable();
 
-        table.setupRows(period);
+        table.setupRows(interval, step);
 
         OperationChain chain = config.buildChain(table);
 
-        Iterator<DBObject> events = findEvents(period.getInterval());
+        Iterator<DBObject> events = findEvents(interval);
 
         while (events.hasNext()) {
             DBObject event = events.next();
@@ -257,10 +256,8 @@ public class Source {
 
             BasicDBObject fields = new BasicDBObject(attName, "1");
 
-            Iterator<DBObject> iterator = events.find(query, fields).iterator();
-
-            while (iterator.hasNext()) {
-                Object value = iterator.next().get(attName);
+            for (DBObject object : events.find(query, fields)) {
+                Object value = object.get(attName);
 
                 if (value instanceof Integer) {
                     count += (Integer) value;

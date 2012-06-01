@@ -1,16 +1,13 @@
 package com.github.dbourdette.otto.service.user;
 
-import java.util.List;
-
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-
+import com.github.dbourdette.otto.SpringConfig;
+import com.google.code.morphia.Datastore;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
-import com.github.dbourdette.otto.SpringConfig;
-import com.google.code.morphia.Datastore;
-import com.google.code.morphia.utils.IndexDirection;
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import java.util.List;
 
 /**
  * @author damien bourdette
@@ -26,17 +23,6 @@ public class Users {
     @PostConstruct
     public void bootstrap() {
         datastore.ensureIndex(User.class, "username_idx", "username", true, false);
-
-        if (datastore.find(User.class).countAll() != 0) {
-            return;
-        }
-
-        User user = new User();
-        user.setUsername(springConfig.getSecurityDefaultUsername());
-        user.setPassword(springConfig.getSecurityDefaultPassword());
-        user.setAdmin(true);
-
-        datastore.save(user);
     }
 
     public List<User> findUsers() {
@@ -60,8 +46,6 @@ public class Users {
     }
 
     public User findUserByUsername(String username) {
-        return datastore.find(User.class)
-                .field("username").equal(username)
-                .get();
+        return datastore.find(User.class).filter("username =", username).get();
     }
 }

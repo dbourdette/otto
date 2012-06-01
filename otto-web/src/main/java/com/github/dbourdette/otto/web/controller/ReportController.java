@@ -16,27 +16,29 @@
 
 package com.github.dbourdette.otto.web.controller;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-
 import com.github.dbourdette.otto.data.DataTableCsvRenderer;
 import com.github.dbourdette.otto.data.DataTableGoogleChartRenderer;
 import com.github.dbourdette.otto.data.DataTableGooglePieRenderer;
 import com.github.dbourdette.otto.data.SimpleDataTable;
 import com.github.dbourdette.otto.source.Source;
 import com.github.dbourdette.otto.source.reports.SourceReports;
+import com.github.dbourdette.otto.web.editor.DatePropertyEditor;
 import com.github.dbourdette.otto.web.form.ReportForm;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author damien bourdette
@@ -46,6 +48,11 @@ import com.github.dbourdette.otto.web.form.ReportForm;
 public class ReportController {
 
     private static final int TOP_COUNT = 30;
+
+    @InitBinder
+    public void binder(WebDataBinder binder) {
+        binder.registerCustomEditor(Date.class, new DatePropertyEditor());
+    }
 
     @RequestMapping({"/sources/{name}/reports/stats"})
     public String stats(@PathVariable String name, @Valid ReportForm form, BindingResult result, Model model, HttpServletRequest request) {

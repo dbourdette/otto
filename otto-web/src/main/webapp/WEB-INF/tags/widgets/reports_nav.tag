@@ -23,27 +23,49 @@
   ~ limitations under the License.
   --%>
 
-<form:form action="" commandName="form" method="GET">
-    <p style="float: left">
+<form:form action="" commandName="form" method="GET" cssClass="container" id="reportForm">
+    <span id="simplePanel">
         Period <form:select path="period" items="${form.periods}" />
-    </p>
+        <form:hidden path="reportId" id="reportId" />
+        <form:hidden path="advanced" id="advanced" />
+        <a href="#" onclick="showAdvanced(); return false">advanced form</a>
+    </span>
+    <span id="advancedPanel">
+        From : <form:input path="from" data-datepicker="datepicker" cssClass="input-small" />
+        To : <form:input path="to" data-datepicker="datepicker" cssClass="input-small" />
+        <a href="#" onclick="showSimple(); return false">basic form</a>
+    </span>
 
-    <p style="float: right">
-        <button type="submit" tabindex="7" class="btn btn-primary">display</button>
-    </p>
+    <div class="btn-group pull-right">
+        <button class="btn btn-primary" type="submit">${fn:escapeXml(form.reportTitle)}</button>
+        <button class="btn dropdown-toggle btn-primary" data-toggle="dropdown">
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <c:forEach var="reportConfig" items="${form.reportConfigs}">
+                <li><a href="#" onclick="$('#reportId').val('${reportConfig.id}'); $('#reportForm').submit(); return false;">${fn:escapeXml(reportConfig.title)}</a></li>
+            </c:forEach>
+        </ul>
+    </div>
+    <script type="text/javascript">
+        function showAdvanced() {
+            $("#advanced").val('true');
+            $("#simplePanel").hide();
+            $("#advancedPanel").show();
+        }
 
-    <p style="float: right;margin-right: 20px;">
-        <c:forEach var="reportConfig" items="${form.reportConfigs}">
-            <label class="radio inline">
-            <form:radiobutton path="reportId" value="${reportConfig.id}"/> ${reportConfig.title}
-            </label>
-        </c:forEach>
-    </p>
+        function showSimple() {
+            $("#advanced").val('false');
+            $("#simplePanel").show();
+            $("#advancedPanel").hide();
+        }
 
-    <p style="clear:both;"/>
+        <c:if test="${form.advanced}">showAdvanced();</c:if>
+        <c:if test="${not form.advanced}">showSimple();</c:if>
+    </script>
 </form:form>
 
-<c:set var="query" value="period=${form.period}&amp;reportId=${form.reportId}"/>
+<c:set var="query" value="period=${form.period}&amp;reportId=${form.reportId}&amp;advanced=${form.advanced}&amp;from=${form.formattedFrom}&amp;to=${form.formattedTo}"/>
 
 <div class="nav">
     <c:if test="${subNavItem eq 'graph'}">graph</c:if>

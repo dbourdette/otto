@@ -121,10 +121,10 @@
     </properties>
 
     <modules>
-        <module>otto-apis</module>
-        <module>otto-web</module>
-        <module>otto-auth-ldap</module>
-        <module>otto-auth-radius</module>
+        <module>../otto-apis</module>
+        <module>../otto-web</module>
+        <module>../otto-auth-ldap</module>
+        <module>../otto-auth-radius</module>
     </modules>
 
     <build>
