@@ -36,12 +36,6 @@
         </license>
     </licenses>
 
-    <scm>
-        <url>scm:git:git@github.com:dbourdette/otto.git</url>
-        <connection>scm:git:git@github.com:dbourdette/otto.git</connection>
-        <developerConnection>scm:git:git@github.com:dbourdette/otto.git</developerConnection>
-    </scm>
-
     <developers>
         <developer>
             <id>dbourdette</id>
@@ -119,13 +113,6 @@
         <spring.security.version>3.1.0.RELEASE</spring.security.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
-    <modules>
-        <module>../otto-apis</module>
-        <module>../otto-web</module>
-        <module>../otto-auth-ldap</module>
-        <module>../otto-auth-radius</module>
-    </modules>
 
     <build>
         <finalName>${project.artifactId}-${project.version}</finalName>

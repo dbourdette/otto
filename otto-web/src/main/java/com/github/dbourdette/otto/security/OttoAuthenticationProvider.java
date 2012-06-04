@@ -30,7 +30,7 @@ public class OttoAuthenticationProvider implements AuthenticationProvider {
         String username = authentication.getName();
         String password = authentication.getCredentials().toString();
 
-        User user = null;
+        User user;
 
         if (security.isAdminAccount(username, password)) {
             user = security.getAdminUser();

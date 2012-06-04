@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>otto-apis</artifactId>
-    <version>0.2.0-SNAPSHOT</version>
+    <version>0.2.0</version>
     <name>otto-apis</name>
     <packaging>jar</packaging>
     <inceptionYear>2012</inceptionYear>

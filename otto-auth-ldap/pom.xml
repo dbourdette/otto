@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>otto-auth-ldap</artifactId>
-    <version>0.2.0-SNAPSHOT</version>
+    <version>0.2.0</version>
     <name>otto-auth-ldap</name>
     <packaging>jar</packaging>
     <inceptionYear>2012</inceptionYear>
@@ -20,13 +20,13 @@
         <dependency>
             <groupId>com.github.dbourdette</groupId>
             <artifactId>otto-apis</artifactId>
-            <version>0.2.0-SNAPSHOT</version>
+            <version>0.2.0</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-ldap</artifactId>
-            <version>3.1.0.RELEASE</version>
+            <version>${spring.security.version}</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

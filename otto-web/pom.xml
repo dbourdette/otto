@@ -27,15 +27,10 @@
     </parent>
 
     <artifactId>otto-web</artifactId>
-    <version>0.2.0-SNAPSHOT</version>
+    <version>0.2.0.b31</version>
     <packaging>war</packaging>
     <name>otto webapp</name>
     <inceptionYear>2011</inceptionYear>
-
-    <properties>
-        <spring.version>3.1.1.RELEASE</spring.version>
-        <spring.security.version>3.1.0.RELEASE</spring.security.version>
-    </properties>
 
     <build>
         <resources>
@@ -174,7 +169,39 @@
         <dependency>
             <groupId>com.github.dbourdette</groupId>
             <artifactId>otto-apis</artifactId>
-            <version>0.2.0-SNAPSHOT</version>
+            <version>0.2.0</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- JRadius -->
+        <dependency>
+            <groupId>net.jradius</groupId>
+            <artifactId>jradius-core</artifactId>
+            <version>1.1.4</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.jradius</groupId>
+            <artifactId>jradius-dictionary</artifactId>
+            <version>1.1.4</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.jradius</groupId>
+            <artifactId>jradius-extended</artifactId>
+            <version>1.1.4</version>
+            <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>ipdr</groupId>
+                    <artifactId>ipdrbase</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>bouncycastle</groupId>
+            <artifactId>bcprov-jdk16</artifactId>
+            <version>140</version>
             <scope>compile</scope>
         </dependency>
 

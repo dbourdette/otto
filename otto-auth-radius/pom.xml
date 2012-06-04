@@ -11,16 +11,40 @@
     </parent>
 
     <artifactId>otto-auth-radius</artifactId>
-    <version>0.2.0-SNAPSHOT</version>
+    <version>0.2.0</version>
     <name>otto-auth-radius</name>
     <packaging>jar</packaging>
     <inceptionYear>2012</inceptionYear>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptors>
+                        <descriptor>assembly.xml</descriptor>
+                    </descriptors>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-archive</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
     <dependencies>
         <dependency>
             <groupId>com.github.dbourdette</groupId>
             <artifactId>otto-apis</artifactId>
-            <version>0.2.0-SNAPSHOT</version>
+            <version>0.2.0</version>
+            <scope>compile</scope>
         </dependency>
 
         <!-- JRadius -->
@@ -28,16 +52,19 @@
             <groupId>net.jradius</groupId>
             <artifactId>jradius-core</artifactId>
             <version>1.1.4</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>net.jradius</groupId>
             <artifactId>jradius-dictionary</artifactId>
             <version>1.1.4</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>net.jradius</groupId>
             <artifactId>jradius-extended</artifactId>
             <version>1.1.4</version>
+            <scope>compile</scope>
             <exclusions>
                 <exclusion>
                     <groupId>ipdr</groupId>
@@ -49,6 +76,7 @@
             <groupId>bouncycastle</groupId>
             <artifactId>bcprov-jdk16</artifactId>
             <version>140</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
