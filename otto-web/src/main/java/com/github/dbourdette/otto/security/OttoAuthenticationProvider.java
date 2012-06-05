@@ -67,6 +67,6 @@ public class OttoAuthenticationProvider implements AuthenticationProvider {
     }
 
     private boolean checkPluginPassword(User user, String password) {
-        return Security.plugin != null && Security.plugin.authenticate(user.getUsername(), password);
+        return security.authenticate(user.getUsername(), password);
     }
 }

@@ -25,12 +25,13 @@
         <intercept-url pattern="/login" access="permitAll" />
         <intercept-url pattern="/favicon.ico" access="permitAll" />
         <intercept-url pattern="/bootstrap/**" access="permitAll" />
+        <intercept-url pattern="/ace/**" access="permitAll" />
         <intercept-url pattern="/img/**" access="permitAll" />
         <intercept-url pattern="/css/**" access="permitAll" />
         <intercept-url pattern="/api/**" access="permitAll" />
         <intercept-url pattern="/imgapi/**" access="permitAll" />
         <intercept-url pattern="/**" access="isAuthenticated()"/>
-        <form-login login-page="/login"/>
+        <form-login login-page="/login" />
         <logout logout-url="/logout" delete-cookies="" />
     </http>
 
