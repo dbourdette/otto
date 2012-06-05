@@ -2,11 +2,9 @@ package com.github.dbourdette.otto.security;
 
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
+import groovy.lang.Binding;
+import groovy.lang.GroovyShell;
 import org.bson.types.ObjectId;
-
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.Properties;
 
 import static org.apache.commons.lang.StringUtils.isEmpty;
 
@@ -19,49 +17,21 @@ public class SecurityConfig {
     private ObjectId id;
 
     /**
-     * Class implementing {@link AuthProviderPlugin}
+     * Groovy code for authentication
      */
-    private String authProviderClass;
+    private String code;
 
-    /**
-     * Key values configuration properties for plugin
-     */
-    private String configuration;
-
-    public Properties getProperties() throws IOException {
-        Properties properties = new Properties();
-
-        properties.load(new StringReader(configuration == null ? "" : configuration));
-
-        return properties;
-    }
-
-    public AuthProviderPlugin instanciatePlugin() throws Exception {
-        if (isEmpty(authProviderClass)) {
-            return null;
+    public boolean authenticate(String username, String password) {
+        if (isEmpty(code)) {
+            return false;
         }
 
-        AuthProviderPlugin plugin = (AuthProviderPlugin) Class.forName(authProviderClass).newInstance();
+        Binding binding = new Binding();
+        binding.setVariable("username", username);
+        binding.setVariable("password", password);
+        GroovyShell shell = new GroovyShell(binding);
 
-        plugin.configure(getProperties());
-
-        return plugin;
-    }
-
-    public String getAuthProviderClass() {
-        return authProviderClass;
-    }
-
-    public void setAuthProviderClass(String authProviderClass) {
-        this.authProviderClass = authProviderClass;
-    }
-
-    public String getConfiguration() {
-        return configuration;
-    }
-
-    public void setConfiguration(String configuration) {
-        this.configuration = configuration;
+        return Boolean.TRUE == shell.evaluate(code);
     }
 
     public ObjectId getId() {
@@ -70,5 +40,24 @@ public class SecurityConfig {
 
     public void setId(ObjectId id) {
         this.id = id;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public SecurityConfig withCode(String code) {
+        setCode(code);
+
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return code;
     }
 }

@@ -27,7 +27,7 @@
     </parent>
 
     <artifactId>otto-web</artifactId>
-    <version>0.2.0.b31</version>
+    <version>0.2.0.b32</version>
     <packaging>war</packaging>
     <name>otto webapp</name>
     <inceptionYear>2011</inceptionYear>
@@ -173,36 +173,11 @@
             <scope>compile</scope>
         </dependency>
 
-        <!-- JRadius -->
+        <!-- groovy -->
         <dependency>
-            <groupId>net.jradius</groupId>
-            <artifactId>jradius-core</artifactId>
-            <version>1.1.4</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.jradius</groupId>
-            <artifactId>jradius-dictionary</artifactId>
-            <version>1.1.4</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.jradius</groupId>
-            <artifactId>jradius-extended</artifactId>
-            <version>1.1.4</version>
-            <scope>compile</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>ipdr</groupId>
-                    <artifactId>ipdrbase</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>bouncycastle</groupId>
-            <artifactId>bcprov-jdk16</artifactId>
-            <version>140</version>
-            <scope>compile</scope>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy</artifactId>
+            <version>1.8.6</version>
         </dependency>
 
     </dependencies>

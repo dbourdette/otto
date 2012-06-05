@@ -1,7 +1,6 @@
 package com.github.dbourdette.otto.security;
 
 import com.github.dbourdette.otto.SpringConfig;
-import com.github.dbourdette.otto.service.logs.Logs;
 import com.github.dbourdette.otto.service.user.User;
 import com.google.code.morphia.Datastore;
 import org.apache.commons.lang.StringUtils;
@@ -10,11 +9,10 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import java.util.Set;
 
-import static org.apache.commons.lang.StringUtils.isEmpty;
+import static org.apache.commons.lang.StringUtils.isNotEmpty;
 
 /**
  * Utility class to check authorizations.
@@ -30,49 +28,26 @@ public class Security {
     @Inject
     private SpringConfig springConfig;
 
-    @Inject
-    private Logs logs;
-
-    /**
-     * Currently configured plugin
-     */
-    public static volatile AuthProviderPlugin plugin;
-
     public static boolean hasSource(String source) {
         Set<String> roles = getAuthoritySet();
 
         return roles.contains("ROLE_ADMIN") || roles.contains("ROLE_SOURCE_" + source.toUpperCase() + "_USER");
     }
 
-    @PostConstruct
-    public void loadPlugin() {
-        SecurityConfig config = fromDb();
-
-        if (config == null || isEmpty(config.getAuthProviderClass())) {
-            return;
-        }
-
-        try {
-            plugin = config.instanciatePlugin();
-        } catch (Exception e) {
-            logs.error("Failed to load auth plugin", e);
-        }
+    public boolean authenticate(String username, String password) {
+        return getConfig().authenticate(username, password);
     }
 
-    public SecurityConfig fromDb() {
+    public SecurityConfig getConfig() {
         SecurityConfig config = datastore.find(SecurityConfig.class).get();
 
         return config == null ? new SecurityConfig() : config;
     }
 
     public void save(SecurityConfig config) throws Exception {
-        if (isEmpty(config.getAuthProviderClass())) {
-            datastore.delete(datastore.find(SecurityConfig.class));
-        } else {
-            plugin = config.instanciatePlugin();
+        datastore.delete(datastore.find(SecurityConfig.class));
 
-            datastore.delete(datastore.find(SecurityConfig.class));
-
+        if (isNotEmpty(config.getCode())) {
             datastore.save(config);
         }
     }

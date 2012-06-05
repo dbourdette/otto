@@ -28,9 +28,13 @@
 <div class="container">
     <widget:admin_nav />
 
-    <h2>Authorization provider</h2>
-
-    <form:form action="/security" commandName="form" method="post" cssClass="form-horizontal">
+    <form:form action="/security" commandName="form" method="post" cssClass="form-horizontal" id="form">
+        <div class="pull-right">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a href="/security/test"><button type="submit" class="btn btn-info">Test</button></a>
+            <a href="/security"><button type="submit" class="btn">Cancel</button></a>
+        </div>
+        <h2>Authorization provider</h2>
         <form:errors path="*">
             <div class="container">
                 <div class="alert alert-danger">
@@ -39,14 +43,20 @@
                 </div>
             </div>
         </form:errors>
-        <bootstrap:control path="authProviderClass" label="Class">
-            <form:input path="authProviderClass" id="authProviderClass" cssClass="input-xxlarge" /> fully qualified class name of AuthProviderPlugin implementation
-        </bootstrap:control>
-        <bootstrap:control path="configuration" label="Configuration">
-            <form:textarea path="configuration" id="configuration" rows="10" cssClass="input-xxlarge" /> key values properties to configure plugin
-        </bootstrap:control>
-        <bootstrap:submit cancelUrl="/security" />
+        <form:hidden path="code" id="code" />
+        <div id="editor" class="span12" style="height: 600px; position: relative; margin: 5px 0 10px 0;">${form.code}</div>
     </form:form>
+
+    <script>
+        var editor = ace.edit("editor");
+        editor.setTheme("ace/theme/textmate");
+        editor.session.setMode("ace/mode/groovy");
+
+        $('#form').submit( function() {
+            $('#code').val(editor.getValue());
+            return true;
+        });
+    </script>
 </div>
 
 <layout:footer/>
