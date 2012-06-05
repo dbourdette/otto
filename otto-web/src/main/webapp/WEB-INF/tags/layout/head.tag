@@ -35,4 +35,6 @@
     <!--[if lt IE 9]>
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+
+    <script src="/ace/ace.js" type="text/javascript" charset="utf-8"></script>
 </head>
