@@ -22,6 +22,7 @@ import com.github.dbourdette.otto.source.Source;
 import com.github.dbourdette.otto.source.config.DefaultGraphParameters;
 import com.github.dbourdette.otto.source.reports.ReportConfig;
 import com.github.dbourdette.otto.web.editor.DatePropertyEditor;
+import org.joda.time.DateMidnight;
 import org.joda.time.Duration;
 import org.joda.time.Interval;
 
@@ -55,7 +56,7 @@ public class ReportForm {
         if (advanced) {
             fixAdvancedParams();
 
-            return new Interval(from.getTime(), to.getTime());
+            return new Interval(from.getTime(), new DateMidnight(to).plusDays(1).toDate().getTime());
         } else {
             return period.getInterval();
         }
@@ -169,11 +170,11 @@ public class ReportForm {
      */
     private void fixAdvancedParams() {
         if (from == null) {
-            from = DataTablePeriod.TODAY.getInterval().getStart().toDate();
+            from = new DateMidnight().toDate();
         }
 
         if (to == null) {
-            to = DataTablePeriod.TODAY.getInterval().getEnd().toDate();
+            to = new DateMidnight().toDate();
         }
     }
 }
