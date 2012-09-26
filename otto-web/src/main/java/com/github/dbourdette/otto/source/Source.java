@@ -16,6 +16,15 @@
 
 package com.github.dbourdette.otto.source;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
+import org.joda.time.Duration;
+import org.joda.time.Interval;
+
 import com.github.dbourdette.otto.Registry;
 import com.github.dbourdette.otto.data.DataTablePeriod;
 import com.github.dbourdette.otto.data.SimpleDataTable;
@@ -37,23 +46,20 @@ import com.github.dbourdette.otto.web.util.Constants;
 import com.github.dbourdette.otto.web.util.Frequency;
 import com.github.dbourdette.otto.web.util.IntervalUtils;
 import com.github.dbourdette.otto.web.util.SizeInBytes;
-import com.mongodb.*;
-import net.sf.ehcache.Element;
-import org.apache.commons.lang.StringUtils;
-import org.joda.time.Duration;
-import org.joda.time.Interval;
+import com.mongodb.BasicDBObject;
+import com.mongodb.CommandResult;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import net.sf.ehcache.Element;
 
 /**
  * @author damien bourdette
  * @version \$Revision$
  */
 public class Source {
-    private static final int PAGE_SIZE = 100;
+    private static final int DEFAULT_PAGE_SIZE = 100;
 
     private String name;
 
@@ -243,7 +249,11 @@ public class Source {
     }
 
     public Page<DBObject> findEvents(Integer page) {
-        return Page.fromCursor(events.find().sort(new BasicDBObject("date", -1)), page, PAGE_SIZE);
+        return findEvents(page, DEFAULT_PAGE_SIZE);
+    }
+
+    public Page<DBObject> findEvents(Integer page, int pageSize) {
+        return Page.fromCursor(events.find().sort(new BasicDBObject("date", -1)), page, pageSize);
     }
 
     public Frequency findEventsFrequency(Interval interval) {

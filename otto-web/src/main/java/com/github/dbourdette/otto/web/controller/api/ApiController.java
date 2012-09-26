@@ -17,6 +17,7 @@
 package com.github.dbourdette.otto.web.controller.api;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,7 +28,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,6 +52,10 @@ import com.mongodb.DBObject;
  */
 @Controller
 public class ApiController {
+
+    private static final int JSONAPI_PAGE_SIZE = 1000;
+
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = ISODateTimeFormat.dateTime();
 
     @Inject
     private RemoteEventsFacade remoteEventsFacade;
@@ -71,13 +80,28 @@ public class ApiController {
     @RequestMapping(value = "/jsonapi/sources/{name}/events", method = RequestMethod.GET, headers = "Accept=application/json")
     public void eventsJson(@PathVariable String name, @RequestParam(required = false) Integer page, HttpServletResponse response) throws IOException {
         Source source = Source.findByName(name);
-        Page<DBObject> events = source.findEvents(page);
+        Page<DBObject> events = source.findEvents(page, JSONAPI_PAGE_SIZE);
 
         ObjectMapper mapper = new ObjectMapper();
 
         ObjectNode root = mapper.createObjectNode();
 
         root.put("count", events.getTotalCount());
+        root.put("page", Page.fixPage(page));
+
+        ArrayNode eventsNode = root.putArray("events");
+
+        for (DBObject event : events.getItems()) {
+            ObjectNode eventNode = mapper.createObjectNode();
+
+            for (String key : event.keySet()) {
+                if (!"_id".equals(key)) {
+                    eventNode.put(key, formatValue(event.get(key)));
+                }
+            }
+
+            eventsNode.add(eventNode);
+        }
 
         response.setContentType("application/json");
         mapper.writeValue(response.getOutputStream(), root);
@@ -110,6 +134,14 @@ public class ApiController {
         }
 
         return params;
+    }
+
+    private String formatValue(Object value) {
+        if (value instanceof Date) {
+            return DATE_TIME_FORMATTER.print(new DateTime(value));
+        } else {
+            return value == null ? null : value.toString();
+        }
     }
 
 }

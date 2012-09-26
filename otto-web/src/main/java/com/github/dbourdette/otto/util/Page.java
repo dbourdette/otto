@@ -21,13 +21,7 @@ public class Page<T> {
     private int pageSize;
 
     public static Page<DBObject> fromCursor(DBCursor cursor, Integer index, int pageSize) {
-        if (index == null) {
-            index = 1;
-        }
-
-        if (index < 1) {
-            index = 1;
-        }
+        index = fixPage(index);
 
         Page<DBObject> page = new Page<DBObject>();
 
@@ -37,6 +31,18 @@ public class Page<T> {
         page.pageSize = pageSize;
         page.totalCount = cursor.count();
         page.items = cursor.toArray();
+
+        return page;
+    }
+
+    public static int fixPage(Integer page) {
+        if (page == null) {
+            return 1;
+        }
+
+        if (page < 1) {
+            return 1;
+        }
 
         return page;
     }
