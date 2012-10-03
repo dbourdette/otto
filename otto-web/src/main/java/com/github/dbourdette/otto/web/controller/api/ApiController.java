@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.SerializationConfig;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
 import org.joda.time.DateTime;
@@ -91,6 +92,7 @@ public class ApiController {
         Page<DBObject> events = source.findEvents(parseDateTime(from), parseDateTime(to), page, JSONAPI_PAGE_SIZE);
 
         ObjectMapper mapper = new ObjectMapper();
+        mapper.getSerializationConfig().set(SerializationConfig.Feature.INDENT_OUTPUT, true);
 
         ObjectNode root = mapper.createObjectNode();
 
