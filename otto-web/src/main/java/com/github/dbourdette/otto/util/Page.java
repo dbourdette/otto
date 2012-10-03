@@ -49,6 +49,10 @@ public class Page<T> {
 
     private Page() {}
 
+    public int getItemCount() {
+        return items.size();
+    }
+
     public List<T> getItems() {
         return Collections.unmodifiableList(items);
     }

@@ -17,6 +17,7 @@
 package com.github.dbourdette.otto.web.util;
 
 import org.joda.time.DateMidnight;
+import org.joda.time.DateTime;
 import org.joda.time.Interval;
 
 import com.mongodb.BasicDBObject;
@@ -41,11 +42,24 @@ public class IntervalUtils {
 	}
 
 	public static BasicDBObject query(Interval interval) {
-		BasicDBObject criteria = new BasicDBObject();
-
-		criteria.append("$gte", interval.getStart().toDate());
-		criteria.append("$lt", interval.getEnd().toDate());
-
-		return new BasicDBObject("date", criteria);
+		return query(interval.getStart(), interval.getEnd());
 	}
+
+    public static BasicDBObject query(DateTime from, DateTime to) {
+        BasicDBObject criteria = new BasicDBObject();
+
+        if (from == null && to == null) {
+            return criteria;
+        }
+
+        if (from != null) {
+            criteria.append("$gte", from.toDate());
+        }
+
+        if (to != null) {
+            criteria.append("$lt", to.toDate());
+        }
+
+        return new BasicDBObject("date", criteria);
+    }
 }

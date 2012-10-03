@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
@@ -39,6 +40,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.github.dbourdette.otto.security.Security;
+import com.github.dbourdette.otto.security.UnauthorizedException;
 import com.github.dbourdette.otto.source.Source;
 import com.github.dbourdette.otto.util.Page;
 import com.github.dbourdette.otto.web.service.RemoteEventsFacade;
@@ -55,7 +58,7 @@ public class ApiController {
 
     private static final int JSONAPI_PAGE_SIZE = 1000;
 
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = ISODateTimeFormat.dateTime();
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = ISODateTimeFormat.dateTimeNoMillis();
 
     @Inject
     private RemoteEventsFacade remoteEventsFacade;
@@ -78,9 +81,14 @@ public class ApiController {
     }
 
     @RequestMapping(value = "/jsonapi/sources/{name}/events", method = RequestMethod.GET, headers = "Accept=application/json")
-    public void eventsJson(@PathVariable String name, @RequestParam(required = false) Integer page, HttpServletResponse response) throws IOException {
+    public void eventsJson(@PathVariable String name, @RequestParam(required = false) Integer page,
+                           @RequestParam(required = false) String from, @RequestParam(required = false) String to, HttpServletResponse response) throws IOException {
+        if (!Security.hasSource(name)) {
+            throw new UnauthorizedException("You don't have access to this source");
+        }
+
         Source source = Source.findByName(name);
-        Page<DBObject> events = source.findEvents(page, JSONAPI_PAGE_SIZE);
+        Page<DBObject> events = source.findEvents(parseDateTime(from), parseDateTime(to), page, JSONAPI_PAGE_SIZE);
 
         ObjectMapper mapper = new ObjectMapper();
 
@@ -88,6 +96,7 @@ public class ApiController {
 
         root.put("count", events.getTotalCount());
         root.put("page", Page.fixPage(page));
+        root.put("pageCount", events.getPageCount());
 
         ArrayNode eventsNode = root.putArray("events");
 
@@ -103,6 +112,7 @@ public class ApiController {
             eventsNode.add(eventNode);
         }
 
+        response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
         mapper.writeValue(response.getOutputStream(), root);
     }
@@ -141,6 +151,18 @@ public class ApiController {
             return DATE_TIME_FORMATTER.print(new DateTime(value));
         } else {
             return value == null ? null : value.toString();
+        }
+    }
+
+    private DateTime parseDateTime(String value) {
+        if (StringUtils.isEmpty(value)) {
+            return null;
+        } else {
+            try {
+                return DATE_TIME_FORMATTER.parseDateTime(value);
+            } catch (Exception e) {
+                throw new BadRequestException("Failed to parse date: " + value);
+            }
         }
     }
 

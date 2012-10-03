@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.joda.time.Interval;
 
@@ -146,11 +147,11 @@ public class Source {
         }
 
         Element element = Registry.sourceCache.get(name);
-        
+
         if (element != null) {
-           return (Source) element.getObjectValue(); 
+            return (Source) element.getObjectValue();
         }
-        
+
         Source source = new Source();
 
         source.name = name;
@@ -162,7 +163,7 @@ public class Source {
         source.loadTransformConfig();
 
         Registry.sourceCache.put(new Element(name, source));
-        
+
         return source;
     }
 
@@ -254,6 +255,10 @@ public class Source {
 
     public Page<DBObject> findEvents(Integer page, int pageSize) {
         return Page.fromCursor(events.find().sort(new BasicDBObject("date", -1)), page, pageSize);
+    }
+
+    public Page<DBObject> findEvents(DateTime from, DateTime to, Integer page, int pageSize) {
+        return Page.fromCursor(events.find(IntervalUtils.query(from, to)).sort(new BasicDBObject("date", -1)), page, pageSize);
     }
 
     public Frequency findEventsFrequency(Interval interval) {
