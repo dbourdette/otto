@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import com.github.dbourdette.otto.service.config.Config;
 import com.github.dbourdette.otto.source.Event;
-import com.github.dbourdette.otto.source.OldSource;
 import com.github.dbourdette.otto.source.Source;
 
 /**

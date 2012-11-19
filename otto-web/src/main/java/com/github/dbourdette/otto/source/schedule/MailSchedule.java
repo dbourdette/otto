@@ -51,19 +51,6 @@ public class MailSchedule {
     @Property
     private String title;
 
-    public static MailSchedule fromOld(String sourceName, OldMailSchedule oldMailSchedule) {
-        MailSchedule mailSchedule = new MailSchedule();
-
-        mailSchedule.setSourceName(sourceName);
-        mailSchedule.setReport(oldMailSchedule.getReport());
-        mailSchedule.setPeriod(oldMailSchedule.getPeriod());
-        mailSchedule.setCronExpression(oldMailSchedule.getCronExpression());
-        mailSchedule.setTo(oldMailSchedule.getTo());
-        mailSchedule.setTitle(oldMailSchedule.getTitle());
-
-        return mailSchedule;
-    }
-
     public MailSchedule() {
     }
 

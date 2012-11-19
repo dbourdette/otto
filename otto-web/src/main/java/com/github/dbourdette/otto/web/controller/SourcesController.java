@@ -33,23 +33,16 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.github.dbourdette.otto.Registry;
 import com.github.dbourdette.otto.data.DataTablePeriod;
-import com.github.dbourdette.otto.source.OldSource;
 import com.github.dbourdette.otto.source.Source;
 import com.github.dbourdette.otto.source.TimeFrame;
 import com.github.dbourdette.otto.source.config.AggregationConfig;
 import com.github.dbourdette.otto.source.config.DefaultGraphParameters;
 import com.github.dbourdette.otto.source.config.TransformConfig;
-import com.github.dbourdette.otto.source.reports.OldReportConfig;
-import com.github.dbourdette.otto.source.reports.OldSourceReports;
 import com.github.dbourdette.otto.source.reports.ReportConfig;
 import com.github.dbourdette.otto.source.reports.SourceReports;
 import com.github.dbourdette.otto.source.schedule.MailSchedule;
-import com.github.dbourdette.otto.source.schedule.OldMailSchedule;
-import com.github.dbourdette.otto.source.schedule.OldSourceSchedules;
 import com.github.dbourdette.otto.source.schedule.SourceScheduleExecutor;
 import com.github.dbourdette.otto.source.schedule.SourceSchedules;
 import com.github.dbourdette.otto.web.editor.ObjectIdEditor;
@@ -76,38 +69,6 @@ public class SourcesController {
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(ObjectId.class, new ObjectIdEditor());
-    }
-
-    @RequestMapping({"/sources/migrate"})
-    @ResponseBody
-    public String migrate() {
-        Registry.datastore.delete(Registry.datastore.find(Source.class));
-        Registry.datastore.delete(Registry.datastore.find(ReportConfig.class));
-
-        for (OldSource oldSource : OldSource.findAll()) {
-            Source source = Source.create(oldSource.getName());
-            source.setDisplayGroup(oldSource.getDisplayGroup());
-            source.setDisplayName(oldSource.getDisplayName());
-            source.setAggregationConfig(oldSource.getAggregationConfig());
-            source.setDefaultGraphParameters(oldSource.getDefaultGraphParameters());
-            source.setTransformConfig(oldSource.getTransformConfig());
-
-            source.save();
-
-            for (OldReportConfig oldReportConfig : OldSourceReports.forSource(oldSource).getReportConfigs()) {
-                ReportConfig reportConfig = ReportConfig.fromOld(source.getName(), oldReportConfig);
-
-                reportConfig.save();
-            }
-
-            for (OldMailSchedule oldMailSchedule : OldSourceSchedules.forSource(oldSource).getSchedules()) {
-                MailSchedule mailSchedule = MailSchedule.fromOld(source.getName(), oldMailSchedule);
-
-                mailSchedule.save();
-            }
-        }
-
-        return "done";
     }
 
     @RequestMapping({"/sources/{name}/configuration"})

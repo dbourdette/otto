@@ -31,7 +31,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.github.dbourdette.otto.source.Event;
-import com.github.dbourdette.otto.source.OldSource;
 import com.github.dbourdette.otto.source.Source;
 import com.github.dbourdette.otto.web.form.BatchForm;
 import com.github.dbourdette.otto.web.form.BatchValuesType;

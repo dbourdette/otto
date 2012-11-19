@@ -16,15 +16,16 @@
 
 package com.github.dbourdette.otto.web.exception;
 
-import com.github.dbourdette.otto.web.util.FlashScope;
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver;
 import org.springframework.web.servlet.view.RedirectView;
 
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import com.github.dbourdette.otto.web.util.FlashScope;
 
 /**
  * @author damien bourdette
@@ -40,7 +41,7 @@ public class ExceptionResolver extends DefaultHandlerExceptionResolver {
 	public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler,
 			Exception ex) {
 		if (ex instanceof SourceNotFound) {
-			flashScope.message("OldSource not found");
+			flashScope.message("Source not found");
 
 			return new ModelAndView(new RedirectView("/index"));
 		} else if (ex instanceof ScheduleNotFound) {
@@ -48,7 +49,7 @@ public class ExceptionResolver extends DefaultHandlerExceptionResolver {
 
             return new ModelAndView(new RedirectView("/index"));
         } else if (ex instanceof SourceAlreadyExists) {
-			flashScope.message("OldSource already exists");
+			flashScope.message("Source already exists");
 
 			return new ModelAndView(new RedirectView("/index"));
 		}

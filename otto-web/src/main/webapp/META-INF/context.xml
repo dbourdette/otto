@@ -15,8 +15,8 @@
   -->
 
 <Context>
-    <Parameter name="mongo/url" value="rtl-jdev1.web.groupertl.net:27117"/>
-    <Parameter name="mongo/dbName" value="events"/>
+    <Parameter name="mongo/url" value="localhost"/>
+    <Parameter name="mongo/dbName" value="otto"/>
 
     <Parameter name="security/admin.username" value="admin"/>
     <Parameter name="security/admin.password" value="admin"/>

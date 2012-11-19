@@ -60,24 +60,6 @@ public class ReportConfig {
     @Property
     private boolean noPunctuation;
 
-    public static ReportConfig fromOld(String sourceName, OldReportConfig oldReportConfig) {
-        ReportConfig reportConfig = new ReportConfig();
-
-        reportConfig.setSourceName(sourceName);
-        reportConfig.setTitle(oldReportConfig.getTitle());
-        reportConfig.setLabelAttributes(oldReportConfig.getLabelAttributes());
-        reportConfig.setValueAttribute(oldReportConfig.getValueAttribute());
-        reportConfig.setTokenize(oldReportConfig.isTokenize());
-        reportConfig.setTokenizeSeparator(oldReportConfig.getTokenizeSeparator());
-        reportConfig.setTokenizeStopWords(oldReportConfig.getTokenizeStopWords());
-        reportConfig.setSort(oldReportConfig.getSort());
-        reportConfig.setLowerCase(oldReportConfig.isLowerCase());
-        reportConfig.setNoAccent(oldReportConfig.isNoAccent());
-        reportConfig.setNoPunctuation(oldReportConfig.isNoPunctuation());
-
-        return reportConfig;
-    }
-
     public ReportConfig() {
     }
 
