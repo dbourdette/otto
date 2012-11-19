@@ -29,7 +29,12 @@
 <div class="container">
     <widget:nav />
 
-    <h2>Aggregation configuration</h2>
+    <h2>
+        <c:if test="${not empty form.id}">
+            <a href="/sources/${name}/aggregation/${form.id}/delete" class="pull-right btn btn-danger">delete</a>
+        </c:if>
+        Aggregation configuration
+    </h2>
 
     <div class="row">
         <div class="span12">

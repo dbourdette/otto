@@ -27,7 +27,7 @@ import com.google.code.morphia.annotations.Property;
  */
 public class DefaultGraphParameters {
     @Property
-    public DataTablePeriod period;
+    public DataTablePeriod period = DataTablePeriod.RECENT;
 
     public DataTablePeriod getPeriod() {
         return period;

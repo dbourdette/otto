@@ -63,7 +63,7 @@ public class Source {
     private AggregationConfig aggregationConfig;
 
     @Embedded
-    private DefaultGraphParameters defaultGraphParameters;
+    private DefaultGraphParameters defaultGraphParameters = new DefaultGraphParameters();
 
     @Embedded
     private TransformConfig transformConfig;

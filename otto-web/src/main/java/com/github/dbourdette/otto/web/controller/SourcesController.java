@@ -202,7 +202,13 @@ public class SourcesController {
 
     @RequestMapping("/sources/{name}/aggregation/form")
     public String aggregation(@PathVariable String name, Model model) {
-        model.addAttribute("form", Source.findByName(name).getAggregationConfig());
+        AggregationConfig config = Source.findByName(name).getAggregationConfig();
+
+        if (config == null) {
+            config = new AggregationConfig();
+        }
+
+        model.addAttribute("form", config);
         model.addAttribute("timeFrames", TimeFrame.values());
 
         return "sources/aggregation_form";
@@ -221,6 +227,16 @@ public class SourcesController {
         source.save();
 
         flashScope.message("Aggregation has been modified for source " + name);
+
+        return "redirect:/sources/{name}/configuration";
+    }
+
+    @RequestMapping("/sources/{name}/aggregation/{id}/delete")
+    public String deleteAggregation(@PathVariable String name, @PathVariable String id) {
+        Source source = Source.findByName(name);
+
+        source.setAggregationConfig(null);
+        source.save();
 
         return "redirect:/sources/{name}/configuration";
     }
