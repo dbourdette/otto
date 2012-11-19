@@ -30,11 +30,11 @@
     </h1>
     <sec:authorize access="hasRole('ROLE_ADMIN')">
         <div class="pull-right">
-            <a href="/sources/${name}/reports" style="margin-right: 10px">Reports</a>
-            <a href="/sources/${name}/configuration" style="margin-right: 10px">Configuration</a>
-            <a href="/sources/${name}/statistics" style="margin-right: 10px">Statistics</a>
-            <a href="/sources/${name}/events" style="margin-right: 10px">Raw logs</a>
-            <a href="/sources/${name}/events/batch">Batch</a>
+            <a href="/sources/${name}/reports" id="reports" style="margin-right: 10px">Reports</a>
+            <a href="/sources/${name}/configuration" id="configuration" style="margin-right: 10px">Configuration</a>
+            <a href="/sources/${name}/statistics" id="statistics" style="margin-right: 10px">Statistics</a>
+            <a href="/sources/${name}/events" id="events" style="margin-right: 10px">Raw logs</a>
+            <a href="/sources/${name}/events/batch" id="batch">Batch</a>
         </div>
     </sec:authorize>
 </div>

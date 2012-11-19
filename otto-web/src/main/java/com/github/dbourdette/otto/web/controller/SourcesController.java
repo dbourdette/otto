@@ -16,36 +16,49 @@
 
 package com.github.dbourdette.otto.web.controller;
 
+import java.io.UnsupportedEncodingException;
+
+import javax.inject.Inject;
+import javax.mail.MessagingException;
+import javax.validation.Valid;
+
+import org.apache.commons.lang.StringUtils;
+import org.bson.types.ObjectId;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.github.dbourdette.otto.Registry;
 import com.github.dbourdette.otto.data.DataTablePeriod;
+import com.github.dbourdette.otto.source.OldSource;
 import com.github.dbourdette.otto.source.Source;
 import com.github.dbourdette.otto.source.TimeFrame;
 import com.github.dbourdette.otto.source.config.AggregationConfig;
 import com.github.dbourdette.otto.source.config.DefaultGraphParameters;
 import com.github.dbourdette.otto.source.config.TransformConfig;
+import com.github.dbourdette.otto.source.reports.OldReportConfig;
+import com.github.dbourdette.otto.source.reports.OldSourceReports;
 import com.github.dbourdette.otto.source.reports.ReportConfig;
 import com.github.dbourdette.otto.source.reports.SourceReports;
 import com.github.dbourdette.otto.source.schedule.MailSchedule;
+import com.github.dbourdette.otto.source.schedule.OldMailSchedule;
+import com.github.dbourdette.otto.source.schedule.OldSourceSchedules;
 import com.github.dbourdette.otto.source.schedule.SourceScheduleExecutor;
 import com.github.dbourdette.otto.source.schedule.SourceSchedules;
+import com.github.dbourdette.otto.web.editor.ObjectIdEditor;
 import com.github.dbourdette.otto.web.form.CappingForm;
 import com.github.dbourdette.otto.web.form.IndexForm;
 import com.github.dbourdette.otto.web.form.SourceForm;
 import com.github.dbourdette.otto.web.form.TransformForm;
 import com.github.dbourdette.otto.web.util.FlashScope;
 import com.github.dbourdette.otto.web.util.IntervalUtils;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-
-import javax.inject.Inject;
-import javax.mail.MessagingException;
-import javax.validation.Valid;
-import java.io.UnsupportedEncodingException;
 
 /**
  * @author damien bourdette
@@ -60,16 +73,50 @@ public class SourcesController {
     @Inject
     private SourceScheduleExecutor scheduleExecutor;
 
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(ObjectId.class, new ObjectIdEditor());
+    }
+
+    @RequestMapping({"/sources/migrate"})
+    @ResponseBody
+    public String migrate() {
+        Registry.datastore.delete(Registry.datastore.find(Source.class));
+        Registry.datastore.delete(Registry.datastore.find(ReportConfig.class));
+
+        for (OldSource oldSource : OldSource.findAll()) {
+            Source source = Source.create(oldSource.getName());
+            source.setDisplayGroup(oldSource.getDisplayGroup());
+            source.setDisplayName(oldSource.getDisplayName());
+            source.setAggregationConfig(oldSource.getAggregationConfig());
+            source.setDefaultGraphParameters(oldSource.getDefaultGraphParameters());
+            source.setTransformConfig(oldSource.getTransformConfig());
+
+            source.save();
+
+            for (OldReportConfig oldReportConfig : OldSourceReports.forSource(oldSource).getReportConfigs()) {
+                ReportConfig reportConfig = ReportConfig.fromOld(source.getName(), oldReportConfig);
+
+                reportConfig.save();
+            }
+
+            for (OldMailSchedule oldMailSchedule : OldSourceSchedules.forSource(oldSource).getSchedules()) {
+                MailSchedule mailSchedule = MailSchedule.fromOld(source.getName(), oldMailSchedule);
+
+                mailSchedule.save();
+            }
+        }
+
+        return "done";
+    }
+
     @RequestMapping({"/sources/{name}/configuration"})
     public String source(@PathVariable String name, Model model) {
         Source source = Source.findByName(name);
 
         model.addAttribute("source", source);
-        model.addAttribute("aggregation", source.getAggregationConfig());
-        model.addAttribute("transform", source.getTransformConfig());
-        model.addAttribute("defaultGraphParameters", source.getDefaultGraphParameters());
         model.addAttribute("reports", SourceReports.forSource(source).getReportConfigs());
-        model.addAttribute("schedules", SourceSchedules.forSource(Source.findByName(name)).getSchedules());
+        model.addAttribute("schedules", SourceSchedules.forSource(source).getSchedules());
         model.addAttribute("indexes", source.getIndexes());
 
         return "sources/source";
@@ -133,8 +180,8 @@ public class SourcesController {
         }
 
         Source source = Source.findByName(form.getName());
-
-        source.updateDisplayGroupAndName(form.getDisplayGroup(), form.getDisplayName());
+        source.setDisplayGroup(form.getDisplayGroup());
+        source.setDisplayName(form.getDisplayName());
 
         return "redirect:/sources/" + form.getName() + "/configuration";
     }
@@ -146,7 +193,7 @@ public class SourcesController {
 
     @RequestMapping(value = "/sources/{name}", method = RequestMethod.DELETE)
     public String dropSource(@PathVariable String name) {
-        Source.findByName(name).drop();
+        Source.findByName(name).delete();
 
         flashScope.message("source " + name + " has just been deleted");
 
@@ -169,7 +216,9 @@ public class SourcesController {
             return "sources/aggregation_form";
         }
 
-        Source.findByName(name).saveAggregation(form);
+        Source source = Source.findByName(name);
+        source.setAggregationConfig(form);
+        source.save();
 
         flashScope.message("Aggregation has been modified for source " + name);
 
@@ -194,7 +243,9 @@ public class SourcesController {
 
         flashScope.message("Default graph parameters have been set for source " + name);
 
-        Source.findByName(name).setDefaultGraphParameters(form);
+        Source source = Source.findByName(name);
+        source.setDefaultGraphParameters(form);
+        source.save();
 
         return "redirect:/sources/{name}/configuration";
     }
@@ -229,7 +280,7 @@ public class SourcesController {
 
     @RequestMapping("/sources/{name}/report")
     public String report(@PathVariable String name, Model model) {
-        model.addAttribute("form", new ReportConfig());
+        model.addAttribute("form", new ReportConfig(name));
 
         return "sources/report_form";
     }
@@ -240,7 +291,8 @@ public class SourcesController {
             return "sources/report_form";
         }
 
-        SourceReports.forSource(Source.findByName(name)).saveReportConfig(form);
+        form.setSourceName(name);
+        form.save();
 
         return "redirect:/sources/{name}/configuration";
     }
@@ -253,8 +305,8 @@ public class SourcesController {
     }
 
     @RequestMapping("/sources/{name}/report/{id}/delete")
-    public String deleteReport(@PathVariable String name, @PathVariable String id, Model model) {
-        SourceReports.forSource(Source.findByName(name)).deleteReportConfig(id);
+    public String deleteReport(@PathVariable String name, @PathVariable String id) {
+        SourceReports.forSource(Source.findByName(name)).getReportConfig(id).delete();
 
         return "redirect:/sources/{name}/configuration";
     }
@@ -262,7 +314,7 @@ public class SourcesController {
     @RequestMapping("/sources/{name}/schedule")
     public String schedule(@PathVariable String name, Model model) {
         model.addAttribute("reports", SourceReports.forSource(Source.findByName(name)).getReportConfigs());
-        model.addAttribute("form", new MailSchedule());
+        model.addAttribute("form", new MailSchedule(name));
 
         return "sources/schedule/edit";
     }
@@ -275,7 +327,8 @@ public class SourcesController {
             return "sources/schedule/edit";
         }
 
-        SourceSchedules.forSource(Source.findByName(name)).schedule(form);
+        form.setSourceName(name);
+        form.save();
 
         return "redirect:/sources/{name}/configuration";
     }
@@ -289,14 +342,14 @@ public class SourcesController {
     }
 
     @RequestMapping("/sources/{name}/schedule/{id}/delete")
-    public String deleteSchedule(@PathVariable String name, @PathVariable String id, Model model) {
-        SourceSchedules.forSource(Source.findByName(name)).deleteSchedule(id);
+    public String deleteSchedule(@PathVariable String name, @PathVariable String id) {
+        SourceSchedules.forSource(Source.findByName(name)).getSchedule(id).delete();
 
         return "redirect:/sources/{name}/configuration";
     }
 
     @RequestMapping("/sources/{name}/schedule/{id}/send")
-    public String sendSchedule(@PathVariable String name, @PathVariable String id, Model model) throws MessagingException, UnsupportedEncodingException {
+    public String sendSchedule(@PathVariable String name, @PathVariable String id) throws MessagingException, UnsupportedEncodingException {
         Source source = Source.findByName(name);
         MailSchedule schedule = SourceSchedules.forSource(source).getSchedule(id);
 
@@ -326,7 +379,8 @@ public class SourcesController {
 
         config.forParam(form.getParameter()).replace(form.getOperations());
 
-        source.saveTransformConfig(config);
+        source.setTransformConfig(config);
+        source.save();
 
         return "redirect:/sources/{name}/configuration";
     }
@@ -372,6 +426,4 @@ public class SourcesController {
 
         return "redirect:/sources/{name}/configuration";
     }
-
-
 }

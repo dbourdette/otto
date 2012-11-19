@@ -21,7 +21,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<layout:head/>
+<layout:head title="Edit source"/>
 
 <body>
 <layout:header/>

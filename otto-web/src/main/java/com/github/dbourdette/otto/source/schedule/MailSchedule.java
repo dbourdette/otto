@@ -1,98 +1,82 @@
-/*
- * Copyright 2011 Damien Bourdette
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.github.dbourdette.otto.source.schedule;
 
-import com.github.dbourdette.otto.data.SimpleDataTable;
-import com.github.dbourdette.otto.data.DataTablePeriod;
-import com.github.dbourdette.otto.service.mail.Mail;
-import com.github.dbourdette.otto.source.Source;
-import com.github.dbourdette.otto.source.reports.SourceReports;
-import com.github.dbourdette.otto.source.reports.ReportConfig;
-import com.github.dbourdette.otto.web.util.Pair;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCursor;
-import org.apache.commons.lang.StringUtils;
+import java.util.Date;
+
+import javax.validation.constraints.NotNull;
+
 import org.bson.types.ObjectId;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import com.github.dbourdette.otto.Registry;
+import com.github.dbourdette.otto.data.DataTablePeriod;
+import com.github.dbourdette.otto.data.SimpleDataTable;
+import com.github.dbourdette.otto.service.mail.Mail;
+import com.github.dbourdette.otto.source.Source;
+import com.github.dbourdette.otto.source.reports.ReportConfig;
+import com.github.dbourdette.otto.source.reports.SourceReports;
+import com.github.dbourdette.otto.web.util.Constants;
+import com.github.dbourdette.otto.web.util.Pair;
+import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Id;
+import com.google.code.morphia.annotations.Property;
 
 /**
- * Send mail schedule operation for a {@link com.github.dbourdette.otto.source.Source}
- *
  * @author damien bourdette
+ * @version \$Revision$
  */
+@Entity(value = Constants.SOURCES_ROOT + "schedules", noClassnameStored = true)
 public class MailSchedule {
-    private String id;
+    @Id
+    private ObjectId id;
+
+    @Property
+    private String sourceName;
 
     @NotNull
+    @Property
     private String report;
 
     @NotNull
+    @Property
     private DataTablePeriod period;
 
+    @Property
     private String cronExpression;
 
     @NotEmpty
+    @Property
     private String to;
 
     @NotEmpty
+    @Property
     private String title;
 
-    public static List<MailSchedule> readAll(DBCursor cursor) {
-        List<MailSchedule> result = new ArrayList<MailSchedule>();
+    public static MailSchedule fromOld(String sourceName, OldMailSchedule oldMailSchedule) {
+        MailSchedule mailSchedule = new MailSchedule();
 
-        while (cursor.hasNext()) {
-            result.add(read((BasicDBObject) cursor.next()));
-        }
+        mailSchedule.setSourceName(sourceName);
+        mailSchedule.setReport(oldMailSchedule.getReport());
+        mailSchedule.setPeriod(oldMailSchedule.getPeriod());
+        mailSchedule.setCronExpression(oldMailSchedule.getCronExpression());
+        mailSchedule.setTo(oldMailSchedule.getTo());
+        mailSchedule.setTitle(oldMailSchedule.getTitle());
 
-        return result;
+        return mailSchedule;
     }
 
-    public static MailSchedule read(BasicDBObject object) {
-        MailSchedule schedule = new MailSchedule();
-
-        schedule.setId(((ObjectId) object.get("_id")).toString());
-        schedule.setReport(object.getString("report"));
-        schedule.setPeriod(DataTablePeriod.valueOf(object.getString("period")));
-        schedule.setTitle(object.getString("title"));
-        schedule.setTo(object.getString("to"));
-        schedule.setCronExpression(object.getString("cronExpression"));
-
-        return schedule;
+    public MailSchedule() {
     }
 
-    public BasicDBObject toDBObject() {
-        BasicDBObject object = new BasicDBObject();
+    public MailSchedule(String sourceName) {
+        this.sourceName = sourceName;
+    }
 
-        if (StringUtils.isNotEmpty(id)) {
-            object.put("_id", new ObjectId(id));
-        }
+    public void save() {
+        Registry.datastore.save(this);
+    }
 
-        object.put("report", report);
-        object.put("period", period.name());
-        object.put("title", title);
-        object.put("to", to);
-        object.put("cronExpression", cronExpression);
-
-        return object;
+    public void delete() {
+        Registry.datastore.delete(this);
     }
 
     public Mail buildMail(Source source) {
@@ -153,8 +137,24 @@ public class MailSchedule {
         return html;
     }
 
+    public String getSourceName() {
+        return sourceName;
+    }
+
+    public void setSourceName(String sourceName) {
+        this.sourceName = sourceName;
+    }
+
     public DataTablePeriod[] getPeriods() {
         return DataTablePeriod.values();
+    }
+
+    public ObjectId getId() {
+        return id;
+    }
+
+    public void setId(ObjectId id) {
+        this.id = id;
     }
 
     public String getReport() {
@@ -165,12 +165,12 @@ public class MailSchedule {
         this.report = report;
     }
 
-    public String getId() {
-        return id;
+    public DataTablePeriod getPeriod() {
+        return period;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setPeriod(DataTablePeriod period) {
+        this.period = period;
     }
 
     public String getCronExpression() {
@@ -196,14 +196,4 @@ public class MailSchedule {
     public void setTitle(String title) {
         this.title = title;
     }
-
-    public DataTablePeriod getPeriod() {
-        return period;
-    }
-
-    public void setPeriod(DataTablePeriod period) {
-        this.period = period;
-    }
-
-
 }

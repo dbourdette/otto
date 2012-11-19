@@ -1,5 +1,7 @@
 <%@ tag language="java" pageEncoding="UTF-8"%>
 
+<%@ attribute name="title" required="false" %>
+
 <%--
   ~ Copyright 2011 Damien Bourdette
   ~
@@ -18,7 +20,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Otto event server</title>
+    <title>${empty title ? 'Otto event server' : title}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link href="/bootstrap/css/bootstrap.css" rel="stylesheet">

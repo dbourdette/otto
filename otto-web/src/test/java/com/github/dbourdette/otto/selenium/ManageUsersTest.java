@@ -3,61 +3,90 @@ package com.github.dbourdette.otto.selenium;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.github.dbourdette.otto.selenium.pages.LoginPage;
+import com.github.dbourdette.otto.selenium.pages.UserFormPage;
+import com.github.dbourdette.otto.selenium.pages.UsersPage;
+
+import fr.javafreelance.fluentlenium.core.annotation.Page;
+
 /**
  * @author damien bourdette
  * @version \$Revision$
  */
 public class ManageUsersTest extends OttoFluentTest {
+    private static final String TEST_USER = "selenium user";
+
+    @Page
+    private LoginPage loginPage;
+
+    @Page
+    private UsersPage usersPage;
+
+    @Page
+    private UserFormPage userFormPage;
+
     @Before
     public void init() {
-        goTo("/users");
+        goTo(usersPage);
 
-        try {
-            link("selenium user");
+        loginPage.isAt();
+        loginPage.doLogin();
 
-            doDeleteUser();
-        } catch (Exception e) {
-            // well there was probably no selenium user
+        usersPage.isAt();
+
+        if (usersPage.hasUser(TEST_USER)) {
+            doDeleteUser(TEST_USER);
         }
     }
 
     @Test
     public void createUser() {
-        link("Add user").click();
+        usersPage.isAt();
+        usersPage.addUserButton().click();
 
-        $("#username").text("selenium user");
-        $("#sources").text("source");
-        $("#form").submit();
+        userFormPage.isAt();
+        userFormPage.createUser(TEST_USER, "source");
 
-        assertThatMessage().isEqualTo("user selenium user has been created");
+        usersPage.assertUserCreated();
     }
 
     @Test
     public void deleteUser() {
         createUser();
 
-        doDeleteUser();
+        doDeleteUser(TEST_USER);
     }
 
     @Test
     public void updateUser() {
         createUser();
 
-        goTo("/users");
+        usersPage.isAt();
+        usersPage.pickUser(TEST_USER);
 
-        link("selenium user").click();
+        userFormPage.isAt();
+        userFormPage.updateUser("source,anothersource");
 
-        $("#sources").text("source,anothersource");
-        $("#form").submit();
-
-        assertThatMessage().isEqualTo("user selenium user has been updated");
+        usersPage.assertUserUpdated();
     }
 
-    private void doDeleteUser() {
-        goTo("/users");
+    @Test
+    public void cancelUpdateUser() {
+        createUser();
 
-        link("selenium user").click();
+        usersPage.isAt();
+        usersPage.pickUser(TEST_USER);
 
-        $("#deleteForm").submit();
+        userFormPage.isAt();
+        userFormPage.cancel();
+
+        usersPage.isAt();
+    }
+
+    private void doDeleteUser(String name) {
+        usersPage.isAt();
+        usersPage.pickUser(TEST_USER);
+
+        userFormPage.deleteUser();
     }
 }

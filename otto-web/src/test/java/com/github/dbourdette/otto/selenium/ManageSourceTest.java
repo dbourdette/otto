@@ -1,8 +1,20 @@
 package com.github.dbourdette.otto.selenium;
 
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
+import com.github.dbourdette.otto.selenium.pages.HomePage;
+import com.github.dbourdette.otto.selenium.pages.LoginPage;
+import com.github.dbourdette.otto.selenium.pages.SourceAggregationForm;
+import com.github.dbourdette.otto.selenium.pages.SourceConfigurationPage;
+import com.github.dbourdette.otto.selenium.pages.SourceEditPage;
+import com.github.dbourdette.otto.selenium.pages.SourceFormPage;
+import com.github.dbourdette.otto.selenium.pages.SourcePage;
+import com.github.dbourdette.otto.source.TimeFrame;
+import com.github.dbourdette.otto.source.config.AggregationConfig;
+
+import fr.javafreelance.fluentlenium.core.annotation.Page;
 import static org.fest.assertions.Assertions.assertThat;
 
 /**
@@ -10,46 +22,80 @@ import static org.fest.assertions.Assertions.assertThat;
  * @version \$Revision$
  */
 public class ManageSourceTest extends OttoFluentTest {
+    @Page
+    private HomePage homePage;
+
+    @Page
+    private LoginPage loginPage;
+
+    @Page
+    private SourcePage sourcePage;
+
+    @Page
+    private SourceFormPage sourceFormPage;
+
+    @Page
+    private SourceEditPage sourceEditPage;
+
+    @Page
+    private SourceConfigurationPage sourceConfigurationPage;
+
+    @Page
+    private SourceAggregationForm sourceAggregationForm;
+
+    @Before
+    public void init() {
+        goTo(homePage);
+
+        loginPage.isAt();
+        loginPage.doLogin();
+
+        homePage.isAt();
+
+        deleteSource();
+    }
+
     @After
     public void deleteSource() {
-        super.deleteSource();
+        if (homePage.hasSource(SOURCE_NAME, SOURCE_DISPLAY_NAME)) {
+            goTo(sourceConfigurationPage.getUrl(SOURCE_NAME));
+            sourceConfigurationPage.delete();
+
+            homePage.isAt();
+        }
     }
 
     @Test
     public void createSource() {
-        super.createSource();
+        homePage.newSourceButton().click();
+
+        sourceFormPage.createSource(SOURCE_NAME);
     }
     
     @Test
-    public void displayName() {
-        super.createSource();
+    public void updateDisplayName() {
+        createSource();
 
-        goTo("/sources/" + SOURCE_NAME + "/edit");
+        goTo(sourceConfigurationPage.getUrl(SOURCE_NAME));
 
-        $("#displayName").text(SOURCE_DISPLAY_NAME);
-        $("#displayGroup").text("My display group");
+        sourceConfigurationPage.edit();
 
-        $("#form").submit();
+        sourceEditPage.updateSource(SOURCE_DISPLAY_NAME, "My display group");
 
-        goToHome();
-        link(SOURCE_DISPLAY_NAME).click();
+        goTo(homePage);
 
-        checkH1();
-
-        $("#sourceConfiguration").click();
-        checkH1();
-
-        $("#sourceStatistics").click();
-        checkH1();
-
-        $("#sourceLogs").click();
-        checkH1();
-
-        $("#sourceBatch").click();
-        checkH1();
+        assertThat(homePage.hasSource(SOURCE_DISPLAY_NAME, SOURCE_DISPLAY_NAME)).isTrue();
     }
 
-    private void checkH1() {
-        assertThat($("h1").first().getText()).isEqualTo("Source My display group / My display name edit");
+    @Test
+    public void setupAggregation() {
+        createSource();
+
+        goTo(sourceAggregationForm.getUrl(SOURCE_NAME));
+
+        AggregationConfig config = new AggregationConfig();
+        config.setTimeFrame(TimeFrame.ONE_MINUTE);
+        config.setAttributeName("hits");
+        sourceAggregationForm.update(config);
     }
 }

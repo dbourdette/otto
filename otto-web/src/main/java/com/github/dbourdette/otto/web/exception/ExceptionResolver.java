@@ -40,7 +40,7 @@ public class ExceptionResolver extends DefaultHandlerExceptionResolver {
 	public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler,
 			Exception ex) {
 		if (ex instanceof SourceNotFound) {
-			flashScope.message("Source not found");
+			flashScope.message("OldSource not found");
 
 			return new ModelAndView(new RedirectView("/index"));
 		} else if (ex instanceof ScheduleNotFound) {
@@ -48,7 +48,7 @@ public class ExceptionResolver extends DefaultHandlerExceptionResolver {
 
             return new ModelAndView(new RedirectView("/index"));
         } else if (ex instanceof SourceAlreadyExists) {
-			flashScope.message("Source already exists");
+			flashScope.message("OldSource already exists");
 
 			return new ModelAndView(new RedirectView("/index"));
 		}

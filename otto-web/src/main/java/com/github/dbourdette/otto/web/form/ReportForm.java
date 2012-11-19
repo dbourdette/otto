@@ -16,20 +16,22 @@
 
 package com.github.dbourdette.otto.web.form;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.joda.time.DateMidnight;
+import org.joda.time.Duration;
+import org.joda.time.Interval;
+
 import com.github.dbourdette.otto.data.DataTablePeriod;
 import com.github.dbourdette.otto.data.SimpleDataTable;
 import com.github.dbourdette.otto.source.Source;
 import com.github.dbourdette.otto.source.config.DefaultGraphParameters;
 import com.github.dbourdette.otto.source.reports.ReportConfig;
 import com.github.dbourdette.otto.web.editor.DatePropertyEditor;
-import org.joda.time.DateMidnight;
-import org.joda.time.Duration;
-import org.joda.time.Interval;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author damien bourdette
@@ -157,7 +159,7 @@ public class ReportForm {
 
         if (reportConfigs.size() > 0) {
             ReportConfig reportConfig = reportConfigs.get(0);
-            reportId = reportConfig.getId();
+            reportId = reportConfig.getId().toString();
 
             return reportConfig;
         }

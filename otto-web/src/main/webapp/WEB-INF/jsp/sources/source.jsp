@@ -36,7 +36,7 @@
                 <strong>Group and name</strong>
             </div>
             <div class="span10">
-                <a href="/sources/${name}/edit">
+                <a href="/sources/${name}/edit" id="edit">
                     <c:if test="${not empty source.displayGroup}">${fn:escapeXml(source.displayGroup)} /</c:if>
                     <c:if test="${not empty source.displayName}">${fn:escapeXml(source.displayName)}</c:if>
                     <c:if test="${empty source.displayName}">${fn:escapeXml(name)}</c:if>
@@ -65,8 +65,8 @@
             </div>
             <div class="span10">
                 <a href="/sources/${name}/aggregation/form">
-                    <c:if test="${aggregation.timeFrame eq 'MILLISECOND'}">none</c:if>
-                    <c:if test="${not (aggregation.timeFrame eq 'MILLISECOND')}">${aggregation.timeFrame} on attribute ${aggregation.attributeName}</c:if>
+                    <c:if test="${source.aggregationConfig.timeFrame eq 'MILLISECOND'}">none</c:if>
+                    <c:if test="${not (source.aggregationConfig.timeFrame eq 'MILLISECOND')}">${source.aggregationConfig.timeFrame} on attribute ${source.aggregationConfig.attributeName}</c:if>
                 </a>
             </div>
         </div>
@@ -75,11 +75,11 @@
             <div class="span2"><strong>Default gragh parameters</strong></div>
             <div class="span10">
                 <a href="/sources/${name}/default-graph-params/form">
-                    <c:if test="${empty defaultGraphParameters.period}">
+                    <c:if test="${empty source.defaultGraphParameters.period}">
                         none
                     </c:if>
-                    <c:if test="${not empty defaultGraphParameters.period}">
-                        period <b>${defaultGraphParameters.period}</b>
+                    <c:if test="${not empty source.defaultGraphParameters.period}">
+                        period <b>${source.defaultGraphParameters.period}</b>
                     </c:if>
                 </a>
             </div>
@@ -148,7 +148,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                    <c:forEach var="parameter" items="${transform.config}">
+                    <c:forEach var="parameter" items="${source.transformConfig.config}">
                         <tr>
                             <td><a href="/sources/${name}/transform/${parameter.name}">${parameter.name}</a></td>
                             <td>${parameter.operations}</td>

@@ -53,18 +53,6 @@
             <td style="width: 200px;">events</td>
             <td>${source.collectionName}</td>
         </tr>
-        <tr>
-            <td>configuration</td>
-            <td>${source.configCollectionName}</td>
-        </tr>
-        <tr>
-            <td>report configuration</td>
-            <td>${source.reportsCollectionName}</td>
-        </tr>
-        <tr>
-            <td>schedule configuration</td>
-            <td>${source.schedulesCollectionName}</td>
-        </tr>
     </table>
 
     <h3>Statistics</h3>

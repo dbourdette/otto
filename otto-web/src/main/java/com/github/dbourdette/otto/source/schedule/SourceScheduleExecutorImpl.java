@@ -16,13 +16,14 @@
 
 package com.github.dbourdette.otto.source.schedule;
 
-import com.github.dbourdette.otto.service.logs.Logs;
-import com.github.dbourdette.otto.service.mail.Mailer;
-import com.github.dbourdette.otto.source.Source;
+import javax.inject.Inject;
+
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
+import com.github.dbourdette.otto.service.logs.Logs;
+import com.github.dbourdette.otto.service.mail.Mailer;
+import com.github.dbourdette.otto.source.Source;
 
 /**
  * @author damien bourdette

@@ -16,20 +16,23 @@
 
 package com.github.dbourdette.otto.source.config;
 
+import javax.validation.constraints.Pattern;
+
 import org.apache.commons.lang.StringUtils;
 
 import com.github.dbourdette.otto.source.TimeFrame;
-
-import javax.validation.constraints.Pattern;
+import com.google.code.morphia.annotations.Property;
 
 /**
  * @author damien bourdette
  * @version \$Revision$
  */
 public class AggregationConfig {
+    @Property
     private TimeFrame timeFrame = TimeFrame.MILLISECOND;
 
     @Pattern(regexp = "^[A-Za-z0-9-_]+$")
+    @Property
     private String attributeName = "count";
 
     public boolean isAggregating() {

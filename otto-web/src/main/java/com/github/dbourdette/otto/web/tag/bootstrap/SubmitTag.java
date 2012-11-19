@@ -1,11 +1,12 @@
 package com.github.dbourdette.otto.web.tag.bootstrap;
 
-import org.apache.commons.lang.StringUtils;
+import java.io.IOException;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
-import java.io.IOException;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * @author damien bourdette
@@ -24,7 +25,7 @@ public class SubmitTag extends SimpleTagSupport {
         writer.write("<button type=\"submit\" class=\"btn btn-primary\">" + label + "</button>\n");
 
         if (StringUtils.isNotEmpty(cancelUrl)) {
-            writer.write("<a href=\"" + cancelUrl + "\"><button type=\"submit\" class=\"btn\">Cancel</button></a>\n");
+            writer.write("<a href=\"" + cancelUrl + "\" class=\"btn\">Cancel</a>\n");
         }
 
         writer.write("</div></div>\n");

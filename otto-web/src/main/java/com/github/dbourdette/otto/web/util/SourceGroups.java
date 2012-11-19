@@ -1,9 +1,14 @@
 package com.github.dbourdette.otto.web.util;
 
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+
 import com.github.dbourdette.otto.security.Security;
 import com.github.dbourdette.otto.source.Source;
-
-import java.util.*;
 
 /**
  * Used for jsp layout by group

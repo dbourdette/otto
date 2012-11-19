@@ -16,14 +16,15 @@
 
 package com.github.dbourdette.otto;
 
-import com.github.dbourdette.otto.security.SecurityConfig;
-import com.github.dbourdette.otto.service.user.User;
-import com.google.code.morphia.Datastore;
-import com.google.code.morphia.Morphia;
-import com.mongodb.DB;
-import com.mongodb.Mongo;
-import com.mongodb.MongoException;
-import com.mongodb.ServerAddress;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.servlet.ServletContext;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -34,13 +35,17 @@ import org.springframework.web.servlet.i18n.FixedLocaleResolver;
 import org.springframework.web.servlet.view.JstlView;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.servlet.ServletContext;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import com.github.dbourdette.otto.security.SecurityConfig;
+import com.github.dbourdette.otto.service.user.User;
+import com.github.dbourdette.otto.source.Source;
+import com.github.dbourdette.otto.source.reports.ReportConfig;
+import com.github.dbourdette.otto.source.schedule.MailSchedule;
+import com.google.code.morphia.Datastore;
+import com.google.code.morphia.Morphia;
+import com.mongodb.DB;
+import com.mongodb.Mongo;
+import com.mongodb.MongoException;
+import com.mongodb.ServerAddress;
 
 /**
  * @author damien bourdette
@@ -72,6 +77,7 @@ public class SpringConfig {
         SpringConfig.staticContext = context;
 
         Registry.mongoDb = mongoDb();
+        Registry.datastore = dataStore();
     }
 
     @Bean
@@ -100,11 +106,7 @@ public class SpringConfig {
 
     @Bean
     public Mongo mongo() throws MongoException, UnknownHostException {
-        Mongo mongo = new Mongo(getMongoServerAdresses());
-
-        mongo.slaveOk();
-
-        return mongo;
+        return new Mongo(getMongoServerAdresses());
     }
 
     @Bean
@@ -129,6 +131,9 @@ public class SpringConfig {
     public Morphia morphia() throws MongoException, UnknownHostException {
         Morphia morphia = new Morphia();
 
+        morphia.map(Source.class);
+        morphia.map(ReportConfig.class);
+        morphia.map(MailSchedule.class);
         morphia.map(User.class);
         morphia.map(SecurityConfig.class);
 

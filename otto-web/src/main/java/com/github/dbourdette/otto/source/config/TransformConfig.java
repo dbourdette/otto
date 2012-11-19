@@ -28,6 +28,7 @@ import com.github.dbourdette.otto.source.config.transform.LowerCaseOperation;
 import com.github.dbourdette.otto.source.config.transform.NoAccentOperation;
 import com.github.dbourdette.otto.source.config.transform.NoPunctuationOperation;
 import com.github.dbourdette.otto.source.config.transform.TransformOperation;
+import com.google.code.morphia.annotations.Embedded;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
@@ -35,6 +36,7 @@ import com.mongodb.DBObject;
  * @author damien bourdette
  */
 public class TransformConfig {
+    @Embedded
     private Map<String, List<TransformOperation>> operations = new HashMap<String, List<TransformOperation>>();
 
     public static final Map<String, TransformOperation> REGISTRY = new HashMap<String, TransformOperation>();

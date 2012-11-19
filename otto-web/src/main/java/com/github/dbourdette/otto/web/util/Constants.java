@@ -27,11 +27,13 @@ public class Constants {
 
 	public static final String OTTO = "otto.";
 	
-	public static final String SOURCES = OTTO + "sources.";
+	public static final String SOURCES_ROOT = OTTO + "sources.";
 	
 	public static final String LOGS = OTTO + "logs";
 
     public static final String USERS = OTTO + "users";
+
+    public static final String SOURCES = OTTO + "sources";
 
     public static final String MAIL_CONFIG = "config.mail";
 

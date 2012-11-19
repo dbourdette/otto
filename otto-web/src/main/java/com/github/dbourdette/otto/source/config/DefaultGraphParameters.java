@@ -17,6 +17,7 @@
 package com.github.dbourdette.otto.source.config;
 
 import com.github.dbourdette.otto.data.DataTablePeriod;
+import com.google.code.morphia.annotations.Property;
 
 /**
  * Default values for graph form for a given source.
@@ -25,6 +26,7 @@ import com.github.dbourdette.otto.data.DataTablePeriod;
  * @version \$Revision$
  */
 public class DefaultGraphParameters {
+    @Property
     public DataTablePeriod period;
 
     public DataTablePeriod getPeriod() {

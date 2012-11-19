@@ -1,12 +1,10 @@
 package com.github.dbourdette.otto.source.reports;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.bson.types.ObjectId;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import com.github.dbourdette.otto.Registry;
 import com.github.dbourdette.otto.data.SimpleDataTable;
 import com.github.dbourdette.otto.data.filler.LowerCaseOperation;
 import com.github.dbourdette.otto.data.filler.NoAccentOperation;
@@ -14,90 +12,85 @@ import com.github.dbourdette.otto.data.filler.NoPunctuationOperation;
 import com.github.dbourdette.otto.data.filler.OperationChain;
 import com.github.dbourdette.otto.data.filler.TokenizeOperation;
 import com.github.dbourdette.otto.web.form.Sort;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCursor;
+import com.github.dbourdette.otto.web.util.Constants;
+import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Id;
+import com.google.code.morphia.annotations.Property;
 
 /**
  * @author damien bourdette
  * @version \$Revision$
  */
+@Entity(value = Constants.SOURCES_ROOT + "reports", noClassnameStored = true)
 public class ReportConfig {
-    private String id;
+    @Id
+    private ObjectId id;
+
+    @Property
+    private String sourceName;
 
     @NotEmpty
+    @Property
     private String title;
 
+    @Property
     private String labelAttributes;
 
+    @Property
     private String valueAttribute;
 
+    @Property
     private boolean tokenize;
 
+    @Property
     private String tokenizeSeparator;
 
+    @Property
     private String tokenizeStopWords;
 
+    @Property
     private Sort sort;
 
+    @Property
     private boolean lowerCase;
 
+    @Property
     private boolean noAccent;
 
+    @Property
     private boolean noPunctuation;
 
-    public static List<ReportConfig> readAll(DBCursor cursor) {
-        List<ReportConfig> result = new ArrayList<ReportConfig>();
+    public static ReportConfig fromOld(String sourceName, OldReportConfig oldReportConfig) {
+        ReportConfig reportConfig = new ReportConfig();
 
-        while (cursor.hasNext()) {
-            result.add(read((BasicDBObject) cursor.next()));
-        }
+        reportConfig.setSourceName(sourceName);
+        reportConfig.setTitle(oldReportConfig.getTitle());
+        reportConfig.setLabelAttributes(oldReportConfig.getLabelAttributes());
+        reportConfig.setValueAttribute(oldReportConfig.getValueAttribute());
+        reportConfig.setTokenize(oldReportConfig.isTokenize());
+        reportConfig.setTokenizeSeparator(oldReportConfig.getTokenizeSeparator());
+        reportConfig.setTokenizeStopWords(oldReportConfig.getTokenizeStopWords());
+        reportConfig.setSort(oldReportConfig.getSort());
+        reportConfig.setLowerCase(oldReportConfig.isLowerCase());
+        reportConfig.setNoAccent(oldReportConfig.isNoAccent());
+        reportConfig.setNoPunctuation(oldReportConfig.isNoPunctuation());
 
-        return result;
+        return reportConfig;
     }
 
-    public static ReportConfig read(BasicDBObject object) {
-        ReportConfig config = new ReportConfig();
-
-        config.setId(((ObjectId) object.get("_id")).toString());
-        config.setTitle(object.getString("title"));
-        config.setLabelAttributes(object.getString("labelAttributes"));
-        config.setValueAttribute(object.getString("valueAttribute"));
-        config.setTokenize(object.getBoolean("tokenize"));
-        config.setTokenizeSeparator(object.getString("tokenizeSeparator"));
-        config.setTokenizeStopWords(object.getString("tokenizeStopWords"));
-        config.setNoAccent(object.getBoolean("noAccent", false));
-        config.setNoPunctuation(object.getBoolean("noPunctuation", false));
-        config.setLowerCase(object.getBoolean("lowerCase", false));
-
-        if (object.containsField("sort")) {
-            config.setSort(Sort.valueOf((String) object.get("sort")));
-        }
-
-        return config;
+    public ReportConfig() {
     }
 
-    public BasicDBObject toDBObject() {
-        BasicDBObject object = new BasicDBObject();
+    public ReportConfig(String sourceName) {
+        this.sourceName = sourceName;
+    }
 
-        if (StringUtils.isNotEmpty(id)) {
-            object.put("_id", new ObjectId(id));
-        }
+    public void save() {
+        Registry.datastore.save(this);
+    }
 
-        object.put("title", title);
-        object.put("labelAttributes", labelAttributes);
-        object.put("valueAttribute", valueAttribute);
-        object.put("tokenize", tokenize);
-        object.put("tokenizeSeparator", tokenizeSeparator);
-        object.put("tokenizeStopWords", tokenizeStopWords);
-        object.put("noAccent", noAccent);
-        object.put("noPunctuation", noPunctuation);
-        object.put("lowerCase", lowerCase);
-
-        if (sort != null) {
-            object.put("sort", sort.name());
-        }
-
-        return object;
+    public void delete() {
+        Registry.datastore.delete(this);
     }
 
     public OperationChain buildChain(SimpleDataTable report) {
@@ -135,12 +128,24 @@ public class ReportConfig {
         return chain;
     }
 
-    public String getId() {
+    public Sort[] getSorts() {
+        return Sort.values();
+    }
+
+    public ObjectId getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(ObjectId id) {
         this.id = id;
+    }
+
+    public String getSourceName() {
+        return sourceName;
+    }
+
+    public void setSourceName(String sourceName) {
+        this.sourceName = sourceName;
     }
 
     public String getTitle() {
@@ -197,10 +202,6 @@ public class ReportConfig {
 
     public void setSort(Sort sort) {
         this.sort = sort;
-    }
-
-    public Sort[] getSorts() {
-        return Sort.values();
     }
 
     public boolean isLowerCase() {

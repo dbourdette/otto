@@ -20,7 +20,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<layout:head/>
+<layout:head title="Please login"/>
 
 <body>
 <layout:header/>
@@ -35,9 +35,9 @@
         </div>
         <div class="row">
             <div class="span6 offset3">
-                <form class="form-inline" method="post" action="j_spring_security_check">
-                    <input name="j_username" value="" type="text" placeholder="Login"/>
-                    <input name="j_password" type="password" placeholder="Password"/>
+                <form class="form-inline" method="post" id="loginForm" action="j_spring_security_check">
+                    <input name="j_username" type="text" id="username" placeholder="Login"/>
+                    <input name="j_password" type="password" id="password" placeholder="Password"/>
                     <button type="submit" class="btn">Submit</button>
                 </form>
             </div>

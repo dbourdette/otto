@@ -1,17 +1,20 @@
 package com.github.dbourdette.otto.integration.source;
 
+import java.net.UnknownHostException;
+
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
 import com.github.dbourdette.otto.Registry;
 import com.github.dbourdette.otto.source.Source;
 import com.github.dbourdette.otto.source.reports.ReportConfig;
 import com.github.dbourdette.otto.source.reports.SourceReports;
 import com.github.dbourdette.otto.web.exception.SourceAlreadyExists;
 import com.github.dbourdette.otto.web.exception.SourceNotFound;
+import com.google.code.morphia.Morphia;
+import com.mongodb.DB;
 import com.mongodb.Mongo;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.net.UnknownHostException;
 
 import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.fail;
@@ -23,8 +26,16 @@ import static org.junit.Assert.fail;
 public class SourceTest {
     @Before
     public void clean() throws UnknownHostException, NoSuchFieldException {
-        Registry.mongoDb = new Mongo().getDB("otto-integration");
-        Registry.mongoDb.dropDatabase();
+        Mongo mongo = new Mongo();
+
+        DB db = mongo.getDB("otto-integration");
+        db.dropDatabase();
+
+        Morphia morphia = new Morphia();
+        morphia.map(Source.class);
+
+        Registry.mongoDb = db;
+        Registry.datastore = morphia.createDatastore(mongo, "otto-integration");
     }
     
     @Test
@@ -75,15 +86,6 @@ public class SourceTest {
     }
 
     @Test
-    public void findAllNames() {
-        Source.create("test1");
-        Source.create("test2");
-
-        assertThat(Source.findAllNames()).contains("test1");
-        assertThat(Source.findAllNames()).contains("test2");
-    }
-
-    @Test
     public void findAll() {
         Source.create("test1");
         Source.create("test2");
@@ -94,10 +96,10 @@ public class SourceTest {
     }
 
     @Test
-    public void drop() {
+    public void delete() {
         Source source = Source.create("test");
 
-        source.drop();
+        source.delete();
 
         assertThat(Source.exists("test")).isFalse();
     }
@@ -110,8 +112,8 @@ public class SourceTest {
         config.setTitle("hits");
         config.setValueAttribute("hits");
 
-        SourceReports.forSource(source).saveReportConfig(config);
-        SourceReports.forSource(source).saveReportConfig(config);
+        config.setSourceName(source.getName());
+        config.save();
 
         Assert.assertEquals(1, SourceReports.forSource(source).getReportConfigs().size());
         Assert.assertEquals("hits", SourceReports.forSource(source).getReportConfigs().get(0).getValueAttribute());
@@ -121,7 +123,7 @@ public class SourceTest {
         Assert.assertEquals("hits", config.getValueAttribute());
 
         config.setValueAttribute("slug");
-        SourceReports.forSource(source).saveReportConfig(config);
+        config.save();
 
         Assert.assertEquals("slug", SourceReports.forSource(source).getReportConfigs().get(0).getValueAttribute());
     }

@@ -43,7 +43,7 @@ public class IndexController {
     }
 
     @RequestMapping("/login")
-    public String login(Model model) {
+    public String login() {
         return "login";
     }
 

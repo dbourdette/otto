@@ -23,7 +23,7 @@
     <div class="container">
         <div class="alert">
             <a class="close" data-dismiss="alert">×</a>
-            ${fn:escapeXml(message)}
+            <span class="message">${fn:escapeXml(message)}</span>
         </div>
     </div>
 </c:if>

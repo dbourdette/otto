@@ -1,27 +1,10 @@
-/*
- * Copyright 2011 Damien Bourdette
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.github.dbourdette.otto.source;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import org.bson.types.ObjectId;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.joda.time.Interval;
@@ -34,8 +17,6 @@ import com.github.dbourdette.otto.source.config.AggregationConfig;
 import com.github.dbourdette.otto.source.config.DefaultGraphParameters;
 import com.github.dbourdette.otto.source.config.TransformConfig;
 import com.github.dbourdette.otto.source.reports.ReportConfig;
-import com.github.dbourdette.otto.source.reports.SourceReports;
-import com.github.dbourdette.otto.source.schedule.SourceSchedules;
 import com.github.dbourdette.otto.util.Page;
 import com.github.dbourdette.otto.web.exception.SourceAlreadyExists;
 import com.github.dbourdette.otto.web.exception.SourceNotFound;
@@ -47,168 +28,96 @@ import com.github.dbourdette.otto.web.util.Constants;
 import com.github.dbourdette.otto.web.util.Frequency;
 import com.github.dbourdette.otto.web.util.IntervalUtils;
 import com.github.dbourdette.otto.web.util.SizeInBytes;
+import com.google.code.morphia.annotations.Embedded;
+import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Id;
+import com.google.code.morphia.annotations.Property;
+import com.google.code.morphia.query.Query;
 import com.mongodb.BasicDBObject;
 import com.mongodb.CommandResult;
 import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
-
-import net.sf.ehcache.Element;
 
 /**
  * @author damien bourdette
  * @version \$Revision$
  */
+@Entity(value = Constants.SOURCES, noClassnameStored = true)
 public class Source {
     private static final int DEFAULT_PAGE_SIZE = 100;
 
+    @Id
+    private ObjectId id;
+
+    @NotEmpty
+    @Property
     private String name;
 
+    @Property
     private String displayName;
 
+    @Property
     private String displayGroup;
 
-    private DBCollection events;
+    @Embedded
+    private AggregationConfig aggregationConfig;
 
-    private DBCollection config;
+    @Embedded
+    private DefaultGraphParameters defaultGraphParameters;
 
-    private volatile AggregationConfig aggregationConfig;
-
-    private volatile TransformConfig transformConfig;
-
-    public static String qualifiedName(String name) {
-        return Constants.SOURCES + name + Constants.EVENTS;
-    }
-
-    public static String qualifiedConfigName(String name) {
-        return Constants.SOURCES + name + Constants.CONFIG;
-    }
-
-    public static String qualifiedReportsName(String name) {
-        return Constants.SOURCES + name + "." + Constants.REPORTS;
-    }
-
-    public static String qualifiedSchedulesName(String name) {
-        return Constants.SOURCES + name + "." + Constants.SCHEDULES;
-    }
+    @Embedded
+    private TransformConfig transformConfig;
 
     public static Source create(String name) {
-        if (exists(name)) {
-            throw new SourceAlreadyExists();
-        }
+        assertNotExists(name);
 
-        String collectionName = qualifiedName(name);
+        Source source = new Source();
+        source.name = name;
 
-        Registry.mongoDb.createCollection(collectionName, new BasicDBObject());
+        Registry.datastore.save(source);
 
-        return findByName(name);
+        return source;
     }
 
     public static Source create(SourceForm form) {
-        if (exists(form.getName())) {
-            throw new SourceAlreadyExists();
-        }
+        assertNotExists(form.getName());
 
-        BasicDBObject capping = new BasicDBObject();
+        createEventsCollection(form);
 
-        SizeInBytes sizeInBytes = form.getSizeInBytes();
+        Source source = new Source();
+        source.name = form.getName().trim();
+        source.displayGroup = form.getDisplayGroup().trim();
+        source.displayName = form.getDisplayName().trim();
 
-        if (sizeInBytes == null) {
-            capping.put("capped", false);
-        } else {
-            capping.put("capped", true);
-            capping.put("size", sizeInBytes.getValue());
-
-            if (form.getMaxEvents() != null) {
-                capping.put("max", form.getMaxEvents());
-            }
-        }
-
-        String collectionName = qualifiedName(form.getName());
-
-        Registry.mongoDb.createCollection(collectionName, capping);
-
-        Source source = findByName(form.getName());
-
-        source.updateDisplayGroupAndName(form.getDisplayGroup(), form.getDisplayName());
+        Registry.datastore.save(source);
 
         return source;
+    }
+
+    public static List<Source> findAll() {
+        return Registry.datastore.find(Source.class).order("name").asList();
     }
 
     public static boolean exists(String name) {
-        String collectionName = qualifiedName(name);
-
-        return Registry.mongoDb.collectionExists(collectionName);
+        return queryByName(name).countAll() > 0;
     }
 
     public static Source findByName(String name) {
-        if (!exists(name)) {
-            throw new SourceNotFound();
-        }
+        assertExists(name);
 
-        Element element = Registry.sourceCache.get(name);
-
-        if (element != null) {
-            return (Source) element.getObjectValue();
-        }
-
-        Source source = new Source();
-
-        source.name = name;
-        source.events = Registry.mongoDb.getCollection(qualifiedName(name));
-        source.config = Registry.mongoDb.getCollection(qualifiedConfigName(name));
-
-        source.loadAggregation();
-        source.loadDisplay();
-        source.loadTransformConfig();
-
-        Registry.sourceCache.put(new Element(name, source));
-
-        return source;
+        return queryByName(name).get();
     }
 
-    public static Collection<String> findAllNames() {
-        List<String> sources = new ArrayList<String>();
-
-        for (String name : Registry.mongoDb.getCollectionNames()) {
-            if (name.startsWith(Constants.SOURCES) && name.endsWith(Constants.EVENTS)) {
-                sources.add(StringUtils.substringBetween(name, Constants.SOURCES, Constants.EVENTS));
-            }
-        }
-
-        return sources;
+    public void save() {
+        Registry.datastore.save(this);
     }
 
-    public static Collection<Source> findAll() {
-        List<Source> sources = new ArrayList<Source>();
+    public void delete() {
+        assertExists(name);
 
-        for (String name : findAllNames()) {
-            sources.add(findByName(name));
-        }
+        getEventsDBCollection().drop();
 
-        return sources;
-    }
-
-    public void drop() {
-        events.drop();
-        config.drop();
-        SourceReports.forSource(this).dropCollection();
-        SourceSchedules.forSource(this).dropCollection();
-
-        Registry.sourceCache.remove(name);
-    }
-
-    public void updateDisplayGroupAndName(String group, String name) {
-        BasicDBObject filter = new BasicDBObject("name", "display");
-
-        BasicDBObject values = new BasicDBObject("name", "display");
-
-        values.put("displayGroup", group.trim());
-        values.put("displayName", name.trim());
-
-        config.update(filter, values, true, false);
-
-        loadDisplay();
+        Registry.datastore.delete(queryByName(name));
     }
 
     public SimpleDataTable buildTable(ReportConfig config, DataTablePeriod period) {
@@ -243,10 +152,27 @@ public class Source {
         return table;
     }
 
+    public void post(Event event) {
+        transformConfig.applyOn(event);
+
+        AggregationConfig config = aggregationConfig;
+
+        if (config.isAggregating()) {
+            event.setDate(config.getTimeFrame().roundDate(event.getDate()));
+
+            BasicDBObject inc = new BasicDBObject();
+            inc.put("$inc", new BasicDBObject(config.getAttributeName(), 1));
+
+            getEventsDBCollection().update(event.toDBObject(), inc, true, false);
+        } else {
+            getEventsDBCollection().insert(event.toDBObject());
+        }
+    }
+
     public Iterator<DBObject> findEvents(Interval interval) {
         BasicDBObject query = IntervalUtils.query(interval);
 
-        return events.find(query).sort(new BasicDBObject("date", -1)).iterator();
+        return getEventsDBCollection().find(query).sort(new BasicDBObject("date", -1)).iterator();
     }
 
     public Page<DBObject> findEvents(Integer page) {
@@ -254,11 +180,29 @@ public class Source {
     }
 
     public Page<DBObject> findEvents(Integer page, int pageSize) {
-        return Page.fromCursor(events.find().sort(new BasicDBObject("date", -1)), page, pageSize);
+        return Page.fromCursor(getEventsDBCollection().find().sort(new BasicDBObject("date", -1)), page, pageSize);
     }
 
     public Page<DBObject> findEvents(DateTime from, DateTime to, Integer page, int pageSize) {
-        return Page.fromCursor(events.find(IntervalUtils.query(from, to)).sort(new BasicDBObject("date", -1)), page, pageSize);
+        BasicDBObject query = IntervalUtils.query(from, to);
+
+        return Page.fromCursor(getEventsDBCollection().find(query).sort(new BasicDBObject("date", -1)), page, pageSize);
+    }
+
+    public void clearEvents() {
+        getEventsDBCollection().remove(new BasicDBObject());
+    }
+
+    public long getCount() {
+        return getEventsDBCollection().count();
+    }
+
+    public String getCollectionName() {
+        return getEventsDBCollection().getName();
+    }
+
+    public CommandResult getStats() {
+        return getEventsDBCollection().getStats();
     }
 
     public Frequency findEventsFrequency(Interval interval) {
@@ -271,7 +215,7 @@ public class Source {
 
             BasicDBObject fields = new BasicDBObject(attName, "1");
 
-            for (DBObject object : events.find(query, fields)) {
+            for (DBObject object : getEventsDBCollection().find(query, fields)) {
                 Object value = object.get(attName);
 
                 if (value instanceof Integer) {
@@ -281,57 +225,14 @@ public class Source {
                 }
             }
         } else {
-            count = (int) events.count(query);
+            count = (int) getEventsDBCollection().count(query);
         }
 
         return new Frequency(count, interval.toDuration());
     }
 
-    public void post(Event event) {
-        transformConfig.applyOn(event);
-
-        AggregationConfig config = aggregationConfig;
-
-        if (config.isAggregating()) {
-            event.setDate(config.getTimeFrame().roundDate(event.getDate()));
-
-            BasicDBObject inc = new BasicDBObject();
-            inc.put("$inc", new BasicDBObject(config.getAttributeName(), 1));
-
-            events.update(event.toDBObject(), inc, true, false);
-        } else {
-            events.insert(event.toDBObject());
-        }
-    }
-
-    public void clearEvents() {
-        events.remove(new BasicDBObject());
-    }
-
-    public void saveAggregation(AggregationConfig form) {
-        BasicDBObject filter = new BasicDBObject("name", "aggregation");
-
-        BasicDBObject values = new BasicDBObject("name", "aggregation");
-
-        if (form.getTimeFrame() == null) {
-            values.put("timeFrame", null);
-        } else {
-            values.put("timeFrame", form.getTimeFrame().name());
-        }
-
-        values.put("attributeName", form.getAttributeName());
-
-        config.update(filter, values, true, false);
-
-        loadAggregation();
-    }
-
-    public void saveTransformConfig(TransformConfig transformConfig) {
-        BasicDBObject filter = new BasicDBObject("name", "transform");
-
-        config.update(filter, transformConfig.toDBObject(), true, false);
-
-        loadTransformConfig();
+    public List<DBObject> getIndexes() {
+        return getEventsDBCollection().getIndexInfo();
     }
 
     public void cap(CappingForm form) {
@@ -343,41 +244,11 @@ public class Source {
 
         BasicDBObject capping = new BasicDBObject();
 
-        capping.put("convertToCapped", qualifiedName(name));
+        capping.put("convertToCapped", getEventsCollectionName(name));
         capping.put("capped", true);
         capping.put("size", sizeInBytes.getValue());
 
         Registry.mongoDb.command(capping);
-    }
-
-    public DefaultGraphParameters getDefaultGraphParameters() {
-        DBObject dbObject = findConfigItem("defaultGraphParameters");
-
-        DefaultGraphParameters parameters = new DefaultGraphParameters();
-
-        if (dbObject != null) {
-            try {
-                parameters.setPeriod(DataTablePeriod.valueOf((String) dbObject.get("period")));
-            } catch (Exception e) {
-                // well, value was not correct in db
-            }
-        }
-
-        return parameters;
-    }
-
-    public void setDefaultGraphParameters(DefaultGraphParameters params) {
-        BasicDBObject filter = new BasicDBObject("name", "defaultGraphParameters");
-
-        BasicDBObject values = new BasicDBObject("name", "defaultGraphParameters");
-
-        values.put("period", params.getPeriod().name());
-
-        config.update(filter, values, true, false);
-    }
-
-    public List<DBObject> getIndexes() {
-        return events.getIndexInfo();
     }
 
     public void createIndex(IndexForm form) {
@@ -391,51 +262,71 @@ public class Source {
             options.put("background", "1");
         }
 
-        events.ensureIndex(keys, options);
+        getEventsDBCollection().ensureIndex(keys, options);
     }
 
     public void dropIndex(String index) {
-        events.dropIndex(index);
+        getEventsDBCollection().dropIndex(index);
     }
 
-    private DBObject findConfigItem(String name) {
-        DBCursor cursor = config.find(new BasicDBObject("name", name));
-
-        if (!cursor.hasNext()) {
-            return null;
-        }
-
-        return cursor.next();
+    public boolean isCapped() {
+        return getEventsDBCollection().isCapped();
     }
 
-    public void loadAggregation() {
-        DBObject dbObject = findConfigItem("aggregation");
-
-        AggregationConfig temp = new AggregationConfig();
-
-        if (dbObject != null) {
-            String timeFrame = (String) dbObject.get("timeFrame");
-
-            temp.setTimeFrame(TimeFrame.safeValueOf(timeFrame, TimeFrame.MILLISECOND));
-            temp.setAttributeName((String) dbObject.get("attributeName"));
-        }
-
-        aggregationConfig = temp;
+    public SizeInBytes getSize() {
+        return new SizeInBytes(getEventsDBCollection().getStats().getLong("storageSize"));
     }
 
-    public void loadDisplay() {
-        DBObject dbObject = findConfigItem("display");
-
-        if (dbObject != null) {
-            displayGroup = (String) dbObject.get("displayGroup");
-            displayName = (String) dbObject.get("displayName");
-        }
+    public Long getMax() {
+        return getEventsDBCollection().getStats().getLong("max");
     }
 
-    public void loadTransformConfig() {
-        DBObject dbObject = findConfigItem("transform");
+    public String getName() {
+        return name;
+    }
 
-        transformConfig = TransformConfig.fromDBObject(dbObject);
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public String getDisplayGroup() {
+        return displayGroup;
+    }
+
+    public void setDisplayGroup(String displayGroup) {
+        this.displayGroup = displayGroup;
+    }
+
+    public AggregationConfig getAggregationConfig() {
+        return aggregationConfig;
+    }
+
+    public void setAggregationConfig(AggregationConfig aggregationConfig) {
+        this.aggregationConfig = aggregationConfig;
+    }
+
+    public DefaultGraphParameters getDefaultGraphParameters() {
+        return defaultGraphParameters;
+    }
+
+    public void setDefaultGraphParameters(DefaultGraphParameters defaultGraphParameters) {
+        this.defaultGraphParameters = defaultGraphParameters;
+    }
+
+    private DBCollection getEventsDBCollection() {
+        return Source.getEventsDBCollection(name);
+    }
+
+    public TransformConfig getTransformConfig() {
+        return transformConfig;
+    }
+
+    public void setTransformConfig(TransformConfig transformConfig) {
+        this.transformConfig = transformConfig;
     }
 
     @Override
@@ -455,72 +346,48 @@ public class Source {
         return name != null ? name.hashCode() : 0;
     }
 
-    @Override
-    public String toString() {
-        return "Source{" +
-                "name='" + name + '\'' +
-                ", displayName='" + displayName + '\'' +
-                ", displayGroup='" + displayGroup + '\'' +
-                ", aggregationConfig=" + aggregationConfig +
-                ", transformConfig=" + transformConfig +
-                '}';
+    private static void createEventsCollection(SourceForm form) {
+        BasicDBObject capping = new BasicDBObject();
+
+        SizeInBytes sizeInBytes = form.getSizeInBytes();
+
+        if (sizeInBytes == null) {
+            capping.put("capped", false);
+        } else {
+            capping.put("capped", true);
+            capping.put("size", sizeInBytes.getValue());
+
+            if (form.getMaxEvents() != null) {
+                capping.put("max", form.getMaxEvents());
+            }
+        }
+
+        String collectionName = getEventsCollectionName(form.getName());
+
+        Registry.mongoDb.createCollection(collectionName, capping);
     }
 
-    public long getCount() {
-        return events.count();
+    private static DBCollection getEventsDBCollection(String name) {
+        return Registry.mongoDb.getCollection(getEventsCollectionName(name));
     }
 
-    public boolean isCapped() {
-        return events.isCapped();
+    private static String getEventsCollectionName(String name) {
+        return Constants.SOURCES_ROOT + name + Constants.EVENTS;
     }
 
-    public SizeInBytes getSize() {
-        return new SizeInBytes(events.getStats().getLong("storageSize"));
+    private static void assertExists(String name) {
+        if (!exists(name)) {
+            throw new SourceNotFound();
+        }
     }
 
-    public Long getMax() {
-        return events.getStats().getLong("max");
+    private static void assertNotExists(String name) {
+        if (exists(name)) {
+            throw new SourceAlreadyExists();
+        }
     }
 
-    public String getCollectionName() {
-        return events.getName();
-    }
-
-    public String getConfigCollectionName() {
-        return config.getName();
-    }
-
-    public String getReportsCollectionName() {
-        return qualifiedReportsName(name);
-    }
-
-    public String getSchedulesCollectionName() {
-        return qualifiedSchedulesName(name);
-    }
-
-    public CommandResult getStats() {
-        return events.getStats();
-    }
-
-    public AggregationConfig getAggregationConfig() {
-        return aggregationConfig;
-    }
-
-    public TransformConfig getTransformConfig() {
-        return transformConfig;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public String getDisplayGroup() {
-        return displayGroup;
+    private static Query<Source> queryByName(String name) {
+        return Registry.datastore.find(Source.class).filter("name", name);
     }
 }
-
-

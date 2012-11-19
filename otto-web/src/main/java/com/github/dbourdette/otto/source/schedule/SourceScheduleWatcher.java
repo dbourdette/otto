@@ -16,17 +16,19 @@
 
 package com.github.dbourdette.otto.source.schedule;
 
-import com.github.dbourdette.otto.service.logs.Logs;
-import com.github.dbourdette.otto.source.Source;
-import com.kenai.crontabparser.CronTabExpression;
+import java.text.ParseException;
+import java.util.Calendar;
+
+import javax.inject.Inject;
+
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
-import java.text.ParseException;
-import java.util.Calendar;
+import com.github.dbourdette.otto.service.logs.Logs;
+import com.github.dbourdette.otto.source.Source;
+import com.kenai.crontabparser.CronTabExpression;
 
 /**
  * Finds and executes all eligible schedule every minute

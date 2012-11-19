@@ -1,5 +1,6 @@
 package com.github.dbourdette.otto;
 
+import com.google.code.morphia.Datastore;
 import com.mongodb.DB;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
@@ -16,6 +17,8 @@ public class Registry {
     public static DB mongoDb;
 
     public static Cache sourceCache;
+
+    public static Datastore datastore;
 
     static {
         CacheManager cacheManager = new CacheManager();

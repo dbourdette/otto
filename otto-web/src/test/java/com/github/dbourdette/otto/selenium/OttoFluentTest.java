@@ -1,12 +1,9 @@
 package com.github.dbourdette.otto.selenium;
 
-import org.fest.assertions.StringAssert;
-
 import fr.javafreelance.fluentlenium.core.domain.FluentList;
 import fr.javafreelance.fluentlenium.core.domain.FluentWebElement;
 import static fr.javafreelance.fluentlenium.core.filter.FilterConstructor.withText;
 import fr.javafreelance.fluentlenium.core.test.FluentTest;
-import static org.fest.assertions.Assertions.assertThat;
 
 /**
  * @author damien bourdette
@@ -16,7 +13,7 @@ public class OttoFluentTest extends FluentTest {
     public static final String SOURCE_NAME = "selenium source";
 
     public static final String SOURCE_DISPLAY_NAME = "My display name";
-    
+
     public void goToHome() {
         goTo("/");
     }
@@ -24,7 +21,7 @@ public class OttoFluentTest extends FluentTest {
     @Override
     public void goTo(String url) {
         if (!url.startsWith("http")) {
-            url = "http://admin:tomlechat@localhost:8080" + url;
+            url = "http://admin:admin@localhost:8080" + url;
         }
 
         super.goTo(url);
@@ -69,9 +66,5 @@ public class OttoFluentTest extends FluentTest {
     
     protected FluentWebElement link(String text) {
         return $("a", withText(text)).first();
-    }
-
-    protected StringAssert assertThatMessage() {
-        return assertThat($(".message").first().getText());
     }
 }
