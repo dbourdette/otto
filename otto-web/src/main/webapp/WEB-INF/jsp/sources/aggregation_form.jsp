@@ -30,8 +30,8 @@
     <widget:nav />
 
     <h2>
-        <c:if test="${not empty form.id}">
-            <a href="/sources/${name}/aggregation/${form.id}/delete" class="pull-right btn btn-danger">delete</a>
+        <c:if test="${not (form.timeFrame eq 'MILLISECOND')}">
+            <a href="/sources/${name}/aggregation/delete" class="pull-right btn btn-danger">no aggregation</a>
         </c:if>
         Aggregation configuration
     </h2>

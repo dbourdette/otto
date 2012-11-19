@@ -29,7 +29,12 @@
 <div class="container">
     <widget:nav />
 
-    <h2>Transform operation</h2>
+    <h2>
+        <c:if test="${not empty form.parameter}">
+            <a href="/sources/${name}/transform/${form.parameter}/delete" class="pull-right btn btn-danger">remove aggregation</a>
+        </c:if>
+        Transform operation
+    </h2>
 
     <div class="row">
         <div class="span12">

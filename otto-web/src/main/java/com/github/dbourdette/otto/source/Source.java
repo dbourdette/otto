@@ -66,7 +66,7 @@ public class Source {
     private DefaultGraphParameters defaultGraphParameters = new DefaultGraphParameters();
 
     @Embedded
-    private TransformConfig transformConfig;
+    private TransformConfig transformConfig = new TransformConfig();
 
     public static Source create(String name) {
         assertNotExists(name);

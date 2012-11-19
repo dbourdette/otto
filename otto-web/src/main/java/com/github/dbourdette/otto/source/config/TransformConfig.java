@@ -36,10 +36,10 @@ import com.mongodb.DBObject;
  * @author damien bourdette
  */
 public class TransformConfig {
+    public static final Map<String, TransformOperation> REGISTRY = new HashMap<String, TransformOperation>();
+
     @Embedded
     private Map<String, List<TransformOperation>> operations = new HashMap<String, List<TransformOperation>>();
-
-    public static final Map<String, TransformOperation> REGISTRY = new HashMap<String, TransformOperation>();
 
     static {
         add(new LowerCaseOperation());
@@ -103,6 +103,12 @@ public class TransformConfig {
             operations.remove(parameter);
 
             add(literal);
+
+            return this;
+        }
+
+        public TransformOperationAdder remove() {
+            operations.remove(parameter);
 
             return this;
         }

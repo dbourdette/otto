@@ -231,11 +231,11 @@ public class SourcesController {
         return "redirect:/sources/{name}/configuration";
     }
 
-    @RequestMapping("/sources/{name}/aggregation/{id}/delete")
-    public String deleteAggregation(@PathVariable String name, @PathVariable String id) {
+    @RequestMapping("/sources/{name}/aggregation/delete")
+    public String deleteAggregation(@PathVariable String name) {
         Source source = Source.findByName(name);
 
-        source.setAggregationConfig(null);
+        source.setAggregationConfig(new AggregationConfig());
         source.save();
 
         return "redirect:/sources/{name}/configuration";
@@ -412,6 +412,17 @@ public class SourcesController {
         model.addAttribute("form", form);
 
         return "sources/transform_form";
+    }
+
+    @RequestMapping("/sources/{name}/transform/{parameter}/delete")
+    public String deleteTransform(@PathVariable String name, @PathVariable String parameter, Model model) {
+        Source source = Source.findByName(name);
+
+        source.getTransformConfig().forParam(parameter).remove();
+
+        source.save();
+
+        return "redirect:/sources/{name}/configuration";
     }
 
     @RequestMapping("/sources/{name}/indexes/form")
