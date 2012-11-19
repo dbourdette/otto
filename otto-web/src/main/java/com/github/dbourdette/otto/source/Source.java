@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.bson.types.ObjectId;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.joda.time.Interval;
 
@@ -26,7 +25,6 @@ import com.github.dbourdette.otto.web.form.Sort;
 import com.github.dbourdette.otto.web.form.SourceForm;
 import com.github.dbourdette.otto.web.util.Constants;
 import com.github.dbourdette.otto.web.util.Frequency;
-import com.github.dbourdette.otto.web.util.IntervalUtils;
 import com.github.dbourdette.otto.web.util.SizeInBytes;
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
@@ -170,23 +168,21 @@ public class Source {
     }
 
     public Iterator<DBObject> findEvents(Interval interval) {
-        BasicDBObject query = IntervalUtils.query(interval);
+        EventsQuery query = new EventsQuery(interval);
 
-        return getEventsDBCollection().find(query).sort(new BasicDBObject("date", -1)).iterator();
+        return query.createCursor(getEventsDBCollection()).iterator();
     }
 
     public Page<DBObject> findEvents(Integer page) {
-        return findEvents(page, DEFAULT_PAGE_SIZE);
+        EventsQuery query = new EventsQuery();
+        query.setPage(page);
+        query.setPageSize(DEFAULT_PAGE_SIZE);
+
+        return findEvents(query);
     }
 
-    public Page<DBObject> findEvents(Integer page, int pageSize) {
-        return Page.fromCursor(getEventsDBCollection().find().sort(new BasicDBObject("date", -1)), page, pageSize);
-    }
-
-    public Page<DBObject> findEvents(DateTime from, DateTime to, Integer page, int pageSize) {
-        BasicDBObject query = IntervalUtils.query(from, to);
-
-        return Page.fromCursor(getEventsDBCollection().find(query).sort(new BasicDBObject("date", -1)), page, pageSize);
+    public Page<DBObject> findEvents(EventsQuery query) {
+        return query.findPage(getEventsDBCollection());
     }
 
     public void clearEvents() {
@@ -206,7 +202,7 @@ public class Source {
     }
 
     public Frequency findEventsFrequency(Interval interval) {
-        BasicDBObject query = IntervalUtils.query(interval);
+        BasicDBObject query = new EventsQuery(interval).createQuery();
 
         int count = 0;
 

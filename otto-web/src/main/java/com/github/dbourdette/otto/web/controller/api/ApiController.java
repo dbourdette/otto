@@ -43,7 +43,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.github.dbourdette.otto.security.Security;
 import com.github.dbourdette.otto.security.UnauthorizedException;
-import com.github.dbourdette.otto.source.OldSource;
+import com.github.dbourdette.otto.source.EventsQuery;
 import com.github.dbourdette.otto.source.Source;
 import com.github.dbourdette.otto.util.Page;
 import com.github.dbourdette.otto.web.service.RemoteEventsFacade;
@@ -59,6 +59,8 @@ import com.mongodb.DBObject;
 public class ApiController {
 
     private static final int JSONAPI_PAGE_SIZE = 1000;
+
+    private static final String FILTER_QUERY_PREFIX = "f_";
 
     private static final DateTimeFormatter DATE_TIME_FORMATTER = ISODateTimeFormat.dateTimeNoMillis();
 
@@ -84,13 +86,29 @@ public class ApiController {
 
     @RequestMapping(value = "/jsonapi/sources/{name}/events", method = RequestMethod.GET, headers = "Accept=application/json")
     public void eventsJson(@PathVariable String name, @RequestParam(required = false) Integer page,
-                           @RequestParam(required = false) String from, @RequestParam(required = false) String to, HttpServletResponse response) throws IOException {
+                           @RequestParam(required = false) String from, @RequestParam(required = false) String to,
+                           HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (!Security.hasSource(name)) {
             throw new UnauthorizedException("You don't have access to this source");
         }
 
+        DateTime fromDate = parseDateTime(from), toDate = parseDateTime(to);
+
+        if (fromDate != null && fromDate.isAfter(new DateTime())) {
+            throw new BadRequestException("from Date must be in past");
+        }
+
+        if (fromDate != null && toDate != null && fromDate.isAfter(toDate)) {
+            throw new BadRequestException("from Date must be before to Date");
+        }
+
+        EventsQuery query = new EventsQuery(fromDate, toDate);
+        query.readFilters(request, FILTER_QUERY_PREFIX);
+        query.setPage(page);
+        query.setPageSize(JSONAPI_PAGE_SIZE);
+
         Source source = Source.findByName(name);
-        Page<DBObject> events = source.findEvents(parseDateTime(from), parseDateTime(to), page, JSONAPI_PAGE_SIZE);
+        Page<DBObject> events = source.findEvents(query);
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.getSerializationConfig().set(SerializationConfig.Feature.INDENT_OUTPUT, true);

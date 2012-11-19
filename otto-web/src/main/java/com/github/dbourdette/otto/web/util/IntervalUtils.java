@@ -41,10 +41,6 @@ public class IntervalUtils {
 		return new Interval(monday.minusDays(7), monday);
 	}
 
-	public static BasicDBObject query(Interval interval) {
-		return query(interval.getStart(), interval.getEnd());
-	}
-
     public static BasicDBObject query(DateTime from, DateTime to) {
         BasicDBObject criteria = new BasicDBObject();
 

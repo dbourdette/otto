@@ -18,34 +18,23 @@ package com.github.dbourdette.otto.source;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
-import org.joda.time.Duration;
-import org.joda.time.Interval;
 
 import com.github.dbourdette.otto.Registry;
 import com.github.dbourdette.otto.data.DataTablePeriod;
-import com.github.dbourdette.otto.data.SimpleDataTable;
-import com.github.dbourdette.otto.data.filler.OperationChain;
 import com.github.dbourdette.otto.source.config.AggregationConfig;
 import com.github.dbourdette.otto.source.config.DefaultGraphParameters;
 import com.github.dbourdette.otto.source.config.TransformConfig;
-import com.github.dbourdette.otto.source.reports.OldReportConfig;
 import com.github.dbourdette.otto.source.reports.OldSourceReports;
 import com.github.dbourdette.otto.source.schedule.OldSourceSchedules;
-import com.github.dbourdette.otto.util.Page;
 import com.github.dbourdette.otto.web.exception.SourceAlreadyExists;
 import com.github.dbourdette.otto.web.exception.SourceNotFound;
 import com.github.dbourdette.otto.web.form.CappingForm;
 import com.github.dbourdette.otto.web.form.IndexForm;
-import com.github.dbourdette.otto.web.form.Sort;
 import com.github.dbourdette.otto.web.form.SourceForm;
 import com.github.dbourdette.otto.web.util.Constants;
-import com.github.dbourdette.otto.web.util.Frequency;
-import com.github.dbourdette.otto.web.util.IntervalUtils;
 import com.github.dbourdette.otto.web.util.SizeInBytes;
 import com.mongodb.BasicDBObject;
 import com.mongodb.CommandResult;
@@ -209,82 +198,6 @@ public class OldSource {
         config.update(filter, values, true, false);
 
         loadDisplay();
-    }
-
-    public SimpleDataTable buildTable(OldReportConfig config, DataTablePeriod period) {
-        return buildTable(config, period.getInterval(), period.getStepDuration());
-    }
-
-    public SimpleDataTable buildTable(OldReportConfig config, Interval interval, Duration step) {
-        SimpleDataTable table = new SimpleDataTable();
-
-        table.setupRows(interval, step);
-
-        OperationChain chain = config.buildChain(table);
-
-        Iterator<DBObject> events = findEvents(interval);
-
-        while (events.hasNext()) {
-            DBObject event = events.next();
-
-            chain.write(event);
-        }
-
-        if (table.getColumnCount() == 0) {
-            table.ensureColumnExists("no data");
-        }
-
-        if (config.getSort() == Sort.ALPHABETICALLY) {
-            table.sortAlphabetically();
-        } else if (config.getSort() == Sort.BY_SUM) {
-            table.sortBySum();
-        }
-
-        return table;
-    }
-
-    public Iterator<DBObject> findEvents(Interval interval) {
-        BasicDBObject query = IntervalUtils.query(interval);
-
-        return events.find(query).sort(new BasicDBObject("date", -1)).iterator();
-    }
-
-    public Page<DBObject> findEvents(Integer page) {
-        return findEvents(page, DEFAULT_PAGE_SIZE);
-    }
-
-    public Page<DBObject> findEvents(Integer page, int pageSize) {
-        return Page.fromCursor(events.find().sort(new BasicDBObject("date", -1)), page, pageSize);
-    }
-
-    public Page<DBObject> findEvents(DateTime from, DateTime to, Integer page, int pageSize) {
-        return Page.fromCursor(events.find(IntervalUtils.query(from, to)).sort(new BasicDBObject("date", -1)), page, pageSize);
-    }
-
-    public Frequency findEventsFrequency(Interval interval) {
-        BasicDBObject query = IntervalUtils.query(interval);
-
-        int count = 0;
-
-        if (aggregationConfig.isAggregating()) {
-            String attName = aggregationConfig.getAttributeName();
-
-            BasicDBObject fields = new BasicDBObject(attName, "1");
-
-            for (DBObject object : events.find(query, fields)) {
-                Object value = object.get(attName);
-
-                if (value instanceof Integer) {
-                    count += (Integer) value;
-                } else {
-                    count += 1;
-                }
-            }
-        } else {
-            count = (int) events.count(query);
-        }
-
-        return new Frequency(count, interval.toDuration());
     }
 
     public void post(Event event) {
