@@ -1,0 +1,25 @@
+<% count = data.sums.sum { it.value } %>
+
+<div style="font-family: Helvetica Neue, Helvetica, Arial, sans-serif;">
+    <h1 style="font-size: 24px;line-height: 36px;font-weight: bold;display: block;">$title</h1>
+    <table style="font-size: 13px;line-height:18px;border: 1px solid #DDD;border-collapse: separate;border-radius: 4px;width: 100%;margin-bottom: 18px;border-spacing: 0;">
+        <thead style="font-weight:bold">
+            <tr>
+                <td style="border-top: 0;border-left: 1px solid #DDD;padding: 4px;line-height: 18px;text-align: left;vertical-align: top;">total count</td>
+                <td style="border-top: 0;border-left: 1px solid #DDD;padding: 4px;line-height: 18px;text-align: left;vertical-align: top;">${count}</td>
+            </tr>
+        </thead>
+        <% data.sums.each() { %>
+            <tbody>
+                <tr>
+                    <td style="border-radius: 0 0 0 4px;border-left: 1px solid #DDD;padding: 4px;line-height: 18px;text-align: left;vertical-align: top;border-top: 1px solid #DDD;">
+                        ${it.name}
+                    </td>
+                    <td style="border-radius: 0 0 4px 0;border-left: 1px solid #DDD;padding: 4px;line-height: 18px;text-align: left;vertical-align: top;border-top: 1px solid #DDD;">
+                        ${it.value}
+                    </td>
+                </tr>
+            </tbody>
+        <% } %>
+    </table>
+</div>

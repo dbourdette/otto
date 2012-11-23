@@ -1,9 +1,14 @@
 package com.github.dbourdette.otto.source.schedule;
 
+import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.bson.types.ObjectId;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -15,10 +20,12 @@ import com.github.dbourdette.otto.source.Source;
 import com.github.dbourdette.otto.source.reports.ReportConfig;
 import com.github.dbourdette.otto.source.reports.SourceReports;
 import com.github.dbourdette.otto.web.util.Constants;
-import com.github.dbourdette.otto.web.util.Pair;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Property;
+
+import groovy.text.SimpleTemplateEngine;
+import groovy.text.Template;
 
 /**
  * @author damien bourdette
@@ -51,6 +58,9 @@ public class MailSchedule {
     @Property
     private String title;
 
+    @Property
+    private String groovyTemplate;
+
     public MailSchedule() {
     }
 
@@ -77,51 +87,42 @@ public class MailSchedule {
     }
 
     public String buildHtml(Source source) {
-        String html = "";
-
         ReportConfig config = SourceReports.forSource(source).getReportConfigByTitle(report);
 
         if (config == null) {
             config = new ReportConfig();
         }
 
-        SimpleDataTable report = source.buildTable(config, period);
+        SimpleDataTable data = source.buildTable(config, period);
 
-        html += "<div style=\"font-family: Helvetica Neue, Helvetica, Arial, sans-serif;\">";
+        return render(report, data);
+    }
 
-        html += "<h1 style=\"font-size: 24px;line-height: 36px;font-weight: bold;display: block;\">" + config.getTitle() + "</h1>";
+    public String render(String title, SimpleDataTable data) {
+        Map<String, Object> bindings = new HashMap<String, Object>();
 
-        html += "<table style=\"font-size: 13px;line-height:18px;border: 1px solid #DDD;border-collapse: separate;border-radius: 4px;width: 100%;margin-bottom: 18px;border-spacing: 0;\">";
+        bindings.put("title", title);
+        bindings.put("data", data);
 
-        int count = 0;
+        return render(bindings);
+    }
 
-        for (Pair pair : report.getSums()) {
-            count += pair.getValue();
+    public String render(Map bindings) {
+        try {
+            return buildTemplate().make(bindings).toString();
+        } catch (Exception e) {
+            return ExceptionUtils.getFullStackTrace(e);
         }
+    }
 
-        html += "<thead style=\"font-weight:bold\"><tr>";
-        html += "<td style=\"border-top: 0;border-left: 1px solid #DDD;padding: 4px;line-height: 18px;text-align: left;vertical-align: top;\">total count</td>";
-        html += "<td style=\"border-top: 0;border-left: 1px solid #DDD;padding: 4px;line-height: 18px;text-align: left;vertical-align: top;\">";
-        html += count;
-        html += "</td>";
-        html += "</tr></thead>";
+    public Template buildTemplate() throws IOException, ClassNotFoundException {
+        SimpleTemplateEngine engine = new SimpleTemplateEngine();
 
-        for (Pair pair : report.getSums()) {
-            html += "<tbody><tr>";
-            html += "<td style=\"border-radius: 0 0 0 4px;border-left: 1px solid #DDD;padding: 4px;line-height: 18px;text-align: left;vertical-align: top;border-top: 1px solid #DDD;\">";
-            html += pair.getName();
-            html += "</td>";
-            html += "<td style=\"border-radius: 0 0 4px 0;border-left: 1px solid #DDD;padding: 4px;line-height: 18px;text-align: left;vertical-align: top;border-top: 1px solid #DDD;\">";
-            html += pair.getValue();
-            html += "</td>";
-            html += "</tr></tbody>";
+        if (StringUtils.isBlank(groovyTemplate)) {
+            return engine.createTemplate(getClass().getResource("default.template"));
+        } else {
+            return engine.createTemplate(groovyTemplate);
         }
-
-        html += "</table>";
-
-        html += "</div>";
-
-        return html;
     }
 
     public String getSourceName() {
@@ -182,5 +183,13 @@ public class MailSchedule {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getGroovyTemplate() {
+        return groovyTemplate;
+    }
+
+    public void setGroovyTemplate(String groovyTemplate) {
+        this.groovyTemplate = groovyTemplate;
     }
 }

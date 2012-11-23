@@ -38,6 +38,7 @@ import org.springframework.web.servlet.view.UrlBasedViewResolver;
 import com.github.dbourdette.otto.security.SecurityConfig;
 import com.github.dbourdette.otto.service.user.User;
 import com.github.dbourdette.otto.source.Source;
+import com.github.dbourdette.otto.source.display.ReportDisplay;
 import com.github.dbourdette.otto.source.reports.ReportConfig;
 import com.github.dbourdette.otto.source.schedule.MailSchedule;
 import com.google.code.morphia.Datastore;
@@ -136,6 +137,7 @@ public class SpringConfig {
         morphia.map(MailSchedule.class);
         morphia.map(User.class);
         morphia.map(SecurityConfig.class);
+        morphia.map(ReportDisplay.class);
 
         return morphia;
     }

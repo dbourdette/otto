@@ -70,12 +70,7 @@
                 <form:input path="cronExpression"/>
             </bootstrap:control>
         </fieldset>
-        <bootstrap:submit cancelUrl="/sources/${name}/configuration" />
-    </form:form>
-
-    <h2>Cron expressions</h2>
-
-    <pre class="well">
+        <pre class="well">
 <b>expressions are made of 5 tokens : </b>
 *    *    *    *    *
 ┬    ┬    ┬    ┬    ┬
@@ -102,6 +97,25 @@ Every 1 minute               : * * * * *
 
 full doc on <a href="http://unixhelp.ed.ac.uk/CGI/man-cgi?crontab+5" target="_blank">cron expression <i class="icon-share"></i></a>
     </pre>
+        <fieldset>
+            <legend>Custom rendering</legend>
+            <form:hidden path="groovyTemplate" id="groovyTemplate" />
+            <div id="editor" class="span12" style="height: 600px; position: relative; margin: 5px 0 10px 0;">${form.groovyTemplate}</div>
+        </fieldset>
+        <bootstrap:submit cancelUrl="/sources/${name}/configuration" />
+    </form:form>
+
+    <script>
+        var editor = ace.edit("editor");
+        editor.setTheme("ace/theme/textmate");
+        editor.session.setMode("ace/mode/groovy");
+        editor.setShowPrintMargin(false);
+
+        $('#form').submit( function() {
+            $('#groovyTemplate').val(editor.getValue());
+            return true;
+        });
+    </script>
 </div>
 
 <layout:footer/>
