@@ -100,7 +100,7 @@ full doc on <a href="http://unixhelp.ed.ac.uk/CGI/man-cgi?crontab+5" target="_bl
         <fieldset>
             <legend>Custom rendering</legend>
             <form:hidden path="groovyTemplate" id="groovyTemplate" />
-            <div id="editor" class="span12" style="height: 600px; position: relative; margin: 5px 0 10px 0;">${form.groovyTemplate}</div>
+            <div id="editor" class="span12" style="height: 600px; position: relative; margin: 5px 0 10px 0;">${fn:escapeXml(form.groovyTemplate)}</div>
         </fieldset>
         <bootstrap:submit cancelUrl="/sources/${name}/configuration" />
     </form:form>
