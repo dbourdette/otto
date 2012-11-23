@@ -153,13 +153,11 @@ public class Source {
     public void post(Event event) {
         transformConfig.applyOn(event);
 
-        AggregationConfig config = aggregationConfig;
-
-        if (config.isAggregating()) {
-            event.setDate(config.getTimeFrame().roundDate(event.getDate()));
+        if (aggregationConfig != null && aggregationConfig.isAggregating()) {
+            event.setDate(aggregationConfig.getTimeFrame().roundDate(event.getDate()));
 
             BasicDBObject inc = new BasicDBObject();
-            inc.put("$inc", new BasicDBObject(config.getAttributeName(), 1));
+            inc.put("$inc", new BasicDBObject(aggregationConfig.getAttributeName(), 1));
 
             getEventsDBCollection().update(event.toDBObject(), inc, true, false);
         } else {
@@ -206,7 +204,7 @@ public class Source {
 
         int count = 0;
 
-        if (aggregationConfig.isAggregating()) {
+        if (aggregationConfig != null && aggregationConfig.isAggregating()) {
             String attName = aggregationConfig.getAttributeName();
 
             BasicDBObject fields = new BasicDBObject(attName, "1");
