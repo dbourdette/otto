@@ -12,7 +12,7 @@ import com.github.dbourdette.otto.data.filler.NoPunctuationOperation;
 import com.github.dbourdette.otto.data.filler.OperationChain;
 import com.github.dbourdette.otto.data.filler.TokenizeOperation;
 import com.github.dbourdette.otto.web.form.Sort;
-import com.github.dbourdette.otto.web.util.Constants;
+import com.github.dbourdette.otto.web.util.MongoCollections;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Property;
@@ -21,7 +21,7 @@ import com.google.code.morphia.annotations.Property;
  * @author damien bourdette
  * @version \$Revision$
  */
-@Entity(value = Constants.SOURCES_ROOT + "reports", noClassnameStored = true)
+@Entity(value = MongoCollections.SOURCES_REPORTS, noClassnameStored = true)
 public class ReportConfig {
     @Id
     private ObjectId id;

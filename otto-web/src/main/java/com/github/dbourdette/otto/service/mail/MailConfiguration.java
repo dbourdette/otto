@@ -16,14 +16,14 @@
 
 package com.github.dbourdette.otto.service.mail;
 
-import com.github.dbourdette.otto.web.util.Constants;
+import com.github.dbourdette.otto.web.util.MongoCollections;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Property;
 
 /**
  * @author damien bourdette
  */
-@Entity(Constants.OTTO +  Constants.MAIL_CONFIG)
+@Entity(MongoCollections.MAIL_CONFIG)
 public class MailConfiguration {
     @Property
     private String smtp;

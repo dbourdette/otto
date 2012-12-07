@@ -18,7 +18,7 @@ package com.github.dbourdette.otto.service.logs;
 
 import com.github.dbourdette.otto.service.user.User;
 import com.github.dbourdette.otto.util.Page;
-import com.github.dbourdette.otto.web.util.Constants;
+import com.github.dbourdette.otto.web.util.MongoCollections;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -49,7 +49,7 @@ public class Logs {
 
 	@PostConstruct
 	public void createCollection() {
-		if (mongoDb.collectionExists(Constants.LOGS)) {
+		if (mongoDb.collectionExists(MongoCollections.LOGS)) {
 			return;
 		}
 
@@ -58,7 +58,7 @@ public class Logs {
 		capping.put("capped", true);
 		capping.put("size", 100000);
 
-		mongoDb.createCollection(Constants.LOGS, capping);
+		mongoDb.createCollection(MongoCollections.LOGS, capping);
 	}
 
 	public void trace(String message) {
@@ -78,7 +78,7 @@ public class Logs {
 	}
 
 	private DBCollection logs() {
-		return mongoDb.getCollection(Constants.LOGS);
+		return mongoDb.getCollection(MongoCollections.LOGS);
 	}
 
     private void store(String message) {

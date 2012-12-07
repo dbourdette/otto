@@ -11,7 +11,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import com.github.dbourdette.otto.web.util.Constants;
+import com.github.dbourdette.otto.web.util.MongoCollections;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Property;
@@ -19,7 +19,7 @@ import com.google.code.morphia.annotations.Property;
 /**
  * @author damien bourdette
  */
-@Entity(Constants.USERS)
+@Entity(MongoCollections.USERS)
 public class User implements Serializable {
     @Id
     private ObjectId id;

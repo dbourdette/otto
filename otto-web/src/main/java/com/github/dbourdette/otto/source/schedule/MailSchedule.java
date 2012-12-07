@@ -19,7 +19,7 @@ import com.github.dbourdette.otto.service.mail.Mail;
 import com.github.dbourdette.otto.source.Source;
 import com.github.dbourdette.otto.source.reports.ReportConfig;
 import com.github.dbourdette.otto.source.reports.SourceReports;
-import com.github.dbourdette.otto.web.util.Constants;
+import com.github.dbourdette.otto.web.util.MongoCollections;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Property;
@@ -31,7 +31,7 @@ import groovy.text.Template;
  * @author damien bourdette
  * @version \$Revision$
  */
-@Entity(value = Constants.SOURCES_ROOT + "schedules", noClassnameStored = true)
+@Entity(value = MongoCollections.SOURCES_SCHEDULES, noClassnameStored = true)
 public class MailSchedule {
     @Id
     private ObjectId id;

@@ -23,7 +23,7 @@ import com.github.dbourdette.otto.web.form.CappingForm;
 import com.github.dbourdette.otto.web.form.IndexForm;
 import com.github.dbourdette.otto.web.form.Sort;
 import com.github.dbourdette.otto.web.form.SourceForm;
-import com.github.dbourdette.otto.web.util.Constants;
+import com.github.dbourdette.otto.web.util.MongoCollections;
 import com.github.dbourdette.otto.web.util.Frequency;
 import com.github.dbourdette.otto.web.util.SizeInBytes;
 import com.google.code.morphia.annotations.Embedded;
@@ -40,7 +40,7 @@ import com.mongodb.DBObject;
  * @author damien bourdette
  * @version \$Revision$
  */
-@Entity(value = Constants.SOURCES, noClassnameStored = true)
+@Entity(value = MongoCollections.SOURCES, noClassnameStored = true)
 public class Source {
     private static final int DEFAULT_PAGE_SIZE = 100;
 
@@ -238,7 +238,7 @@ public class Source {
 
         BasicDBObject capping = new BasicDBObject();
 
-        capping.put("convertToCapped", getEventsCollectionName(name));
+        capping.put("convertToCapped", MongoCollections.eventsCollectionName(name));
         capping.put("capped", true);
         capping.put("size", sizeInBytes.getValue());
 
@@ -312,7 +312,7 @@ public class Source {
     }
 
     private DBCollection getEventsDBCollection() {
-        return Source.getEventsDBCollection(name);
+        return MongoCollections.eventsCollection(name);
     }
 
     public TransformConfig getTransformConfig() {
@@ -356,17 +356,9 @@ public class Source {
             }
         }
 
-        String collectionName = getEventsCollectionName(form.getName());
+        String collectionName = MongoCollections.eventsCollectionName(form.getName());
 
         Registry.mongoDb.createCollection(collectionName, capping);
-    }
-
-    private static DBCollection getEventsDBCollection(String name) {
-        return Registry.mongoDb.getCollection(getEventsCollectionName(name));
-    }
-
-    private static String getEventsCollectionName(String name) {
-        return Constants.SOURCES_ROOT + name + Constants.EVENTS;
     }
 
     private static void assertExists(String name) {
