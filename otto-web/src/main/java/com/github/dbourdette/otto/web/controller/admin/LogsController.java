@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.dbourdette.otto.web.controller;
+package com.github.dbourdette.otto.web.controller.admin;
 
 import javax.inject.Inject;
 

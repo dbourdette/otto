@@ -1,4 +1,4 @@
-package com.github.dbourdette.otto.web.controller;
+package com.github.dbourdette.otto.web.controller.admin;
 
 import javax.inject.Inject;
 import javax.validation.Valid;

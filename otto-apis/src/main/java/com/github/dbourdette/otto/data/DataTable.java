@@ -17,4 +17,10 @@ public interface DataTable {
     public Integer getValue(Interval row, String column);
 
     public int getSum(String column);
+
+    public void top(int count);
+
+    public void sortAlphabetically();
+
+    public void sortBySum();
 }

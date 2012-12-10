@@ -26,6 +26,7 @@
     <link href="/bootstrap/css/bootstrap.css" rel="stylesheet">
     <link href="/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
     <link href="/bootstrap/css/bootstrap-datepicker.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
 
     <script src="/bootstrap/js/jquery-1.7.2.min.js"></script>
     <script src="/bootstrap/js/bootstrap.min.js"></script>

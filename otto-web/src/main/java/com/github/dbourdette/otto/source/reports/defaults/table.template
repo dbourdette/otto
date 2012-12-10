@@ -1,0 +1,19 @@
+<% totalCount = table.sums.sum { it.value } %>
+
+<h2>Statistics</h2>
+<table class="table table-bordered table-condensed">
+    <thead>
+        <tr>
+            <td><b>total</b></td>
+            <td><b>${totalCount}</b></td>
+        </tr>
+    </thead>
+    <tbody>
+        <% table.sums.each { %>
+            <tr>
+                <td>${it.name}</td>
+                <td>${it.value}</td>
+            </tr>
+        <% } %>
+    </tbody>
+</table>

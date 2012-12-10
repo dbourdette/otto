@@ -1,0 +1,27 @@
+<%
+    import org.joda.time.Interval;
+    import org.joda.time.format.DateTimeFormat;
+    import org.joda.time.format.DateTimeFormatter;
+
+    DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
+
+    table.top(30)
+    table.sortBySum()
+
+    out.print('startDate,endDate')
+    table.columns.each { out.print(",$it") }
+    out.println('')
+
+    table.rows.each { interval ->
+        out.print(formatter.print(interval.start))
+        out.print(',')
+        out.print(formatter.print(interval.end))
+
+        table.columns.each { column ->
+            out.print(',')
+            out.print(table.getValue(interval, column))
+        }
+
+        out.println('')
+    }
+%>

@@ -12,13 +12,13 @@ import com.google.code.morphia.query.Query;
  * @author damien bourdette
  * @version \$Revision$
  */
-public class SourceReports {
+public class ReportConfigs {
     private String sourceName;
 
-    private SourceReports() {}
+    private ReportConfigs() {}
 
-    public static SourceReports forSource(Source source) {
-        SourceReports reports = new SourceReports();
+    public static ReportConfigs forSource(Source source) {
+        ReportConfigs reports = new ReportConfigs();
 
         reports.sourceName = source.getName();
 

@@ -1,10 +1,8 @@
-package com.github.dbourdette.otto.web.controller;
+package com.github.dbourdette.otto.web.controller.admin;
 
-import com.github.dbourdette.otto.security.Security;
-import com.github.dbourdette.otto.security.SecurityConfig;
-import com.github.dbourdette.otto.service.logs.Logs;
-import com.github.dbourdette.otto.web.form.TestLoginForm;
-import com.github.dbourdette.otto.web.util.FlashScope;
+import javax.inject.Inject;
+import javax.validation.Valid;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,8 +11,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.inject.Inject;
-import javax.validation.Valid;
+import com.github.dbourdette.otto.security.Security;
+import com.github.dbourdette.otto.security.SecurityConfig;
+import com.github.dbourdette.otto.service.logs.Logs;
+import com.github.dbourdette.otto.web.form.TestLoginForm;
+import com.github.dbourdette.otto.web.util.FlashScope;
 
 import static org.apache.commons.lang.exception.ExceptionUtils.getFullStackTrace;
 

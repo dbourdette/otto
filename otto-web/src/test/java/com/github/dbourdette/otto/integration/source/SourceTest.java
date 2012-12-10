@@ -9,7 +9,8 @@ import org.junit.Test;
 import com.github.dbourdette.otto.Registry;
 import com.github.dbourdette.otto.source.Source;
 import com.github.dbourdette.otto.source.reports.ReportConfig;
-import com.github.dbourdette.otto.source.reports.SourceReports;
+import com.github.dbourdette.otto.source.reports.ReportConfigs;
+import com.github.dbourdette.otto.source.reports.ReportConfigs;
 import com.github.dbourdette.otto.web.exception.SourceAlreadyExists;
 import com.github.dbourdette.otto.web.exception.SourceNotFound;
 import com.google.code.morphia.Morphia;
@@ -115,16 +116,16 @@ public class SourceTest {
         config.setSourceName(source.getName());
         config.save();
 
-        Assert.assertEquals(1, SourceReports.forSource(source).getReportConfigs().size());
-        Assert.assertEquals("hits", SourceReports.forSource(source).getReportConfigs().get(0).getValueAttribute());
+        Assert.assertEquals(1, ReportConfigs.forSource(source).getReportConfigs().size());
+        Assert.assertEquals("hits", ReportConfigs.forSource(source).getReportConfigs().get(0).getValueAttribute());
 
-        config = SourceReports.forSource(source).getReportConfig(config.getId());
+        config = ReportConfigs.forSource(source).getReportConfig(config.getId());
 
         Assert.assertEquals("hits", config.getValueAttribute());
 
         config.setValueAttribute("slug");
         config.save();
 
-        Assert.assertEquals("slug", SourceReports.forSource(source).getReportConfigs().get(0).getValueAttribute());
+        Assert.assertEquals("slug", ReportConfigs.forSource(source).getReportConfigs().get(0).getValueAttribute());
     }
 }

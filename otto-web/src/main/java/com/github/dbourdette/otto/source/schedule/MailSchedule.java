@@ -18,7 +18,7 @@ import com.github.dbourdette.otto.data.SimpleDataTable;
 import com.github.dbourdette.otto.service.mail.Mail;
 import com.github.dbourdette.otto.source.Source;
 import com.github.dbourdette.otto.source.reports.ReportConfig;
-import com.github.dbourdette.otto.source.reports.SourceReports;
+import com.github.dbourdette.otto.source.reports.ReportConfigs;
 import com.github.dbourdette.otto.web.util.MongoCollections;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
@@ -87,7 +87,7 @@ public class MailSchedule {
     }
 
     public String buildHtml(Source source) {
-        ReportConfig config = SourceReports.forSource(source).getReportConfigByTitle(report);
+        ReportConfig config = ReportConfigs.forSource(source).getReportConfigByTitle(report);
 
         if (config == null) {
             config = new ReportConfig();

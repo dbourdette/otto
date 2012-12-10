@@ -28,7 +28,7 @@ public class MongoCollections {
 
     public static final String SOURCES = "otto.sources";
 
-    public static final String SOURCES_DISPLAYS = "otto.sources.displays";
+    public static final String SOURCES_FORMATS = "otto.sources.formats";
 
     public static final String SOURCES_REPORTS = "otto.sources.reports";
 

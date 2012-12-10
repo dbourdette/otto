@@ -35,4 +35,7 @@
 
 	<c:if test="${navItem eq 'mail'}">- mail</c:if>
 	<c:if test="${not (navItem eq 'mail')}">- <a href="/mail">mail</a></c:if>
+
+    <c:if test="${navItem eq 'formats'}">- report formats</c:if>
+    <c:if test="${not (navItem eq 'formats')}">- <a href="/admin/formats">report formats</a></c:if>
 </div>

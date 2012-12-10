@@ -100,6 +100,46 @@ public class SimpleDataTable implements DataTable {
         return sum;
     }
 
+    /**
+     * Keeps only count top columns from all current columns.
+     */
+    @Override
+    public void top(int count) {
+        if (count >= columns.size()) {
+            return;
+        }
+
+        List<ColumnSum> sums = sortedSums();
+
+        List<ColumnSum> columnsToDrop = sums.subList(0, sums.size() - count);
+
+        for (ColumnSum sum : columnsToDrop) {
+            dropColumn(sum.getColumn().getTitle());
+        }
+    }
+
+    @Override
+    public void sortAlphabetically() {
+        Collections.sort(columns, new Comparator<SimpleDataTableColumn>() {
+            @Override
+            public int compare(SimpleDataTableColumn o1, SimpleDataTableColumn o2) {
+                return o1.getTitle().compareTo(o2.getTitle());
+            }
+        });
+    }
+
+    @Override
+    public void sortBySum() {
+        List<ColumnSum> sums = sortedSums();
+        Collections.reverse(sums);
+
+        columns.clear();
+
+        for (ColumnSum sum : sums) {
+            columns.add(sum.getColumn());
+        }
+    }
+
     public void setupRows(DataTablePeriod period) {
         setupRows(period.getInterval(), period.getStepDuration());
     }
@@ -224,43 +264,6 @@ public class SimpleDataTable implements DataTable {
         }
 
         return values;
-    }
-
-    /**
-     * Keeps only count top columns from all current columns.
-     */
-    public void top(int count) {
-        if (count >= columns.size()) {
-            return;
-        }
-
-        List<ColumnSum> sums = sortedSums();
-
-        List<ColumnSum> columnsToDrop = sums.subList(0, sums.size() - count);
-
-        for (ColumnSum sum : columnsToDrop) {
-            dropColumn(sum.getColumn().getTitle());
-        }
-    }
-
-    public void sortAlphabetically() {
-        Collections.sort(columns, new Comparator<SimpleDataTableColumn>() {
-            @Override
-            public int compare(SimpleDataTableColumn o1, SimpleDataTableColumn o2) {
-                return o1.getTitle().compareTo(o2.getTitle());
-            }
-        });
-    }
-
-    public void sortBySum() {
-        List<ColumnSum> sums = sortedSums();
-        Collections.reverse(sums);
-
-        columns.clear();
-
-        for (ColumnSum sum : sums) {
-            columns.add(sum.getColumn());
-        }
     }
 
     private SimpleDataTableRow getRow(DateTime date) {

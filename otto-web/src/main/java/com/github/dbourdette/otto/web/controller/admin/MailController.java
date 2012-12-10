@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package com.github.dbourdette.otto.web.controller;
+package com.github.dbourdette.otto.web.controller.admin;
 
-import com.github.dbourdette.otto.service.mail.Mail;
-import com.github.dbourdette.otto.service.mail.MailConfiguration;
-import com.github.dbourdette.otto.service.mail.Mailer;
-import com.github.dbourdette.otto.web.util.FlashScope;
+import javax.inject.Inject;
+import javax.validation.Valid;
+
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,8 +27,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.inject.Inject;
-import javax.validation.Valid;
+import com.github.dbourdette.otto.service.mail.Mail;
+import com.github.dbourdette.otto.service.mail.MailConfiguration;
+import com.github.dbourdette.otto.service.mail.Mailer;
+import com.github.dbourdette.otto.web.util.FlashScope;
 
 /**
  * Edition of mail configuration

@@ -23,59 +23,62 @@
   ~ limitations under the License.
   --%>
 
-<form:form action="" commandName="form" method="GET" cssClass="container" id="reportForm">
-    <span id="simplePanel">
-        Period <form:select path="period" items="${form.periods}" />
-        <form:hidden path="reportId" id="reportId" />
-        <form:hidden path="advanced" id="advanced" />
-        <a href="#" onclick="showAdvanced(); return false">advanced form</a>
-    </span>
-    <span id="advancedPanel">
-        From : <form:input path="from" data-datepicker="datepicker" cssClass="input-small" />
-        To : <form:input path="to" data-datepicker="datepicker" cssClass="input-small" />
-        <a href="#" onclick="showSimple(); return false">basic form</a>
-    </span>
+<c:set var="query" value="period=${form.period}&amp;reportId=${form.reportId}&amp;advanced=${form.advanced}&amp;from=${form.formattedFrom}&amp;to=${form.formattedTo}"/>
 
-    <div class="btn-group pull-right">
-        <button class="btn btn-primary" type="submit">${fn:escapeXml(form.reportTitle)}</button>
-        <button class="btn dropdown-toggle btn-primary" data-toggle="dropdown">
-            <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu">
+<form:form action="" commandName="form" method="GET" cssClass="row" id="reportForm">
+    <div class="span4">
+        <span id="simplePanel">
+            Period <form:select path="period" items="${form.periods}" cssClass="span2" />
+            <form:hidden path="reportId" id="reportId" />
+            <form:hidden path="advanced" id="advanced" />
+            <a href="#" onclick="showAdvanced(); return false">advanced form</a>
+        </span>
+        <span id="advancedPanel">
+            From : <form:input path="from" data-datepicker="datepicker" cssClass="input-small" />
+            To : <form:input path="to" data-datepicker="datepicker" cssClass="input-small" />
+            <a href="#" onclick="showSimple(); return false">basic form</a>
+        </span>
+    </div>
+
+    <div class="span4">
+        <ul class="nav nav-pills">
+            <li><span>Reports :</span></li>
             <c:forEach var="reportConfig" items="${form.reportConfigs}">
-                <li><a href="#" onclick="$('#reportId').val('${reportConfig.id}'); $('#reportForm').submit(); return false;">${fn:escapeXml(reportConfig.title)}</a></li>
+                <li class="${form.reportTitle eq reportConfig.title ? 'active' : ''}"><a href="#" onclick="$('#reportId').val('${reportConfig.id}'); $('#reportForm').submit(); return false;">${fn:escapeXml(reportConfig.title)}</a></li>
             </c:forEach>
         </ul>
     </div>
-    <script type="text/javascript">
-        function showAdvanced() {
-            $("#advanced").val('true');
-            $("#simplePanel").hide();
-            $("#advancedPanel").show();
-        }
 
-        function showSimple() {
-            $("#advanced").val('false');
-            $("#simplePanel").show();
-            $("#advancedPanel").hide();
-        }
-
-        <c:if test="${form.advanced}">showAdvanced();</c:if>
-        <c:if test="${not form.advanced}">showSimple();</c:if>
-    </script>
+    <div class="span4">
+        <ul class="nav nav-pills pull-right">
+            <li><span>Format :</span></li>
+            <c:forEach var="format" items="${formats}">
+                <li class="${currentFormat eq format.name ? 'active' : ''}">
+                    <a href="/sources/${name}/reports/${format.name}?${query}">
+                        ${format.name}
+                        <c:if test="${not empty format.contentType}"><i class="icon-download"></i></c:if>
+                    </a>
+                </li>
+            </c:forEach>
+        </ul>
+    </div>
 </form:form>
 
-<c:set var="query" value="period=${form.period}&amp;reportId=${form.reportId}&amp;advanced=${form.advanced}&amp;from=${form.formattedFrom}&amp;to=${form.formattedTo}"/>
+<script type="text/javascript">
+    $('#period').change(function() {$('#reportForm').submit()});
 
-<div class="nav">
-    <c:if test="${subNavItem eq 'graph'}">graph</c:if>
-    <c:if test="${not (subNavItem eq 'graph')}"><a href="/sources/${name}/reports/graph?${query}">graph</a></c:if>
+    function showAdvanced() {
+        $("#advanced").val('true');
+        $("#simplePanel").hide();
+        $("#advancedPanel").show();
+    }
 
-    <c:if test="${subNavItem eq 'pie'}">- pie</c:if>
-    <c:if test="${not (subNavItem eq 'pie')}">- <a href="/sources/${name}/reports/pie?${query}">pie</a></c:if>
+    function showSimple() {
+        $("#advanced").val('false');
+        $("#simplePanel").show();
+        $("#advancedPanel").hide();
+    }
 
-    <c:if test="${subNavItem eq 'stats'}">- table</c:if>
-    <c:if test="${not (subNavItem eq 'stats')}">- <a href="/sources/${name}/reports/stats?${query}">table</a></c:if>
-
-    - <a href="/sources/${name}/reports/csv?${query}">csv <i class="icon-download"></i></a>
-</div>
+    <c:if test="${form.advanced}">showAdvanced();</c:if>
+    <c:if test="${not form.advanced}">showSimple();</c:if>
+</script>

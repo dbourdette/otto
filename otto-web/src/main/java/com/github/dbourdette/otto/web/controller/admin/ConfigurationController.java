@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-package com.github.dbourdette.otto.web.controller;
+package com.github.dbourdette.otto.web.controller.admin;
 
-import com.github.dbourdette.otto.SpringConfig;
-import com.github.dbourdette.otto.service.config.Config;
-import com.github.dbourdette.otto.web.form.ConfigForm;
-import com.github.dbourdette.otto.web.util.FlashScope;
+import javax.inject.Inject;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,7 +27,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.inject.Inject;
+import com.github.dbourdette.otto.SpringConfig;
+import com.github.dbourdette.otto.service.config.Config;
+import com.github.dbourdette.otto.web.form.ConfigForm;
+import com.github.dbourdette.otto.web.util.FlashScope;
 
 /**
  * @author damien bourdette

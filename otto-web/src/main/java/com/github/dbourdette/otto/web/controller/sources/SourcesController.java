@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.dbourdette.otto.web.controller;
+package com.github.dbourdette.otto.web.controller.sources;
 
 import java.io.UnsupportedEncodingException;
 
@@ -41,7 +41,8 @@ import com.github.dbourdette.otto.source.config.AggregationConfig;
 import com.github.dbourdette.otto.source.config.DefaultGraphParameters;
 import com.github.dbourdette.otto.source.config.TransformConfig;
 import com.github.dbourdette.otto.source.reports.ReportConfig;
-import com.github.dbourdette.otto.source.reports.SourceReports;
+import com.github.dbourdette.otto.source.reports.ReportConfigs;
+import com.github.dbourdette.otto.source.reports.ReportConfigs;
 import com.github.dbourdette.otto.source.schedule.MailSchedule;
 import com.github.dbourdette.otto.source.schedule.SourceScheduleExecutor;
 import com.github.dbourdette.otto.source.schedule.SourceSchedules;
@@ -76,7 +77,7 @@ public class SourcesController {
         Source source = Source.findByName(name);
 
         model.addAttribute("source", source);
-        model.addAttribute("reports", SourceReports.forSource(source).getReportConfigs());
+        model.addAttribute("reports", ReportConfigs.forSource(source).getReportConfigs());
         model.addAttribute("schedules", SourceSchedules.forSource(source).getSchedules());
         model.addAttribute("indexes", source.getIndexes());
 
@@ -276,21 +277,21 @@ public class SourcesController {
 
     @RequestMapping("/sources/{name}/report/{id}")
     public String report(@PathVariable String name, @PathVariable String id, Model model) {
-        model.addAttribute("form", SourceReports.forSource(Source.findByName(name)).getReportConfig(id));
+        model.addAttribute("form", ReportConfigs.forSource(Source.findByName(name)).getReportConfig(id));
 
         return "sources/report_form";
     }
 
     @RequestMapping("/sources/{name}/report/{id}/delete")
     public String deleteReport(@PathVariable String name, @PathVariable String id) {
-        SourceReports.forSource(Source.findByName(name)).getReportConfig(id).delete();
+        ReportConfigs.forSource(Source.findByName(name)).getReportConfig(id).delete();
 
         return "redirect:/sources/{name}/configuration";
     }
 
     @RequestMapping("/sources/{name}/schedule")
     public String schedule(@PathVariable String name, Model model) {
-        model.addAttribute("reports", SourceReports.forSource(Source.findByName(name)).getReportConfigs());
+        model.addAttribute("reports", ReportConfigs.forSource(Source.findByName(name)).getReportConfigs());
         model.addAttribute("form", new MailSchedule(name));
 
         return "sources/schedule/edit";
@@ -299,7 +300,7 @@ public class SourcesController {
     @RequestMapping(value = "/sources/{name}/schedule", method = RequestMethod.POST)
     public String schedule(@PathVariable String name, @Valid @ModelAttribute("form") MailSchedule form, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            model.addAttribute("reports", SourceReports.forSource(Source.findByName(name)).getReportConfigs());
+            model.addAttribute("reports", ReportConfigs.forSource(Source.findByName(name)).getReportConfigs());
 
             return "sources/schedule/edit";
         }
@@ -312,7 +313,7 @@ public class SourcesController {
 
     @RequestMapping("/sources/{name}/schedule/{id}")
     public String schedule(@PathVariable String name, @PathVariable String id, Model model) {
-        model.addAttribute("reports", SourceReports.forSource(Source.findByName(name)).getReportConfigs());
+        model.addAttribute("reports", ReportConfigs.forSource(Source.findByName(name)).getReportConfigs());
         model.addAttribute("form", SourceSchedules.forSource(Source.findByName(name)).getSchedule(id));
 
         return "sources/schedule/edit";

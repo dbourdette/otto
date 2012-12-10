@@ -44,7 +44,7 @@
             </div>
         </form:errors>
         <form:hidden path="code" id="code" />
-        <div id="editor" class="span12" style="height: 600px; position: relative; margin: 5px 0 10px 0;">${form.code}</div>
+        <div id="editor" class="span12" style="height: 600px; position: relative; margin: 5px 0 10px 0;">${fn:escapeXml(form.code)}</div>
     </form:form>
 
     <script>

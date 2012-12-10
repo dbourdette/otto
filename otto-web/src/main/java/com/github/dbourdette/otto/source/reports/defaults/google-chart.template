@@ -1,0 +1,56 @@
+<%
+    import groovy.json.StringEscapeUtils
+    import org.joda.time.Duration
+
+    table.top(30)
+    table.sortBySum()
+
+    private String getDatePattern(table) {
+        if (table.rows && table.rows.get(0).toDuration().isShorterThan(Duration.standardDays(1))) {
+            return 'dd MM yyyy HH:mm';
+        } else {
+            return 'dd MMM yyyy';
+        }
+    }
+%>
+
+<div id="googlegraph"></div>
+
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+    google.load("visualization", "1", {packages:["corechart"]});
+    google.setOnLoadCallback(drawChart);
+    function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('date', 'Date');
+        <% table.columns.each { %> data.addColumn('number', '${StringEscapeUtils.escapeJavaScript(it)}') <% } %>
+        data.addRows(${table.rows.size()});
+
+        <%
+            rowIndex = 0;
+
+            table.rows.each { interval ->
+                columnIndex = 0;
+                %>
+                    data.setValue(${rowIndex}, ${columnIndex}, new Date(${interval.start.millis}));
+                <%
+                table.columns.each { column ->
+                    columnIndex++;
+                %>
+                    data.setValue(${rowIndex}, ${columnIndex}, ${table.getValue(interval, column)});
+                <%
+                }
+
+                rowIndex++;
+            }
+
+            columnIndex++
+        %>
+
+        var formatter = new google.visualization.DateFormat({pattern: '${getDatePattern(table)}'});
+        formatter.format(data, 0);
+        var chart = new google.visualization.LineChart(document.getElementById('googlegraph'));
+        chart.draw(data, {width: "1080", height: "750", backgroundColor:'white'});
+    }
+</script>
+
