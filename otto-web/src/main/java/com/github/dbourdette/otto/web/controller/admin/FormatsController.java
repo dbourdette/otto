@@ -25,6 +25,9 @@ public class FormatsController {
     @Inject
     private FlashScope flashScope;
 
+    @Inject
+    private ReportFormats reportFormats;
+
     @ModelAttribute("navItem")
     public String navItem() {
         return "formats";
@@ -37,7 +40,7 @@ public class FormatsController {
 
     @RequestMapping("")
     public String index(Model model) {
-        model.addAttribute("formats", ReportFormats.findForAllSources());
+        model.addAttribute("formats", reportFormats.findForAllSources());
 
         return "admin/formats/index";
     }
@@ -47,7 +50,7 @@ public class FormatsController {
         if (id == null) {
             model.addAttribute("form", new ReportFormat());
         } else {
-            model.addAttribute("form", ReportFormats.findById(id));
+            model.addAttribute("form", reportFormats.findById(id));
         }
 
         return "admin/formats/form";
@@ -61,7 +64,7 @@ public class FormatsController {
 
         form.setSourceName(ReportFormats.ALL_SOURCES);
 
-        ReportFormats.save(form);
+        reportFormats.save(form);
 
         flashScope.message("Reports format " + form.getName() + " for all sources has been updated");
 
@@ -70,9 +73,9 @@ public class FormatsController {
 
     @RequestMapping(method = RequestMethod.DELETE)
     public String delete(@RequestParam(required = true) String id) {
-        ReportFormat reportFormat = ReportFormats.findById(id);
+        ReportFormat reportFormat = reportFormats.findById(id);
 
-        ReportFormats.delete(id);
+        reportFormats.delete(id);
 
         flashScope.message("Reports format " + reportFormat.getName() + " has been deleted");
 

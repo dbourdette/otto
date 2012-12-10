@@ -78,8 +78,16 @@ public class ReportFormat {
         return new SimpleTemplateEngine().createTemplate(code);
     }
 
-    public ReportFormat withContentType(String contentType) {
+    public ReportFormat withDownloadAs(String contentType, String extension) {
+        this.downloadAs = true;
         this.contentType = contentType;
+        this.extension = extension;
+
+        return this;
+    }
+
+    public ReportFormat withIndex(int index) {
+        this.index = index;
 
         return this;
     }

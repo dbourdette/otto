@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -46,6 +47,8 @@ import com.github.dbourdette.otto.web.form.ReportForm;
  */
 @Controller
 public class ReportsController {
+    @Inject
+    private ReportFormats reportFormats;
 
     @InitBinder
     public void binder(WebDataBinder binder) {
@@ -64,7 +67,7 @@ public class ReportsController {
     @RequestMapping({"/sources/{name}/reports/{format}"})
     public String format(@PathVariable String name, @PathVariable String format, @Valid ReportForm form, BindingResult result, Model model, HttpServletRequest request, HttpServletResponse response) throws IOException {
         Source source = Source.findByName(name);
-        ReportFormat reportFormat = ReportFormats.findByName(format);
+        ReportFormat reportFormat = reportFormats.findByName(format);
 
         form.fillWithDefault(source.getDefaultGraphParameters(), request);
         form.setReportConfigs(ReportConfigs.forSource(source).getReportConfigs());
@@ -90,12 +93,8 @@ public class ReportsController {
     private List<ReportFormat> findAllFormats(Source source) {
         List<ReportFormat> allFormats = new ArrayList<ReportFormat>();
 
-        allFormats.addAll(ReportFormats.findBySource(source));
-        allFormats.addAll(ReportFormats.findForAllSources());
-
-        if (allFormats.size() == 0) {
-            allFormats = ReportFormats.findDefaults();
-        }
+        allFormats.addAll(reportFormats.findBySource(source));
+        allFormats.addAll(reportFormats.findForAllSources());
 
         return allFormats;
     }

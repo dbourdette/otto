@@ -1,53 +1,72 @@
 package com.github.dbourdette.otto.source.reports;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+
 import org.bson.types.ObjectId;
+import org.springframework.stereotype.Service;
 
-import com.github.dbourdette.otto.Registry;
 import com.github.dbourdette.otto.source.Source;
+import com.github.dbourdette.otto.web.exception.FormatNotFound;
+import com.google.code.morphia.Datastore;
 
+@Service
 public class ReportFormats {
     public static final String ALL_SOURCES = "*";
 
-    public static ReportFormat findById(String id) {
-        return Registry.datastore.find(ReportFormat.class).filter("id", new ObjectId(id)).get();
-    }
-
-    public static ReportFormat findByName(String name) {
-        return Registry.datastore.find(ReportFormat.class).filter("name", name).get();
-    }
-
-    public static List<ReportFormat> findBySource(Source source) {
-        return Registry.datastore.find(ReportFormat.class).filter("sourceName", source.getName()).order("index").asList();
-    }
-
-    public static List<ReportFormat> findForAllSources() {
-        return Registry.datastore.find(ReportFormat.class).filter("sourceName", ALL_SOURCES).order("index").asList();
-    }
-
-    public static List<ReportFormat> findDefaults() {
-        try {
-            List<ReportFormat> formats = new ArrayList<ReportFormat>();
-
-            formats.add(ReportFormat.loadDefault("graph", "google-chart"));
-            formats.add(ReportFormat.loadDefault("pie", "google-pie"));
-            formats.add(ReportFormat.loadDefault("table", "table"));
-            formats.add(ReportFormat.loadDefault("csv", "csv").withContentType(""));
-
-            return formats;
-        } catch (IOException e) {
-            throw new IllegalStateException("Failed to load default format templates", e);
+    @Inject
+    private Datastore datastore;
+    
+    @PostConstruct
+    public void initDB() throws IOException {
+        if (datastore.find(ReportFormat.class).countAll() != 0) {
+            return;
         }
+
+        datastore.save(ReportFormat.loadDefault("graph", "google-chart").withIndex(1));
+        datastore.save(ReportFormat.loadDefault("pie", "google-chart").withIndex(1));
+        datastore.save(ReportFormat.loadDefault("table", "table").withIndex(1));
+        datastore.save(ReportFormat.loadDefault("csv", "csv").withDownloadAs("application/csv", "csv").withIndex(1));
     }
 
-    public static void save(ReportFormat format) {
-        Registry.datastore.save(format);
+    public ReportFormat findById(String id) {
+        ReportFormat format = datastore.find(ReportFormat.class).filter("id", new ObjectId(id)).get();
+
+        assertExists(format);
+
+        return format;
     }
 
-    public static void delete(String id) {
-        Registry.datastore.delete(findById(id));
+    public ReportFormat findByName(String name) {
+        ReportFormat format = datastore.find(ReportFormat.class).filter("name", name).get();
+
+        assertExists(format);
+
+        return format;
+    }
+
+    public List<ReportFormat> findBySource(Source source) {
+        return datastore.find(ReportFormat.class).filter("sourceName", source.getName()).order("index").asList();
+    }
+
+    public List<ReportFormat> findForAllSources() {
+        return datastore.find(ReportFormat.class).filter("sourceName", ALL_SOURCES).order("index").asList();
+    }
+
+    public void save(ReportFormat format) {
+        datastore.save(format);
+    }
+
+    public void delete(String id) {
+        datastore.delete(findById(id));
+    }
+
+    public static void assertExists(ReportFormat format) {
+        if (format == null) {
+            throw new FormatNotFound();
+        }
     }
 }
