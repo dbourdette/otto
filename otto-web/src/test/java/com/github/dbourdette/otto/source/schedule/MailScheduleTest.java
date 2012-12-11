@@ -17,7 +17,7 @@ public class MailScheduleTest {
         Map<String, Object> bindings = new HashMap<String, Object>();
         bindings.put("name", "john");
 
-        assertThat(mailSchedule.render(bindings)).isEqualTo("Hello john");
+        assertThat(mailSchedule.render(bindings, "")).isEqualTo("Hello john");
     }
 
     @Test
@@ -25,14 +25,14 @@ public class MailScheduleTest {
         MailSchedule mailSchedule = new MailSchedule();
         mailSchedule.setGroovyTemplate("Hello $name");
 
-        assertThat(mailSchedule.buildTemplate()).isNotNull();
+        assertThat(mailSchedule.buildTemplate("")).isNotNull();
     }
 
     @Test
     public void buildDefaultTemplate() throws ClassNotFoundException, IOException {
         MailSchedule mailSchedule = new MailSchedule();
 
-        assertThat(mailSchedule.buildTemplate()).isNotNull();
+        assertThat(mailSchedule.buildTemplate("")).isNotNull();
     }
 
     @Test
@@ -41,6 +41,6 @@ public class MailScheduleTest {
 
         Map<String, Object> bindings = new HashMap<String, Object>();
 
-        assertThat(mailSchedule.render(bindings)).isNotNull();
+        assertThat(mailSchedule.render(bindings, "")).isNotNull();
     }
 }

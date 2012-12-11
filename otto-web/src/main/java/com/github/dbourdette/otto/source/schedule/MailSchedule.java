@@ -85,6 +85,60 @@ public class MailSchedule {
         }
     }
 
+    public String buildMailSubject() {
+        if (isGlobal()) {
+            return title + " sent at " + new Date();
+        } else {
+            return title + " sent at " + new Date() + " for period " + period;
+        }
+    }
+
+    public String buildHtmlForGlobalSchedule() {
+        Map<String, Object> bindings = new HashMap<String, Object>();
+
+        bindings.put("title", title);
+        bindings.put("api", new ScheduleApi());
+
+        return render(bindings, "global.template");
+    }
+
+    public String buildHtmlForSpecificSource() {
+        Source source = Source.findByName(sourceName);
+
+        ReportConfig config = ReportConfigs.forSource(source).getReportConfigByTitle(report);
+
+        if (config == null) {
+            config = new ReportConfig();
+        }
+
+        SimpleDataTable data = source.buildTable(config, period);
+
+        Map<String, Object> bindings = new HashMap<String, Object>();
+
+        bindings.put("title", title);
+        bindings.put("data", data);
+
+        return render(bindings, "default.template");
+    }
+
+    public String render(Map bindings, String defaultTemplate) {
+        try {
+            return buildTemplate(defaultTemplate).make(bindings).toString();
+        } catch (Exception e) {
+            return ExceptionUtils.getFullStackTrace(e);
+        }
+    }
+
+    public Template buildTemplate(String defaultTemplate) throws IOException, ClassNotFoundException {
+        SimpleTemplateEngine engine = new SimpleTemplateEngine();
+
+        if (StringUtils.isBlank(groovyTemplate)) {
+            return engine.createTemplate(getClass().getResource(defaultTemplate));
+        } else {
+            return engine.createTemplate(groovyTemplate);
+        }
+    }
+
     public String getSourceName() {
         return sourceName;
     }
@@ -151,59 +205,5 @@ public class MailSchedule {
 
     public void setGroovyTemplate(String groovyTemplate) {
         this.groovyTemplate = groovyTemplate;
-    }
-
-    private String buildMailSubject() {
-        if (isGlobal()) {
-            return title + " sent at " + new Date();
-        } else {
-            return title + " sent at " + new Date() + " for period " + period;
-        }
-    }
-
-    public String buildHtmlForGlobalSchedule() {
-        Map<String, Object> bindings = new HashMap<String, Object>();
-
-        bindings.put("title", title);
-        bindings.put("api", new ScheduleApi());
-
-        return render(bindings, "global.template");
-    }
-
-    public String buildHtmlForSpecificSource() {
-        Source source = Source.findByName(sourceName);
-
-        ReportConfig config = ReportConfigs.forSource(source).getReportConfigByTitle(report);
-
-        if (config == null) {
-            config = new ReportConfig();
-        }
-
-        SimpleDataTable data = source.buildTable(config, period);
-
-        Map<String, Object> bindings = new HashMap<String, Object>();
-
-        bindings.put("title", title);
-        bindings.put("data", data);
-
-        return render(bindings, "default.template");
-    }
-
-    public String render(Map bindings, String defaultTemplate) {
-        try {
-            return buildTemplate(defaultTemplate).make(bindings).toString();
-        } catch (Exception e) {
-            return ExceptionUtils.getFullStackTrace(e);
-        }
-    }
-
-    public Template buildTemplate(String defaultTemplate) throws IOException, ClassNotFoundException {
-        SimpleTemplateEngine engine = new SimpleTemplateEngine();
-
-        if (StringUtils.isBlank(groovyTemplate)) {
-            return engine.createTemplate(getClass().getResource(defaultTemplate));
-        } else {
-            return engine.createTemplate(groovyTemplate);
-        }
     }
 }

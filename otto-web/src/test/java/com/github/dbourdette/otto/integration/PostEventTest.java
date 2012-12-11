@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -25,6 +26,7 @@ public class PostEventTest {
     private RestTemplate template = new RestTemplate();
 
     @Test
+    @Ignore("working on localhost:8080")
     public void post() throws IOException, InterruptedException {
         int count = getEventCount();
 
