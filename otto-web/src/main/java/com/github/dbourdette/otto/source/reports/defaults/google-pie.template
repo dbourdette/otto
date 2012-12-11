@@ -17,14 +17,14 @@
 
         <%
             columnIndex = 0;
-            table.columns.each {
+            table.columns.each { column ->
         %>
-                data.setValue(${columnIndex}, 0, '${it}');
-                data.setValue(${columnIndex}, 1, ${table.getSum(it)});
+                data.setValue(${columnIndex}, 0, '${column}');
+                data.setValue(${columnIndex}, 1, ${table.getSum(column)});
         <%
-            }
-
             columnIndex++
+
+            }
         %>
 
         var chart = new google.visualization.PieChart(document.getElementById('googlepie'));

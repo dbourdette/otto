@@ -23,7 +23,7 @@
     function drawChart() {
         var data = new google.visualization.DataTable();
         data.addColumn('date', 'Date');
-        <% table.columns.each { %> data.addColumn('number', '${StringEscapeUtils.escapeJavaScript(it)}') <% } %>
+        <% table.columns.each { %> data.addColumn('number', '${StringEscapeUtils.escapeJavaScript(it)}'); <% } %>
         data.addRows(${table.rows.size()});
 
         <%

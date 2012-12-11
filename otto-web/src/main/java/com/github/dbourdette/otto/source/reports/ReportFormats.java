@@ -27,9 +27,9 @@ public class ReportFormats {
         }
 
         datastore.save(ReportFormat.loadDefault("graph", "google-chart").withIndex(1));
-        datastore.save(ReportFormat.loadDefault("pie", "google-chart").withIndex(1));
-        datastore.save(ReportFormat.loadDefault("table", "table").withIndex(1));
-        datastore.save(ReportFormat.loadDefault("csv", "csv").withDownloadAs("application/csv", "csv").withIndex(1));
+        datastore.save(ReportFormat.loadDefault("pie", "google-pie").withIndex(2));
+        datastore.save(ReportFormat.loadDefault("table", "table").withIndex(3));
+        datastore.save(ReportFormat.loadDefault("csv", "csv").withDownloadAs("application/csv", "csv").withIndex(4));
     }
 
     public ReportFormat findById(String id) {
