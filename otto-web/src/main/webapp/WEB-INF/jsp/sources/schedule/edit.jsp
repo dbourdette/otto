@@ -102,6 +102,30 @@ full doc on <a href="http://unixhelp.ed.ac.uk/CGI/man-cgi?crontab+5" target="_bl
             <form:hidden path="groovyTemplate" id="groovyTemplate" />
             <div id="editor" class="span12" style="height: 600px; position: relative; margin: 5px 0 10px 0;">${fn:escapeXml(form.groovyTemplate)}</div>
         </fieldset>
+
+
+    <pre class="well"><h3>Available properties</h3>
+<b>title</b>
+Title of this report
+
+<b>data</b>
+public interface DataTable {
+    public List&lt;String&gt; getColumns();
+
+    public List&lt;Interval&gt; getRows();
+
+    public Integer getValue(Interval row, String column);
+
+    public int getSum(String column);
+
+    public void top(int count);
+
+    public void sortAlphabetically();
+
+    public void sortBySum();
+}</pre>
+
+
         <bootstrap:submit cancelUrl="/sources/${name}/configuration" />
     </form:form>
 

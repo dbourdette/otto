@@ -54,8 +54,9 @@
         <bootstrap:submit label="Save" cancelUrl="/admin/formats" />
     </form:form>
 
-    <h2>Available properties</h2>
-    <pre class="well"><h3>table</h3>
+    <pre class="well"><h3>Available properties</h3>
+
+<b>table</b>
 public interface DataTable {
     public List&lt;String&gt; getColumns();
 
