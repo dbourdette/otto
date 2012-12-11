@@ -124,7 +124,7 @@ public interface DataTable {
         editor.setShowPrintMargin(false);
 
         $('#form').submit( function() {
-            $('#code').val(editor.getValue());
+            $('#groovyTemplate').val(editor.getValue());
             return true;
         });
     </script>
