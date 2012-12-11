@@ -86,24 +86,15 @@ full doc on <a href="http://unixhelp.ed.ac.uk/CGI/man-cgi?crontab+5" target="_bl
 <b>title</b>
 Title of this report
 
-<b>data</b>
-public interface DataTable {
-    public List&lt;String&gt; getColumns();
+<b>api</b>
+public class ScheduleApi {
+    public List&lt;String&gt; getSources();
 
-    public List&lt;Interval&gt; getRows();
+    public List&lt;String&gt; getReports(String source);
 
-    public Integer getValue(Interval row, String column);
-
-    public int getSum(String column);
-
-    public void top(int count);
-
-    public void sortAlphabetically();
-
-    public void sortBySum();
-}</pre>
-
-
+    public DataTable getData(String source, String report, String period)
+}
+</pre>
         <bootstrap:submit cancelUrl="/admin/schedules" />
     </form:form>
 
