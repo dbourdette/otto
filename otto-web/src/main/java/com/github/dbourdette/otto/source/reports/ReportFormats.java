@@ -15,7 +15,6 @@ import com.google.code.morphia.Datastore;
 
 @Service
 public class ReportFormats {
-    public static final String ALL_SOURCES = "*";
 
     @Inject
     private Datastore datastore;
@@ -53,7 +52,7 @@ public class ReportFormats {
     }
 
     public List<ReportFormat> findForAllSources() {
-        return datastore.find(ReportFormat.class).filter("sourceName", ALL_SOURCES).order("index").asList();
+        return datastore.find(ReportFormat.class).filter("sourceName", Source.ALL_SOURCES).order("index").asList();
     }
 
     public void save(ReportFormat format) {

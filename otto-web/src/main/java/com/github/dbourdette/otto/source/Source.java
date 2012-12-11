@@ -44,6 +44,8 @@ import com.mongodb.DBObject;
 public class Source {
     private static final int DEFAULT_PAGE_SIZE = 100;
 
+    public static final String ALL_SOURCES = "*";
+
     @Id
     private ObjectId id;
 

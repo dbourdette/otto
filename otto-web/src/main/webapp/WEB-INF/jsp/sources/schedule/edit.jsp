@@ -57,17 +57,17 @@
         </fieldset>
         <fieldset>
             <legend>Mail</legend>
-            <bootstrap:control path="to" label="To">
-                <form:textarea path="to" cssClass="input-xxlarge" rows="5"/> (comma separated values)
-            </bootstrap:control>
             <bootstrap:control path="title" label="Subject">
                 <form:input path="title" size="80" cssClass="input-xxlarge" />
+            </bootstrap:control>
+            <bootstrap:control path="to" label="To">
+                <form:textarea path="to" cssClass="input-xxlarge" rows="5"/> (comma separated values)
             </bootstrap:control>
         </fieldset>
         <fieldset>
             <legend>Planification</legend>
             <bootstrap:control path="cronExpression" label="Cron expression">
-                <form:input path="cronExpression"/>
+                <form:input path="cronExpression"/> (leave blank for no planification)
             </bootstrap:control>
         </fieldset>
         <pre class="well">

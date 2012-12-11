@@ -1,0 +1,18 @@
+<%
+    api.sources.each { source ->
+%>
+        <b>Source ${source.name}</b><br>
+<%
+        api.getReports(source.name).each { report ->
+
+            data = api.getData(source.name, report.title, 'RECENT')
+            total = data.columns.sum{ column -> data.getSum(column) }
+%>
+            Report ${report.title} : ${total} events in last 2 hours<br>
+<%
+        }
+%>
+        <br><br>
+<%
+}
+%>

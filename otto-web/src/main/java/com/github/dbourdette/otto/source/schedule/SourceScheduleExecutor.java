@@ -16,8 +16,6 @@
 
 package com.github.dbourdette.otto.source.schedule;
 
-import com.github.dbourdette.otto.source.Source;
-
 /**
  * Executes schedules.
  *
@@ -25,7 +23,10 @@ import com.github.dbourdette.otto.source.Source;
  */
 
 public interface SourceScheduleExecutor {
-    public void execute(Source source, MailSchedule schedule);
+    /**
+     * Executes schedule asynchronously
+     */
+    public void execute(MailSchedule schedule);
 
-    public String executionMessage(Source source, MailSchedule schedule);
+    public void executeNow(MailSchedule schedule) throws Exception;
 }

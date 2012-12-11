@@ -5,14 +5,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.validation.constraints.NotNull;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.bson.types.ObjectId;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import com.github.dbourdette.otto.Registry;
 import com.github.dbourdette.otto.data.DataTablePeriod;
 import com.github.dbourdette.otto.data.SimpleDataTable;
 import com.github.dbourdette.otto.service.mail.Mail;
@@ -39,11 +36,9 @@ public class MailSchedule {
     @Property
     private String sourceName;
 
-    @NotNull
     @Property
     private String report;
 
-    @NotNull
     @Property
     private DataTablePeriod period;
 
@@ -68,60 +63,25 @@ public class MailSchedule {
         this.sourceName = sourceName;
     }
 
-    public void save() {
-        Registry.datastore.save(this);
-    }
-
-    public void delete() {
-        Registry.datastore.delete(this);
-    }
-
-    public Mail buildMail(Source source) {
+    public Mail buildMail() {
         Mail mail = new Mail();
 
         mail.setTo(to);
-        mail.setSubject(title + " sent at " + new Date() + " for period " + period);
-        mail.setHtml(buildHtml(source));
+        mail.setSubject(buildMailSubject());
+        mail.setHtml(buildHtml());
 
         return mail;
     }
 
-    public String buildHtml(Source source) {
-        ReportConfig config = ReportConfigs.forSource(source).getReportConfigByTitle(report);
-
-        if (config == null) {
-            config = new ReportConfig();
-        }
-
-        SimpleDataTable data = source.buildTable(config, period);
-
-        return render(report, data);
+    public boolean isGlobal() {
+        return Source.ALL_SOURCES.equals(sourceName);
     }
 
-    public String render(String title, SimpleDataTable data) {
-        Map<String, Object> bindings = new HashMap<String, Object>();
-
-        bindings.put("title", title);
-        bindings.put("data", data);
-
-        return render(bindings);
-    }
-
-    public String render(Map bindings) {
-        try {
-            return buildTemplate().make(bindings).toString();
-        } catch (Exception e) {
-            return ExceptionUtils.getFullStackTrace(e);
-        }
-    }
-
-    public Template buildTemplate() throws IOException, ClassNotFoundException {
-        SimpleTemplateEngine engine = new SimpleTemplateEngine();
-
-        if (StringUtils.isBlank(groovyTemplate)) {
-            return engine.createTemplate(getClass().getResource("default.template"));
+    public String buildHtml() {
+        if (isGlobal()) {
+            return buildHtmlForGlobalSchedule();
         } else {
-            return engine.createTemplate(groovyTemplate);
+            return buildHtmlForSpecificSource();
         }
     }
 
@@ -191,5 +151,59 @@ public class MailSchedule {
 
     public void setGroovyTemplate(String groovyTemplate) {
         this.groovyTemplate = groovyTemplate;
+    }
+
+    private String buildMailSubject() {
+        if (isGlobal()) {
+            return title + " sent at " + new Date();
+        } else {
+            return title + " sent at " + new Date() + " for period " + period;
+        }
+    }
+
+    public String buildHtmlForGlobalSchedule() {
+        Map<String, Object> bindings = new HashMap<String, Object>();
+
+        bindings.put("title", title);
+        bindings.put("api", new ScheduleApi());
+
+        return render(bindings, "global.template");
+    }
+
+    public String buildHtmlForSpecificSource() {
+        Source source = Source.findByName(sourceName);
+
+        ReportConfig config = ReportConfigs.forSource(source).getReportConfigByTitle(report);
+
+        if (config == null) {
+            config = new ReportConfig();
+        }
+
+        SimpleDataTable data = source.buildTable(config, period);
+
+        Map<String, Object> bindings = new HashMap<String, Object>();
+
+        bindings.put("title", title);
+        bindings.put("data", data);
+
+        return render(bindings, "default.template");
+    }
+
+    public String render(Map bindings, String defaultTemplate) {
+        try {
+            return buildTemplate(defaultTemplate).make(bindings).toString();
+        } catch (Exception e) {
+            return ExceptionUtils.getFullStackTrace(e);
+        }
+    }
+
+    public Template buildTemplate(String defaultTemplate) throws IOException, ClassNotFoundException {
+        SimpleTemplateEngine engine = new SimpleTemplateEngine();
+
+        if (StringUtils.isBlank(groovyTemplate)) {
+            return engine.createTemplate(getClass().getResource(defaultTemplate));
+        } else {
+            return engine.createTemplate(groovyTemplate);
+        }
     }
 }

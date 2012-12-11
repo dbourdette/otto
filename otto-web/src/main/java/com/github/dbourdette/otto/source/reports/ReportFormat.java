@@ -11,6 +11,7 @@ import org.bson.types.ObjectId;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.github.dbourdette.otto.data.SimpleDataTable;
+import com.github.dbourdette.otto.source.Source;
 import com.github.dbourdette.otto.web.util.MongoCollections;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
@@ -51,7 +52,7 @@ public class ReportFormat {
 
         ReportFormat format = new ReportFormat();
 
-        format.sourceName = ReportFormats.ALL_SOURCES;
+        format.sourceName = Source.ALL_SOURCES;
         format.name = name;
         format.code = FileUtils.readFileToString(FileUtils.toFile(url), "UTF-8");
 

@@ -41,6 +41,9 @@ public class SourceScheduleWatcher {
     private SourceScheduleExecutor executor;
 
     @Inject
+    private SourceSchedules sourceSchedules;
+
+    @Inject
     private Logs logs;
 
     @Scheduled(cron = "0 * * * * *")
@@ -48,12 +51,20 @@ public class SourceScheduleWatcher {
         DateTime now = new DateTime();
 
         for (Source source : Source.findAll()) {
-            for (MailSchedule schedule : SourceSchedules.forSource(source).getSchedules()) {
+            for (MailSchedule schedule : sourceSchedules.findForSource(source)) {
                 if (isEligible(schedule.getCronExpression(), now)) {
-                    logs.trace(executor.executionMessage(source, schedule));
+                    logs.trace("Executing schedule " + schedule.getTitle() + " for source " + source.getName());
 
-                    executor.execute(source, schedule);
+                    executor.execute(schedule);
                 }
+            }
+        }
+
+        for (MailSchedule schedule : sourceSchedules.findForAllSources()) {
+            if (isEligible(schedule.getCronExpression(), now)) {
+                logs.trace("Executing global schedule " + schedule.getTitle());
+
+                executor.execute(schedule);
             }
         }
     }

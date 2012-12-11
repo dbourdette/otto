@@ -20,7 +20,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<layout:head title="All users"/>
+<layout:head title="All formats"/>
 
 <body>
 <layout:header/>

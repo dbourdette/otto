@@ -23,7 +23,6 @@ import org.springframework.stereotype.Component;
 
 import com.github.dbourdette.otto.service.logs.Logs;
 import com.github.dbourdette.otto.service.mail.Mailer;
-import com.github.dbourdette.otto.source.Source;
 
 /**
  * @author damien bourdette
@@ -38,22 +37,18 @@ public class SourceScheduleExecutorImpl implements SourceScheduleExecutor {
 
     @Async
     @Override
-    public void execute(Source source, MailSchedule schedule) {
+    public void execute(MailSchedule schedule) {
         try {
-            mailer.send(schedule.buildMail(source));
+            executeNow(schedule);
 
-            logs.trace("Schedule " + messageCore(source, schedule) + " has just been executed");
+            logs.trace("Schedule " + schedule.getTitle() + " has just been executed");
         } catch (Exception e) {
             logs.error("Failed to execute schedule, reason : " + e.getMessage(), e);
         }
     }
 
     @Override
-    public String executionMessage(Source source, MailSchedule schedule) {
-        return "Executing schedule " + messageCore(source, schedule);
-    }
-
-    public String messageCore(Source source, MailSchedule schedule) {
-        return schedule.getTitle() + " for source " + source.getName();
+    public void executeNow(MailSchedule schedule) throws Exception {
+        mailer.send(schedule.buildMail());
     }
 }

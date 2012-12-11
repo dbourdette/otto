@@ -42,7 +42,6 @@ import com.github.dbourdette.otto.source.config.DefaultGraphParameters;
 import com.github.dbourdette.otto.source.config.TransformConfig;
 import com.github.dbourdette.otto.source.reports.ReportConfig;
 import com.github.dbourdette.otto.source.reports.ReportConfigs;
-import com.github.dbourdette.otto.source.reports.ReportConfigs;
 import com.github.dbourdette.otto.source.schedule.MailSchedule;
 import com.github.dbourdette.otto.source.schedule.SourceScheduleExecutor;
 import com.github.dbourdette.otto.source.schedule.SourceSchedules;
@@ -67,6 +66,10 @@ public class SourcesController {
     @Inject
     private SourceScheduleExecutor scheduleExecutor;
 
+    @Inject
+    private SourceSchedules sourceSchedules;
+
+
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(ObjectId.class, new ObjectIdEditor());
@@ -78,7 +81,7 @@ public class SourcesController {
 
         model.addAttribute("source", source);
         model.addAttribute("reports", ReportConfigs.forSource(source).getReportConfigs());
-        model.addAttribute("schedules", SourceSchedules.forSource(source).getSchedules());
+        model.addAttribute("schedules", sourceSchedules.findForSource(source));
         model.addAttribute("indexes", source.getIndexes());
 
         return "sources/source";
@@ -299,6 +302,16 @@ public class SourcesController {
 
     @RequestMapping(value = "/sources/{name}/schedule", method = RequestMethod.POST)
     public String schedule(@PathVariable String name, @Valid @ModelAttribute("form") MailSchedule form, BindingResult result, Model model) {
+        if (!result.hasErrors()) {
+            if (StringUtils.isEmpty(form.getSourceName())) {
+                result.rejectValue("source", "value.notNull", "Can't be null");
+            }
+
+            if (StringUtils.isEmpty(form.getReport())) {
+                result.rejectValue("report", "value.notNull", "Can't be null");
+            }
+        }
+
         if (result.hasErrors()) {
             model.addAttribute("reports", ReportConfigs.forSource(Source.findByName(name)).getReportConfigs());
 
@@ -306,7 +319,8 @@ public class SourcesController {
         }
 
         form.setSourceName(name);
-        form.save();
+
+        sourceSchedules.save(form);
 
         return "redirect:/sources/{name}/configuration";
     }
@@ -314,14 +328,14 @@ public class SourcesController {
     @RequestMapping("/sources/{name}/schedule/{id}")
     public String schedule(@PathVariable String name, @PathVariable String id, Model model) {
         model.addAttribute("reports", ReportConfigs.forSource(Source.findByName(name)).getReportConfigs());
-        model.addAttribute("form", SourceSchedules.forSource(Source.findByName(name)).getSchedule(id));
+        model.addAttribute("form", sourceSchedules.findById(id));
 
         return "sources/schedule/edit";
     }
 
     @RequestMapping("/sources/{name}/schedule/{id}/delete")
     public String deleteSchedule(@PathVariable String name, @PathVariable String id) {
-        SourceSchedules.forSource(Source.findByName(name)).getSchedule(id).delete();
+        sourceSchedules.save(sourceSchedules.findById(id));
 
         return "redirect:/sources/{name}/configuration";
     }
@@ -329,11 +343,11 @@ public class SourcesController {
     @RequestMapping("/sources/{name}/schedule/{id}/send")
     public String sendSchedule(@PathVariable String name, @PathVariable String id) throws MessagingException, UnsupportedEncodingException {
         Source source = Source.findByName(name);
-        MailSchedule schedule = SourceSchedules.forSource(source).getSchedule(id);
+        MailSchedule schedule = sourceSchedules.findById(id);
 
-        scheduleExecutor.execute(source, schedule);
+        scheduleExecutor.execute(schedule);
 
-        flashScope.message(scheduleExecutor.executionMessage(source, schedule));
+        flashScope.message("Schedule " + schedule.getTitle() + " for source " + source.getName() + " has been executed (and mail sent)");
 
         return "redirect:/sources/{name}/configuration";
     }

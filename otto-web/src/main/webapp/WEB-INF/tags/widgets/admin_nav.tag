@@ -38,4 +38,7 @@
 
     <c:if test="${navItem eq 'formats'}">- report formats</c:if>
     <c:if test="${not (navItem eq 'formats')}">- <a href="/admin/formats">report formats</a></c:if>
+
+    <c:if test="${navItem eq 'schedules'}">- global schedules</c:if>
+    <c:if test="${not (navItem eq 'schedules')}">- <a href="/admin/schedules">global schedules</a></c:if>
 </div>

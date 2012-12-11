@@ -2,31 +2,40 @@ package com.github.dbourdette.otto.source.schedule;
 
 import java.util.List;
 
-import org.bson.types.ObjectId;
+import javax.inject.Inject;
 
-import com.github.dbourdette.otto.Registry;
+import org.bson.types.ObjectId;
+import org.springframework.stereotype.Service;
+
 import com.github.dbourdette.otto.source.Source;
+import com.google.code.morphia.Datastore;
 
 /**
  * @author damien bourdette
  * @version \$Revision$
  */
+@Service
 public class SourceSchedules {
-    private String sourceName;
-
-    public static SourceSchedules forSource(Source source) {
-        SourceSchedules schedules = new SourceSchedules();
-
-        schedules.sourceName = source.getName() ;
-
-        return schedules;
+    @Inject
+    private Datastore datastore;
+    
+    public MailSchedule findById(String id) {
+        return datastore.get(MailSchedule.class, new ObjectId(id));
     }
 
-    public MailSchedule getSchedule(String id) {
-        return Registry.datastore.get(MailSchedule.class, new ObjectId(id));
+    public List<MailSchedule> findForSource(Source source) {
+        return datastore.find(MailSchedule.class).filter("sourceName", source.getName()).order("title").asList();
     }
 
-    public List<MailSchedule> getSchedules() {
-        return Registry.datastore.find(MailSchedule.class).filter("sourceName", sourceName).order("title").asList();
+    public List<MailSchedule> findForAllSources() {
+        return datastore.find(MailSchedule.class).filter("sourceName", Source.ALL_SOURCES).order("title").asList();
+    }
+
+    public void save(MailSchedule mailSchedule) {
+        datastore.save(mailSchedule);
+    }
+
+    public void delete(MailSchedule mailSchedule) {
+        datastore.delete(mailSchedule);
     }
 }

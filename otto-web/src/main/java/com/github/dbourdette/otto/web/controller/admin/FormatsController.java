@@ -3,6 +3,7 @@ package com.github.dbourdette.otto.web.controller.admin;
 import javax.inject.Inject;
 import javax.validation.Valid;
 
+import org.apache.commons.lang.StringUtils;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.github.dbourdette.otto.source.Source;
 import com.github.dbourdette.otto.source.reports.ReportFormat;
 import com.github.dbourdette.otto.source.reports.ReportFormats;
 import com.github.dbourdette.otto.web.editor.ObjectIdEditor;
@@ -47,7 +49,7 @@ public class FormatsController {
 
     @RequestMapping("/form")
     public String form(@RequestParam(required = false) String id, Model model) {
-        if (id == null) {
+        if (StringUtils.isEmpty(id)) {
             model.addAttribute("form", new ReportFormat());
         } else {
             model.addAttribute("form", reportFormats.findById(id));
@@ -62,7 +64,7 @@ public class FormatsController {
             return "admin/formats/form";
         }
 
-        form.setSourceName(ReportFormats.ALL_SOURCES);
+        form.setSourceName(Source.ALL_SOURCES);
 
         reportFormats.save(form);
 
