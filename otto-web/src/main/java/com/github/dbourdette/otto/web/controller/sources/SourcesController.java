@@ -303,12 +303,12 @@ public class SourcesController {
     @RequestMapping(value = "/sources/{name}/schedule", method = RequestMethod.POST)
     public String schedule(@PathVariable String name, @Valid @ModelAttribute("form") MailSchedule form, BindingResult result, Model model) {
         if (!result.hasErrors()) {
-            if (StringUtils.isEmpty(form.getSourceName())) {
-                result.rejectValue("source", "value.notNull", "Can't be null");
-            }
-
             if (StringUtils.isEmpty(form.getReport())) {
                 result.rejectValue("report", "value.notNull", "Can't be null");
+            }
+
+            if (form.getPeriod() == null) {
+                result.rejectValue("period", "value.notNull", "Can't be null");
             }
         }
 
@@ -335,7 +335,7 @@ public class SourcesController {
 
     @RequestMapping("/sources/{name}/schedule/{id}/delete")
     public String deleteSchedule(@PathVariable String name, @PathVariable String id) {
-        sourceSchedules.save(sourceSchedules.findById(id));
+        sourceSchedules.delete(sourceSchedules.findById(id));
 
         return "redirect:/sources/{name}/configuration";
     }
