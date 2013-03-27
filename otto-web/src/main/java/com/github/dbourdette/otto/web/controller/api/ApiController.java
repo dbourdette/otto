@@ -26,6 +26,7 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.github.dbourdette.otto.source.IntervalEventsQuery;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -43,7 +44,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.github.dbourdette.otto.security.Security;
 import com.github.dbourdette.otto.security.UnauthorizedException;
-import com.github.dbourdette.otto.source.EventsQuery;
 import com.github.dbourdette.otto.source.Source;
 import com.github.dbourdette.otto.util.Page;
 import com.github.dbourdette.otto.web.service.RemoteEventsFacade;
@@ -102,7 +102,7 @@ public class ApiController {
             throw new BadRequestException("from Date must be before to Date");
         }
 
-        EventsQuery query = new EventsQuery(fromDate, toDate);
+        IntervalEventsQuery query = new IntervalEventsQuery(fromDate, toDate);
         query.readFilters(request, FILTER_QUERY_PREFIX);
         query.setPage(page);
         query.setPageSize(JSONAPI_PAGE_SIZE);

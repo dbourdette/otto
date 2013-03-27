@@ -42,8 +42,6 @@ import com.mongodb.DBObject;
  */
 @Entity(value = MongoCollections.SOURCES, noClassnameStored = true)
 public class Source {
-    private static final int DEFAULT_PAGE_SIZE = 100;
-
     public static final String ALL_SOURCES = "*";
 
     @Id
@@ -168,17 +166,9 @@ public class Source {
     }
 
     public Iterator<DBObject> findEvents(Interval interval) {
-        EventsQuery query = new EventsQuery(interval);
+        IntervalEventsQuery query = new IntervalEventsQuery(interval);
 
         return query.createCursor(getEventsDBCollection()).iterator();
-    }
-
-    public Page<DBObject> findEvents(Integer page) {
-        EventsQuery query = new EventsQuery();
-        query.setPage(page);
-        query.setPageSize(DEFAULT_PAGE_SIZE);
-
-        return findEvents(query);
     }
 
     public Page<DBObject> findEvents(EventsQuery query) {
@@ -202,7 +192,7 @@ public class Source {
     }
 
     public Frequency findEventsFrequency(Interval interval) {
-        BasicDBObject query = new EventsQuery(interval).createQuery();
+        BasicDBObject query = new IntervalEventsQuery(interval).createQuery();
 
         int count = 0;
 

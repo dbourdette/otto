@@ -4,6 +4,7 @@
 
 <%@ attribute name="path" required="true" %>
 <%@ attribute name="page" required="true" type="com.github.dbourdette.otto.util.Page" %>
+<%@ attribute name="params" required="false" type="java.lang.String" %>
 
 <%--
   ~ Copyright 2011 Damien Bourdette
@@ -25,13 +26,13 @@
     <div class="span4 offset4">
         <ul class="pager">
             <li class="previous" style="${page.index > 1 ? 'visibility:visible' : 'visibility:hidden'}">
-                <a href="${path}?page=${page.index - 1}">&larr; prev</a>
+                <a href="${path}?page=${page.index - 1}&amp;${params}">&larr; prev</a>
             </li>
             <li class="next">
-                <a href="${path}?page=${page.index + 1}">next &rarr;</a>
+                <a href="${path}?page=${page.index + 1}&amp;${params}">next &rarr;</a>
             </li>
             <li>
-                <form action="${path}" method="get" style="margin: 0">
+                <form action="${path}?${params}" method="get" style="margin: 0">
                     <input type="text" name="page" class="input-mini" value="${page.index}" /> / ${page.pageCount}
                 </form>
             </li>

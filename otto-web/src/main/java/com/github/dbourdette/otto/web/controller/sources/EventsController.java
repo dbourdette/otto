@@ -16,17 +16,17 @@
 
 package com.github.dbourdette.otto.web.controller.sources;
 
-import javax.inject.Inject;
-
+import com.github.dbourdette.otto.source.RawEventsQuery;
+import com.github.dbourdette.otto.source.Source;
+import com.github.dbourdette.otto.web.util.FlashScope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import com.github.dbourdette.otto.source.Source;
-import com.github.dbourdette.otto.web.util.FlashScope;
+import javax.inject.Inject;
 
 /**
  * @author damien bourdette
@@ -40,17 +40,17 @@ public class EventsController {
     private FlashScope flashScope;
 
     @RequestMapping(method = RequestMethod.GET, headers = "Accept=text/html")
-    public String events(@PathVariable String name, @RequestParam(required = false) Integer page, Model model) {
+    public String events(@PathVariable String name, @ModelAttribute("query") RawEventsQuery query, Model model) {
         Source source = Source.findByName(name);
 
         model.addAttribute("source", source);
-        model.addAttribute("events", source.findEvents(page));
+        model.addAttribute("events", source.findEvents(query));
 
         return "sources/events";
     }
 
     @RequestMapping("/delete")
-    public String clearForm(@PathVariable String name, Model model) {
+    public String clearForm(@PathVariable String name) {
         Source source = Source.findByName(name);
 
         if (source.isCapped()) {

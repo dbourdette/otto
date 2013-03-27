@@ -29,6 +29,12 @@
 <div class="container">
     <widget:nav />
 
+    <form class="form-inline" action="/sources/${name}/events" method="get">
+        <input type="text" name="query" class="span8" placeholder="Query" value="${fn:escapeXml(query.query)}">
+        <input type="text" name="sort" class="span3" placeholder="Sort" value="${fn:escapeXml(query.sort)}">
+        <button type="submit" class="btn">Search</button>
+    </form>
+
     <div class="well">
         <h3 class="span4"><strong>${events.totalCount} events</strong></h3>
         <div class="span1 offset6">
@@ -39,7 +45,7 @@
         </div>
     </div>
 
-    <widget:pagination path="/sources/${name}/events" page="${events}"/>
+    <widget:pagination path="/sources/${name}/events" page="${events}" params="${query.queryParams}"/>
 
     <table class="table table-bordered table-condensed">
         <c:forEach var="event" items="${events.items}">
@@ -49,7 +55,7 @@
         </c:forEach>
     </table>
 
-    <widget:pagination path="/sources/${name}/events" page="${events}"/>
+    <widget:pagination path="/sources/${name}/events" page="${events}" params="${query.queryParams}"/>
 </div>
 
 <layout:footer/>

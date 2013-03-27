@@ -34,7 +34,7 @@
     <br/>
 
     <form:form action="/sources/${name}/events" commandName="form" method="delete">
-        <input type="submit" value="delete events" />
+        <input type="submit" value="delete events" class="btn btn-danger" />
     </form:form>
 </div>
 
