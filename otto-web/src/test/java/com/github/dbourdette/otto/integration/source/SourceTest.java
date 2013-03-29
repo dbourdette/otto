@@ -10,9 +10,7 @@ import com.github.dbourdette.otto.Registry;
 import com.github.dbourdette.otto.source.Source;
 import com.github.dbourdette.otto.source.reports.ReportConfig;
 import com.github.dbourdette.otto.source.reports.ReportConfigs;
-import com.github.dbourdette.otto.source.reports.ReportConfigs;
 import com.github.dbourdette.otto.web.exception.SourceAlreadyExists;
-import com.github.dbourdette.otto.web.exception.SourceNotFound;
 import com.google.code.morphia.Morphia;
 import com.mongodb.DB;
 import com.mongodb.Mongo;
@@ -38,12 +36,12 @@ public class SourceTest {
         Registry.mongoDb = db;
         Registry.datastore = morphia.createDatastore(mongo, "otto-integration");
     }
-    
+
     @Test
     public void create() {
-        Source source = Source.create("test");
+        Source.create("test");
 
-        assertThat(source.getName()).isEqualTo("test");
+        assertThat(Registry.datastore.find(Source.class).countAll()).isEqualTo(1);
     }
 
     @Test
@@ -52,10 +50,10 @@ public class SourceTest {
 
         try {
             Source.create("test");
-            
+
             fail("Source test already exists");
         } catch (SourceAlreadyExists e) {
-            
+
         }
     }
 
@@ -69,21 +67,8 @@ public class SourceTest {
     @Test
     public void findByName() {
         Source.create("test");
-        
-        Source source = Source.findByName("test");
 
-        assertThat(source.getName()).isEqualTo("test");
-    }
-
-    @Test
-    public void findByNameNotFound() {
-        try {
-            Source.findByName("test");
-
-            fail("Source test does not exist");
-        } catch (SourceNotFound e) {
-
-        }
+        assertThat(Source.findByName("test").getName()).isEqualTo("test");
     }
 
     @Test
@@ -98,11 +83,22 @@ public class SourceTest {
 
     @Test
     public void delete() {
-        Source source = Source.create("test");
+        Source.create("test");
 
-        source.delete();
+        Source.findByName("test").delete();
 
         assertThat(Source.exists("test")).isFalse();
+    }
+
+    @Test
+    public void updateDisplayName() {
+        Source source =  Source.create("test");
+        source.setDisplayGroup("test group");
+        source.setDisplayName("test name");
+
+        source.save();
+
+        assertThat(Registry.datastore.find(Source.class).get().getDisplayName()).isEqualTo("test name");
     }
 
     @Test

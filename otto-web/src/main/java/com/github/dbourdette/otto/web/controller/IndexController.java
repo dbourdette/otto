@@ -25,6 +25,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.github.dbourdette.otto.source.Source;
 import com.github.dbourdette.otto.web.util.SourceGroups;
 
 /**
@@ -48,9 +49,9 @@ public class IndexController {
     @RequestMapping("/state")
     public void state(HttpServletResponse response) throws IOException {
         Writer writer = response.getWriter();
-                 throw new IllegalArgumentException("haaaa daazdklsqjdl sq");
-        /*for (Source source : Source.findAll()) {
+
+        for (Source source : Source.findAll()) {
             writer.write(source.toString());
-        } */
+        }
     }
 }
