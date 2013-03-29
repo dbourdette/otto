@@ -32,7 +32,7 @@ import com.github.dbourdette.otto.web.util.FlashScope;
  * @author damien bourdette
  */
 @ControllerAdvice
-public class ControllersAdvice {
+public class ExceptionHandlers {
     @Inject
     private FlashScope flashScope;
 
