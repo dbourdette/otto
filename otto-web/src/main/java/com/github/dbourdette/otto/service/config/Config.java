@@ -1,15 +1,17 @@
 package com.github.dbourdette.otto.service.config;
 
-import com.google.code.morphia.Datastore;
-import com.google.code.morphia.query.Query;
+import javax.inject.Inject;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
-import javax.inject.Inject;
+import com.google.code.morphia.Datastore;
+import com.google.code.morphia.query.Query;
 
 /**
+ * Global configuration
+ *
  * @author damien bourdette
- * @version \$Revision$
  */
 @Service
 public class Config {

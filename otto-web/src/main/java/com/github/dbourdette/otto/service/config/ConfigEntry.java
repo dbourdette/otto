@@ -4,8 +4,9 @@ import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Property;
 
 /**
+ * Global configuration entry
+ *
  * @author damien bourdette
- * @version \$Revision$
  */
 @Entity("otto.config.entries")
 public class ConfigEntry {

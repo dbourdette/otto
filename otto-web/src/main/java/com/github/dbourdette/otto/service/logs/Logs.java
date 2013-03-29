@@ -16,6 +16,17 @@
 
 package com.github.dbourdette.otto.service.logs;
 
+import java.util.Date;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+
 import com.github.dbourdette.otto.service.user.User;
 import com.github.dbourdette.otto.util.Page;
 import com.github.dbourdette.otto.web.util.MongoCollections;
@@ -23,19 +34,11 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
-
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import java.util.Date;
 
 /**
+ * Service for logs
+ *
  * @author damien bourdette
- * @version \$Revision$
  */
 @Service
 public class Logs {
