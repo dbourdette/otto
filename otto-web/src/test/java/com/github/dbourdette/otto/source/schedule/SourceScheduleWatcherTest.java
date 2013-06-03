@@ -16,11 +16,11 @@
 
 package com.github.dbourdette.otto.source.schedule;
 
+import java.text.ParseException;
+
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.junit.Test;
-
-import java.text.ParseException;
 
 import static org.fest.assertions.Assertions.assertThat;
 
@@ -45,6 +45,14 @@ public class SourceScheduleWatcherTest {
     }
 
     @Test
+    public void isEligibleWithRange() throws ParseException {
+        assertThat(watcher.isEligible("0 9,12,15,18,21 * * *", twoOClock())).isFalse();
+        assertThat(watcher.isEligible("0 9,12,15,18,21 * * *", nineOClock())).isTrue();
+        assertThat(watcher.isEligible("0 9,12,15,18,21 * * *", threePM())).isTrue();
+        assertThat(watcher.isEligible("0 9,12,15,18,21 * * *", anyDateWithMinutesAt(10))).isFalse();
+    }
+
+    @Test
     public void isEligibleNicknames() {
         assertThat(watcher.isEligible("@monthly", startOfMonth())).isTrue();
     }
@@ -64,5 +72,17 @@ public class SourceScheduleWatcherTest {
 
     private DateTime startOfMonth() {
         return new DateMidnight().withDayOfMonth(1).toDateTime();
+    }
+
+    private DateTime twoOClock() {
+        return new DateTime().withTime(2, 0, 0, 0);
+    }
+
+    private DateTime nineOClock() {
+        return new DateTime().withTime(9, 0, 0, 0);
+    }
+
+    private DateTime threePM() {
+        return new DateTime().withTime(15, 0, 0, 0);
     }
 }
