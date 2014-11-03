@@ -27,7 +27,7 @@
     </parent>
 
     <artifactId>otto-web</artifactId>
-    <version>0.2.0.b59</version>
+    <version>0.2.0.b60</version>
     <packaging>war</packaging>
     <name>otto webapp</name>
     <inceptionYear>2011</inceptionYear>
