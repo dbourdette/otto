@@ -5,7 +5,6 @@ import org.joda.time.Interval;
 /**
  * A cell (row and column) in {@link SimpleDataTable}
  *
- * @author damien bourdette
  */
 public class SimpleDataTableCell {
     private final SimpleDataTableRow row;

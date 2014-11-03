@@ -22,10 +22,6 @@ import org.joda.time.Interval;
 
 import com.mongodb.BasicDBObject;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 public class IntervalUtils {
 	public static Interval yesterday() {
 		return new Interval(new DateMidnight().minusDays(1), new DateMidnight());

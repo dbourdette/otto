@@ -9,9 +9,6 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import java.util.List;
 
-/**
- * @author damien bourdette
- */
 @Service("users")
 public class Users {
     @Inject

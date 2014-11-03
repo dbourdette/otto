@@ -18,10 +18,6 @@ package com.github.dbourdette.otto.web.form;
 
 import javax.validation.constraints.Min;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 public class BatchForm {
 	private String values;
 	

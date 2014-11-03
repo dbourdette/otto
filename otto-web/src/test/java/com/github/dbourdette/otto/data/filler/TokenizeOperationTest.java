@@ -2,10 +2,6 @@ package com.github.dbourdette.otto.data.filler;
 
 import org.junit.Test;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 public class TokenizeOperationTest {
 
     private TokenizeOperation operation = new TokenizeOperation();

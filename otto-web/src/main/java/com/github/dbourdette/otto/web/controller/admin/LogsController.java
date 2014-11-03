@@ -25,10 +25,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.github.dbourdette.otto.service.logs.Logs;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 @Controller
 public class LogsController {
 	@Inject

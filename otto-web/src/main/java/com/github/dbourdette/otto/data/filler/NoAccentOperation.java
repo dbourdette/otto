@@ -5,10 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 public class NoAccentOperation implements Operation {
     private Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
 

@@ -8,10 +8,6 @@ import com.github.dbourdette.otto.Registry;
 import com.github.dbourdette.otto.source.Source;
 import com.google.code.morphia.query.Query;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 public class ReportConfigs {
     private String sourceName;
 

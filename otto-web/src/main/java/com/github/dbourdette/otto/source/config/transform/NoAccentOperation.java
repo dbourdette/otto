@@ -19,9 +19,6 @@ package com.github.dbourdette.otto.source.config.transform;
 import java.text.Normalizer;
 import java.util.regex.Pattern;
 
-/**
- * @author damien bourdette
- */
 public class NoAccentOperation implements TransformOperation {
     private Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
 

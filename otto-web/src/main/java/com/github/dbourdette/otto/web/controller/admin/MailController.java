@@ -35,7 +35,6 @@ import com.github.dbourdette.otto.web.util.FlashScope;
 /**
  * Edition of mail configuration
  *
- * @author damien bourdette
  */
 @Controller
 public class MailController {

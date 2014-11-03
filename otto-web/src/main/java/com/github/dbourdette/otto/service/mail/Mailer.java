@@ -33,9 +33,6 @@ import org.springframework.stereotype.Service;
 import com.github.dbourdette.otto.SpringConfig;
 import com.google.code.morphia.Datastore;
 
-/**
- * @author damien bourdette
- */
 @Service
 public class Mailer {
     @Inject

@@ -12,9 +12,6 @@ import com.github.dbourdette.otto.source.Source;
 
 /**
  * Used for jsp layout by group
- *
- * @author damien bourdette
- * @version \$Revision$
  */
 public class SourceGroups {
     Map<String, SourceGroup> groups = new HashMap<String, SourceGroup>();

@@ -33,10 +33,6 @@ import com.github.dbourdette.otto.source.config.DefaultGraphParameters;
 import com.github.dbourdette.otto.source.reports.ReportConfig;
 import com.github.dbourdette.otto.web.editor.DatePropertyEditor;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 public class ReportForm {
     private DataTablePeriod period;
 

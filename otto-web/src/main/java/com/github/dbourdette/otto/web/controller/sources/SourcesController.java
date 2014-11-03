@@ -53,10 +53,6 @@ import com.github.dbourdette.otto.web.form.TransformForm;
 import com.github.dbourdette.otto.web.util.FlashScope;
 import com.github.dbourdette.otto.web.util.IntervalUtils;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 @Controller
 public class SourcesController {
 

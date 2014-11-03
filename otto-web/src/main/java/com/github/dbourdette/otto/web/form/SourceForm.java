@@ -22,10 +22,6 @@ import org.apache.commons.lang.StringUtils;
 
 import com.github.dbourdette.otto.web.util.SizeInBytes;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 public class SourceForm {
 
     @Pattern(regexp = "^[A-Za-z0-9 \\-_]+$")

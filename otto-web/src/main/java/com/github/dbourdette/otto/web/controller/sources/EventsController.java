@@ -28,10 +28,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.inject.Inject;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 @Controller
 @RequestMapping("/sources/{name}/events")
 public class EventsController {

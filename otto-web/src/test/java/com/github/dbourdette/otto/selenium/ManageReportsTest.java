@@ -3,10 +3,6 @@ package com.github.dbourdette.otto.selenium;
 import org.junit.Before;
 import org.junit.Test;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 public class ManageReportsTest extends OttoFluentTest {
     @Before
     public void init() {

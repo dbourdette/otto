@@ -22,9 +22,6 @@ import java.util.List;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 
-/**
- * @author damien bourdette
- */
 public class TokenizeOperation implements Operation {
     private String separator = " ";
 

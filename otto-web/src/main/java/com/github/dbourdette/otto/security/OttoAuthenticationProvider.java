@@ -15,7 +15,6 @@ import javax.inject.Inject;
  * Authenticate and load authorities from mongodb.
  * Only try to authenticate user if password is stored in mongodb.
  *
- * @author damien bourdette
  */
 public class OttoAuthenticationProvider implements AuthenticationProvider {
 

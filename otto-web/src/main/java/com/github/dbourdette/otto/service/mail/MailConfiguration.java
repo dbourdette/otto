@@ -20,9 +20,6 @@ import com.github.dbourdette.otto.web.util.MongoCollections;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Property;
 
-/**
- * @author damien bourdette
- */
 @Entity(MongoCollections.MAIL_CONFIG)
 public class MailConfiguration {
     @Property

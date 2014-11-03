@@ -4,10 +4,6 @@ import fr.javafreelance.fluentlenium.core.domain.FluentWebElement;
 import static fr.javafreelance.fluentlenium.core.filter.FilterConstructor.withText;
 import static org.fest.assertions.Assertions.assertThat;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 public class UsersPage extends PageSupport {
     @Override
     public String getUrl() {

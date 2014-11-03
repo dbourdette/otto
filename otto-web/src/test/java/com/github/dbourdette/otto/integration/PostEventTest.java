@@ -14,9 +14,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-/**
- * @author damien bourdette
- */
 public class PostEventTest {
 
     //private String url = "http://otto.dbourdette.cloudbees.net/sources/test/events";

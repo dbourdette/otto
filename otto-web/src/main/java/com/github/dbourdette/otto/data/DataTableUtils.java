@@ -19,10 +19,6 @@ package com.github.dbourdette.otto.data;
 import org.joda.time.Duration;
 import org.joda.time.Interval;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 public class DataTableUtils {
 
     private static final Duration ONE_DAY = Duration.standardDays(1);

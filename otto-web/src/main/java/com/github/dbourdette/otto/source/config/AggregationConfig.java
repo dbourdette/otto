@@ -23,10 +23,6 @@ import org.apache.commons.lang.StringUtils;
 import com.github.dbourdette.otto.source.TimeFrame;
 import com.google.code.morphia.annotations.Property;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 public class AggregationConfig {
     @Property
     private TimeFrame timeFrame = TimeFrame.MILLISECOND;

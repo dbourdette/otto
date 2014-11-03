@@ -19,10 +19,6 @@ package com.github.dbourdette.otto.source;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 public enum TimeFrame {
     MILLISECOND, THIRTY_SECONDS, ONE_MINUTE, FIVE_MINUTES, THIRTY_MINUTES, ONE_HOUR, TWELVE_HOURS, ONE_DAY;
 

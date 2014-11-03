@@ -21,9 +21,6 @@ import com.google.code.morphia.annotations.Property;
 
 /**
  * Default values for graph form for a given source.
- *
- * @author damien bourdette
- * @version \$Revision$
  */
 public class DefaultGraphParameters {
     @Property

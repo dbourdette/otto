@@ -9,10 +9,6 @@ import com.github.dbourdette.otto.selenium.pages.UsersPage;
 
 import fr.javafreelance.fluentlenium.core.annotation.Page;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 public class ManageUsersTest extends OttoFluentTest {
     private static final String TEST_USER = "selenium user";
 

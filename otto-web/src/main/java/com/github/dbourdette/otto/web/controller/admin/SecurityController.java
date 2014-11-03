@@ -19,9 +19,6 @@ import com.github.dbourdette.otto.web.util.FlashScope;
 
 import static org.apache.commons.lang.exception.ExceptionUtils.getFullStackTrace;
 
-/**
- * @author damien bourdette
- */
 @Controller
 public class SecurityController {
     @Inject

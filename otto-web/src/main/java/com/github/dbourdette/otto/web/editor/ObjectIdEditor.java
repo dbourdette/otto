@@ -4,9 +4,6 @@ import java.beans.PropertyEditorSupport;
 
 import org.bson.types.ObjectId;
 
-/**
- * @author damien bourdette
- */
 public class ObjectIdEditor extends PropertyEditorSupport {
     @Override
 	public void setAsText(String text) throws IllegalArgumentException {

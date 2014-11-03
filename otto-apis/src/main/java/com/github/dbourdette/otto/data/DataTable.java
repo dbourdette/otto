@@ -7,7 +7,6 @@ import org.joda.time.Interval;
 /**
  * Table containing data read from database and transformed using operations.
  *
- * @author damien bourdette
  */
 public interface DataTable {
     public List<String> getColumns();

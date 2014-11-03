@@ -16,10 +16,6 @@
 
 package com.github.dbourdette.otto.source;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 public class EventValue {
 	private Object value;
 	

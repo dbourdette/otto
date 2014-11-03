@@ -18,9 +18,6 @@ package com.github.dbourdette.otto.service.mail;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
-/**
- * @author damien bourdette
- */
 public class Mail {
     @NotEmpty
     public String to;

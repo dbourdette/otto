@@ -5,10 +5,6 @@ import fr.javafreelance.fluentlenium.core.domain.FluentWebElement;
 import static fr.javafreelance.fluentlenium.core.filter.FilterConstructor.withText;
 import fr.javafreelance.fluentlenium.core.test.FluentTest;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 public class OttoFluentTest extends FluentTest {
     public static final String SOURCE_NAME = "selenium source";
 

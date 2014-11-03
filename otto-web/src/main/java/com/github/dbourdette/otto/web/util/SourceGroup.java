@@ -10,9 +10,6 @@ import com.github.dbourdette.otto.source.Source;
 
 /**
  * Used for jsp layout by group
- *
- * @author damien bourdette
- * @version \$Revision$
  */
 public class SourceGroup {
     private String name;

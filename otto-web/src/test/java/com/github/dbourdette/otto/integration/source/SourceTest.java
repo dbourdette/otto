@@ -18,10 +18,6 @@ import com.mongodb.Mongo;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.fail;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 public class SourceTest {
     @Before
     public void clean() throws UnknownHostException, NoSuchFieldException {

@@ -19,9 +19,6 @@ package com.github.dbourdette.otto.source.config.transform;
 import org.junit.Assert;
 import org.junit.Test;
 
-/**
- * @author damien bourdette
- */
 public class LowerCaseOperationTest {
     private LowerCaseOperation operation = new LowerCaseOperation();
 

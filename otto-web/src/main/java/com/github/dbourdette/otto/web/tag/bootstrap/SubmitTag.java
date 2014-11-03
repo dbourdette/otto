@@ -8,10 +8,6 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
 
 import org.apache.commons.lang.StringUtils;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 public class SubmitTag extends SimpleTagSupport {
     private String label = "Save";
 

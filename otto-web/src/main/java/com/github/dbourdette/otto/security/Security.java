@@ -18,7 +18,6 @@ import static org.apache.commons.lang.StringUtils.isNotEmpty;
  * Utility class to check authorizations.
  * Can be used from jsp files.
  *
- * @author damien bourdette
  */
 @Component
 public class Security {

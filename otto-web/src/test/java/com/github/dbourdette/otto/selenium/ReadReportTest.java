@@ -6,10 +6,6 @@ import org.junit.Test;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 public class ReadReportTest extends OttoFluentTest {
     @Before
     public void init() {

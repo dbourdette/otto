@@ -21,10 +21,6 @@ import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 public class TimeFrameTest {
     @Test
     public void roundDateMillisecond() {

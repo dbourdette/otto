@@ -4,10 +4,6 @@ import org.junit.Test;
 
 import junit.framework.Assert;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 public class PageUtilsTest {
     @Test
     public void getPageCount() throws Exception {

@@ -18,9 +18,6 @@ package com.github.dbourdette.otto.web.form;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
-/**
- * @author damien bourdette
- */
 public class IndexForm {
     @NotEmpty
     private String key;

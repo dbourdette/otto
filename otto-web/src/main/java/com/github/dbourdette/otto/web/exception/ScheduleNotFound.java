@@ -16,9 +16,6 @@
 
 package com.github.dbourdette.otto.web.exception;
 
-/**
- * @author damien bourdette
- */
 public class ScheduleNotFound extends RuntimeException {
 
     private static final long serialVersionUID = 1L;

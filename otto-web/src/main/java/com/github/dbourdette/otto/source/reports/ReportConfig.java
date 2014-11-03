@@ -17,10 +17,6 @@ import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Property;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 @Entity(value = MongoCollections.SOURCES_REPORTS, noClassnameStored = true)
 public class ReportConfig {
     @Id

@@ -19,7 +19,6 @@ package com.github.dbourdette.otto.web.util;
 /**
  * A key value pair
  *
- * @author damien bourdette
  */
 public class Pair {
     private String name;

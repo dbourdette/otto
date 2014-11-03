@@ -4,10 +4,6 @@ import fr.javafreelance.fluentlenium.core.FluentPage;
 import static fr.javafreelance.fluentlenium.core.filter.FilterConstructor.withText;
 import static org.fest.assertions.Assertions.assertThat;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 public class UserFormPage extends FluentPage {
     @Override
     public void isAt() {

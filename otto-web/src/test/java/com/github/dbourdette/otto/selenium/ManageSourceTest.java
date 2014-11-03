@@ -17,10 +17,6 @@ import com.github.dbourdette.otto.source.config.AggregationConfig;
 import fr.javafreelance.fluentlenium.core.annotation.Page;
 import static org.fest.assertions.Assertions.assertThat;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 public class ManageSourceTest extends OttoFluentTest {
     @Page
     private HomePage homePage;

@@ -11,10 +11,6 @@ import org.joda.time.DateTime;
 import com.github.dbourdette.otto.data.SimpleDataTable;
 import com.mongodb.DBObject;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 public class OperationChain {
     public static final String DEFAULT_COLUMN = "default";
 

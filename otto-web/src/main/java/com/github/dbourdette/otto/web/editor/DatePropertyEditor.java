@@ -21,9 +21,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-/**
- * @author damien bourdette
- */
 public class DatePropertyEditor extends PropertyEditorSupport {
     public static final String DATE_FORMAT = "MM/dd/yyyy";
 

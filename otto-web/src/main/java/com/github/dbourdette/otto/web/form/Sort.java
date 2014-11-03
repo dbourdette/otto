@@ -16,9 +16,6 @@
 
 package com.github.dbourdette.otto.web.form;
 
-/**
- * @author damien bourdette
- */
 public enum Sort {
     ALPHABETICALLY, BY_SUM;
 }

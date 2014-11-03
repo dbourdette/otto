@@ -28,9 +28,6 @@ import com.github.dbourdette.otto.web.exception.SourceAlreadyExists;
 import com.github.dbourdette.otto.web.exception.SourceNotFound;
 import com.github.dbourdette.otto.web.util.FlashScope;
 
-/**
- * @author damien bourdette
- */
 @ControllerAdvice
 public class ExceptionHandlers {
     @Inject

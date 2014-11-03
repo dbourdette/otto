@@ -16,10 +16,6 @@
 
 package com.github.dbourdette.otto.web.form;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 public enum BatchValuesType {
 	KEY_VALUES, JSON
 }

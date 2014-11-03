@@ -5,10 +5,6 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 public class LowerCaseFillerTest {
     private LowerCaseOperation filler = new LowerCaseOperation();
 

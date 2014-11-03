@@ -22,10 +22,6 @@ import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 public class RandomDateUtils {
 	public static DateTime today() {
 		return in(new Interval(new DateMidnight(), new DateMidnight().plusDays(1)));

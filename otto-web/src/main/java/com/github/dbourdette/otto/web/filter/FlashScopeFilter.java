@@ -13,10 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.github.dbourdette.otto.web.util.FlashScope;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 public class FlashScopeFilter implements Filter {
 
     private static String[] STATIC_FILES = {".ico", ".txt", ".css"};

@@ -32,9 +32,6 @@ import com.google.code.morphia.annotations.Embedded;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
-/**
- * @author damien bourdette
- */
 public class TransformConfig {
     public static final Map<String, TransformOperation> REGISTRY = new HashMap<String, TransformOperation>();
 

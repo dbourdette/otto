@@ -7,10 +7,6 @@ import java.util.List;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 public class Page<T> {
     private List<T> items = new ArrayList<T>();
 

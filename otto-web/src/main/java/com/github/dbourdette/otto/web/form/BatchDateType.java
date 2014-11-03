@@ -19,10 +19,6 @@ package com.github.dbourdette.otto.web.form;
 import org.joda.time.DateTime;
 import com.github.dbourdette.otto.web.util.RandomDateUtils;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 public enum BatchDateType {
 	CURRENT, RANDOM_TODAY, RANDOM_LAST_7_DAYS;
 	

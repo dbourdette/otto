@@ -21,10 +21,6 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import com.github.dbourdette.otto.web.util.SizeInBytes;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 public class CappingForm {
 
     @NotEmpty

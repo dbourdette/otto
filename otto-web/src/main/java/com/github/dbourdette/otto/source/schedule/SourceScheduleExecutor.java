@@ -19,7 +19,6 @@ package com.github.dbourdette.otto.source.schedule;
 /**
  * Executes schedules.
  *
- * @author damien bourdette
  */
 
 public interface SourceScheduleExecutor {

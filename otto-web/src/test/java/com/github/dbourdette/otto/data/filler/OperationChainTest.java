@@ -9,10 +9,6 @@ import com.github.dbourdette.otto.data.SimpleDataTable;
 import com.github.dbourdette.otto.data.DataTablePeriod;
 import com.mongodb.BasicDBObject;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 public class OperationChainTest {
     private SimpleDataTable table;
 

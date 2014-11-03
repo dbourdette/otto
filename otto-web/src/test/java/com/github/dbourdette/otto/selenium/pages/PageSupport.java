@@ -7,10 +7,6 @@ import fr.javafreelance.fluentlenium.core.domain.FluentWebElement;
 import static fr.javafreelance.fluentlenium.core.filter.FilterConstructor.withText;
 import static org.fest.assertions.Assertions.assertThat;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 public class PageSupport extends FluentPage {
     protected static final String ROOT = "http://localhost:8080";
 

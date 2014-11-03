@@ -18,9 +18,6 @@ package com.github.dbourdette.otto.source.config;
 
 import com.github.dbourdette.otto.source.config.transform.TransformOperation;
 
-/**
- * @author damien bourdette
- */
 public class DummyOperation implements TransformOperation {
     public int callCount;
 

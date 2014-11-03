@@ -51,9 +51,6 @@ import com.mongodb.DBObject;
 
 /**
  * Controller for external apis.
- *
- * @author damien bourdette
- * @version \$Revision$
  */
 @Controller
 public class ApiController {

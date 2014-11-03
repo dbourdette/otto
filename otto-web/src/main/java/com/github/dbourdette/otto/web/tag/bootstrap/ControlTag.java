@@ -12,10 +12,6 @@ import org.springframework.web.servlet.support.RequestContext;
 import org.springframework.web.servlet.tags.NestedPathTag;
 import org.springframework.web.servlet.tags.RequestContextAwareTag;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 public class ControlTag extends BodyTagSupport {
     private String label;
 

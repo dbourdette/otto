@@ -18,9 +18,6 @@ package com.github.dbourdette.otto.source.config.transform;
 
 import java.util.regex.Pattern;
 
-/**
- * @author damien bourdette
- */
 public class NoPunctuationOperation implements TransformOperation {
     private Pattern pattern = Pattern.compile("\\p{Punct}+");
 

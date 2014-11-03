@@ -21,9 +21,6 @@ import org.joda.time.Interval;
 
 /**
  * A row in a {@link SimpleDataTable}
- *
- * @author damien bourdette
- * @version \$Revision$
  */
 public class SimpleDataTableRow implements Comparable<SimpleDataTableRow> {
 

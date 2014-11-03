@@ -19,7 +19,6 @@ import com.github.dbourdette.otto.source.Source;
  * Provides a facade for posting and retrieving events.
  * It is used by controllers when receiving requests from remote client.
  *
- * @author damien bourdette
  */
 @Service
 public class RemoteEventsFacadeImpl implements RemoteEventsFacade {

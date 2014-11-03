@@ -19,9 +19,6 @@ import com.github.dbourdette.otto.service.user.Users;
 import com.github.dbourdette.otto.web.editor.ObjectIdEditor;
 import com.github.dbourdette.otto.web.util.FlashScope;
 
-/**
- * @author damien bourdette
- */
 @Controller
 public class UsersController {
     @Inject

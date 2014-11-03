@@ -32,10 +32,6 @@ import com.github.dbourdette.otto.service.config.Config;
 import com.github.dbourdette.otto.web.form.ConfigForm;
 import com.github.dbourdette.otto.web.util.FlashScope;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 @Controller
 public class ConfigurationController {
     @Inject

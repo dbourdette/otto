@@ -16,10 +16,6 @@
 
 package com.github.dbourdette.otto.web.exception;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 public class FormatNotFound extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;

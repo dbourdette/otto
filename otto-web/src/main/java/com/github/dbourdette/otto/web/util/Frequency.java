@@ -18,10 +18,6 @@ package com.github.dbourdette.otto.web.util;
 
 import org.joda.time.Duration;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 public class Frequency {
 	
 	private int count;

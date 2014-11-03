@@ -24,9 +24,6 @@ import org.junit.Test;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-/**
- * @author damien bourdette
- */
 public class SourceScheduleWatcherTest {
     private SourceScheduleWatcher watcher = new SourceScheduleWatcher();
 

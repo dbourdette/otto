@@ -36,10 +36,6 @@ import com.mongodb.CommandResult;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 @Entity(value = MongoCollections.SOURCES, noClassnameStored = true)
 public class Source {
     public static final String ALL_SOURCES = "*";

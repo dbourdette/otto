@@ -24,10 +24,6 @@ import com.google.code.morphia.annotations.Property;
 import groovy.text.SimpleTemplateEngine;
 import groovy.text.Template;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 @Entity(value = MongoCollections.SOURCES_SCHEDULES, noClassnameStored = true)
 public class MailSchedule {
     @Id

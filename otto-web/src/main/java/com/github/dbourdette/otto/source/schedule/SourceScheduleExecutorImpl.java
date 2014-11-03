@@ -24,9 +24,6 @@ import org.springframework.stereotype.Component;
 import com.github.dbourdette.otto.service.logs.Logs;
 import com.github.dbourdette.otto.service.mail.Mailer;
 
-/**
- * @author damien bourdette
- */
 @Component
 public class SourceScheduleExecutorImpl implements SourceScheduleExecutor {
     @Inject

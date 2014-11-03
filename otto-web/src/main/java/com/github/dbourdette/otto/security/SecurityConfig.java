@@ -8,9 +8,6 @@ import org.bson.types.ObjectId;
 
 import static org.apache.commons.lang.StringUtils.isEmpty;
 
-/**
- * @author damien bourdette
- */
 @Entity("otto.config.security")
 public class SecurityConfig {
     @Id

@@ -10,10 +10,6 @@ import org.springframework.stereotype.Service;
 import com.github.dbourdette.otto.source.Source;
 import com.google.code.morphia.Datastore;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 @Service
 public class SourceSchedules {
     @Inject

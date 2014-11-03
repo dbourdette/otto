@@ -23,9 +23,6 @@ import com.github.dbourdette.otto.source.Event;
 import com.github.dbourdette.otto.source.config.transform.LowerCaseOperation;
 import com.github.dbourdette.otto.source.config.transform.NoAccentOperation;
 
-/**
- * @author damien bourdette
- */
 public class TransformConfigTest {
     private TransformConfig config = new TransformConfig();
 

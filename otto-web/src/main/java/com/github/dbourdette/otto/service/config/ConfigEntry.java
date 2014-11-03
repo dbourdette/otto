@@ -6,7 +6,6 @@ import com.google.code.morphia.annotations.Property;
 /**
  * Global configuration entry
  *
- * @author damien bourdette
  */
 @Entity("otto.config.entries")
 public class ConfigEntry {

@@ -18,10 +18,6 @@ package com.github.dbourdette.otto.web.util;
 
 import org.apache.commons.lang.StringUtils;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 public class SizeInBytes {
     private static final long SCALE = 1024;
 

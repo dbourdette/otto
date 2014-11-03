@@ -9,7 +9,6 @@ import org.joda.time.Interval;
 /**
  * Predefined possible periods for {@link SimpleDataTable}s
  *
- * @author damien bourdette
  */
 public enum DataTablePeriod {
     RECENT(5), TODAY(60), YESTERDAY(60), THIS_WEEK(6 * 60), LAST_WEEK(6 * 60), THIS_MONTH(24 * 60), LAST_MONTH(24 * 60);

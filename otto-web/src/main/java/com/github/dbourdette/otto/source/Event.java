@@ -34,10 +34,6 @@ import com.google.common.base.Strings;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 public class Event {
 
     public static final String DATE_KEY = "date";

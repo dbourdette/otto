@@ -27,10 +27,6 @@ import com.mongodb.DBObject;
 import junit.framework.Assert;
 
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 public class EventTest {
 	
 	@Test

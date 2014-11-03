@@ -48,10 +48,6 @@ import com.mongodb.Mongo;
 import com.mongodb.MongoException;
 import com.mongodb.ServerAddress;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 @Configuration
 @EnableWebMvc
 public class SpringConfig {

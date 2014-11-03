@@ -41,10 +41,6 @@ import com.github.dbourdette.otto.source.reports.ReportFormats;
 import com.github.dbourdette.otto.web.editor.DatePropertyEditor;
 import com.github.dbourdette.otto.web.form.ReportForm;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 @Controller
 public class ReportsController {
     @Inject

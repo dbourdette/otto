@@ -25,10 +25,6 @@ import org.junit.Test;
 
 import junit.framework.Assert;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 public class RandomDateUtilsTest {
 	@Test
 	public void today() {

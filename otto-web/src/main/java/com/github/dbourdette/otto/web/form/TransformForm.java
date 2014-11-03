@@ -18,9 +18,6 @@ package com.github.dbourdette.otto.web.form;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
-/**
- * @author damien bourdette
- */
 public class TransformForm {
     @NotEmpty
     private String parameter;

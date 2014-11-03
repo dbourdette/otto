@@ -38,7 +38,6 @@ import com.mongodb.DBObject;
 /**
  * Service for logs
  *
- * @author damien bourdette
  */
 @Service
 public class Logs {

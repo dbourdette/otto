@@ -37,10 +37,6 @@ import com.github.dbourdette.otto.web.form.BatchValuesType;
 import com.github.dbourdette.otto.web.service.RemoteEventsFacade;
 import com.github.dbourdette.otto.web.util.FlashScope;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 @Controller
 public class BatchController {
 	@Inject

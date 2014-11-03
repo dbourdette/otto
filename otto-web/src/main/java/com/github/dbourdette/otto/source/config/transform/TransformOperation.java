@@ -16,9 +16,6 @@
 
 package com.github.dbourdette.otto.source.config.transform;
 
-/**
- * @author damien bourdette
- */
 public interface TransformOperation {
     public String getShortName();
 

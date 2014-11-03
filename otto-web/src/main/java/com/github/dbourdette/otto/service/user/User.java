@@ -16,9 +16,6 @@ import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Property;
 
-/**
- * @author damien bourdette
- */
 @Entity(MongoCollections.USERS)
 public class User implements Serializable {
     @Id

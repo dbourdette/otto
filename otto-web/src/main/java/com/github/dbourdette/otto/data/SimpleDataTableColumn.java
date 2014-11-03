@@ -18,9 +18,6 @@ package com.github.dbourdette.otto.data;
 
 /**
  * A column in a {@link SimpleDataTable}
- *
- * @author damien bourdette
- * @version \$Revision$
  */
 public class SimpleDataTableColumn {
 

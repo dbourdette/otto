@@ -16,10 +16,6 @@
 
 package com.github.dbourdette.otto.source;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 public enum EventValueType {
 	STRING, INTEGER, BOOLEAN, DATE;
 }

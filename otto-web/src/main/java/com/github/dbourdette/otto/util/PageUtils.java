@@ -1,9 +1,5 @@
 package com.github.dbourdette.otto.util;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 public class PageUtils {
     public static int getPageCount(int totalCount, int pageSize) {
         if (totalCount <= 0) {

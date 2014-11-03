@@ -20,10 +20,6 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * @author damien bourdette
- * @version \$Revision$
- */
 public class SizeInBytesTest {
     @Test
     public void fromValue() {

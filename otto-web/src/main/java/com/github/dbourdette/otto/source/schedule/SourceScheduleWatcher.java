@@ -33,7 +33,6 @@ import com.kenai.crontabparser.CronTabExpression;
 /**
  * Finds and executes all eligible schedule every minute
  *
- * @author damien bourdette
  */
 @Component
 public class SourceScheduleWatcher {

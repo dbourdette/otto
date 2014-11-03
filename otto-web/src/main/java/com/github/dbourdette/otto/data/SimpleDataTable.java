@@ -31,9 +31,6 @@ import com.github.dbourdette.otto.web.util.Pair;
 
 /**
  * Simple implementation of {@link DataTable}
- *
- * @author damien bourdette
- * @version \$Revision$
  */
 public class SimpleDataTable implements DataTable {
     private static final Duration FIVE_MINUTES = Duration.standardMinutes(5);

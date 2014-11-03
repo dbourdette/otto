@@ -28,9 +28,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.github.dbourdette.otto.source.Source;
 import com.github.dbourdette.otto.web.util.SourceGroups;
 
-/**
- * @author damien bourdette
- */
 @Controller
 public class IndexController {
 
